@@ -26,18 +26,18 @@ namespace nx
 
 	void Window::Init()
 	{
-		std::cout << "Initializing GLFW..." << std::endl;
+		std::cout << "Initializing GLFW...\n";
 
 		glfwInit();
 
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-		std::cout << "Creating window..." << std::endl;
+		std::cout << "Creating window...\n";
 
 		mWindow = glfwCreateWindow(mDefaultWidth, mDefaultHeight, mTitle, nullptr, nullptr);
 
-		std::cout << "GLFW Initialized." << std::endl;
+		std::cout << "GLFW Initialized.\n";
 	}
 
 	// Defines callback function to invoke on window resize

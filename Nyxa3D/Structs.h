@@ -35,7 +35,6 @@ namespace nx
 		int Graphics = UNAVAILABLE;
 		int Present = UNAVAILABLE;
 
-	private:
 		static constexpr int UNAVAILABLE = -1;
 		static constexpr int MIN_INDEX = 0;
 	};

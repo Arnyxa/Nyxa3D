@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Globals.h"
-#include "Structs.h"
+#include "VulkanStructs.h"
 #include "Structs.h"
 #include "Window.h"
 #include "Debug.h"
+#include "Pipeline.h"
 
 #include <vulkan/vulkan.hpp>
 #include <vector>
@@ -35,19 +36,19 @@ namespace nx
 		void CreateCommandBuffers();
 		void CreateSemaphores();
 
-		void RecreateSwapChain();
-		void CleanupSwapChain();
+		void RecreateSwapchain();
+		void CleanupSwapchain();
 
 		void SelectPhysicalDevice();
-		bool IsDeviceSuitable(PhysicalDevice aDevice);
-		bool CheckDeviceExtensionSupport(PhysicalDevice aDevice);
+		bool IsDeviceSuitable(vk::PhysicalDevice aDevice);
+		bool CheckDeviceExtensionSupport(vk::PhysicalDevice aDevice);
 		bool CheckValidationLayerSupport();
 
-		Extent2D ChooseSwapExtent(const SurfaceCapabilitiesKHR& aCapabilities);
-		PresentModeKHR ChooseSwapPresentMode(const std::vector<PresentModeKHR> anAvailablePresentModes);
-		SurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<SurfaceFormatKHR>& anAvailableFormats);
-		SwapchainDetails QuerySwapchainSupport(PhysicalDevice aDevice);
-		QueueFamilyIndices FindQueueFamilies(PhysicalDevice aDevice);
+		vk::Extent2D ChooseSwapExtent(const vk::SurfaceCapabilitiesKHR& aCapabilities);
+		vk::PresentModeKHR ChooseSwapPresentMode(const std::vector<vk::PresentModeKHR> anAvailablePresentModes);
+		vk::SurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& anAvailableFormats);
+		SwapchainDetails QuerySwapchainSupport(vk::PhysicalDevice aDevice);
+		QueueFamilyIndices FindQueueFamilies(vk::PhysicalDevice aDevice);
 		std::vector<const char*> GetRequiredExtensions();
 
 		static void OnWindowResize(GLFWwindow* aWindow, int aWidth, int aHeight);
@@ -68,18 +69,18 @@ namespace nx
 		vk::Queue mPresentQueue;
 		vk::Queue mGraphicsQueue;
 
-		vk::SwapchainKHR mSwapChain;
-		vk::Format mSwapChainImageFormat;
-		vk::Extent2D mSwapChainExtent2D;
+		vk::SwapchainKHR mSwapchain;
+		vk::Format mSwapchainImageFormat;
+		vk::Extent2D mSwapchainExtent2D;
 
 		vk::CommandPool mCommandPool;
 		vk::Semaphore mImageAvailableSema;
 		vk::Semaphore mRenderFinishedSema;
 
 		// STL
-		std::vector<vk::Image> mSwapChainImages;
-		std::vector<vk::ImageView> mSwapChainImageViews;
-		std::vector<vk::Framebuffer> mSwapChainFramebuffers;
+		std::vector<vk::Image> mSwapchainImages;
+		std::vector<vk::ImageView> mSwapchainImageViews;
+		std::vector<vk::Framebuffer> mSwapchainFramebuffers;
 		std::vector<vk::CommandBuffer> mCommandBuffers;
 
 		// NyxaVK

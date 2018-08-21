@@ -136,13 +136,17 @@
     <ClCompile Include="Context.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pipeline.cpp" />
+    <ClCompile Include="Util.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Context.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Globals.h" />
-    <ClInclude Include="VkStructs.h" />
+    <ClInclude Include="Pipeline.h" />
+    <ClInclude Include="Util.h" />
+    <ClInclude Include="VulkanStructs.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
