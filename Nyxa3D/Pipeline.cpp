@@ -10,11 +10,13 @@ namespace nx
 	Pipeline::Pipeline(const vk::Device& aDevice, const vk::Extent2D& aViewport)
 		: mDevice(aDevice)
 		, mViewport(aViewport)
+		, mDestroyed(false)
 	{}
 
 	Pipeline::~Pipeline()
 	{
-		Destroy();
+		if (!mDestroyed)
+			Destroy();
 	}
 
 	void Pipeline::Create()
@@ -86,13 +88,15 @@ namespace nx
 										&myRasterizer, &myMultiSampling, nullptr, &myColorBlendingGlobal, nullptr, mPipelineLayout, 
 										mRenderPass, 0, vk::Pipeline(), -1);
 
-		if (PrintResult(mDevice.createGraphicsPipelines(vk::PipelineCache(), 1, &myPipelineInfo, nullptr, &mPipeline)) != vk::Result::eSuccess)
+		if (Print(mDevice.createGraphicsPipelines(vk::PipelineCache(), 1, &myPipelineInfo, nullptr, &mPipeline)) != vk::Result::eSuccess)
 			throw std::runtime_error("Failed to create Vulkan Graphics Pipeline.");
 
 		std::cout << "Graphics pipeline successfully created.\n\n";
 
 		mDevice.destroyShaderModule(myVertShaderModule);
 		mDevice.destroyShaderModule(myFragShaderModule);
+
+		mDestroyed = false;
 	}
 
 	vk::ShaderModule Pipeline::CreateShaderModule(const std::vector<char>& aByteCode)
@@ -149,5 +153,8 @@ namespace nx
 		mDevice.destroyPipeline(mPipeline);
 		mDevice.destroyPipelineLayout(mPipelineLayout);
 		mDevice.destroyRenderPass(mRenderPass);
+
+		// Track this to ensure object doesn't get destroyed if it has already been destroyed
+		mDestroyed = true;
 	}
 }

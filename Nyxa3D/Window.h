@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Structs.h"
+#include "Util.h"
 
 #include <string>
 
@@ -30,7 +31,7 @@ namespace nx
 		void SetResizeCallback(GLFWwindowsizefun aFunction, void* aUserPointer);
 
 		void SetTitle(const std::string& aTitle);
-		const std::string& GetTitle() const;
+		std::string GetTitle() const;
 
 	private:
 		// GLFW

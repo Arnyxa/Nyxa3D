@@ -35,7 +35,7 @@ namespace nx
 
 		std::cout << "Creating window...\n";
 
-		mWindow = glfwCreateWindow(mDefaultWidth, mDefaultHeight, mTitle, nullptr, nullptr);
+		mWindow = glfwCreateWindow((int)mDefaultWidth, (int)mDefaultHeight, mTitle, nullptr, nullptr);
 
 		std::cout << "GLFW Initialized.\n";
 	}
@@ -49,8 +49,11 @@ namespace nx
 
 	void Window::Destroy()
 	{
-		glfwDestroyWindow(mWindow);
-		glfwTerminate();
+		if (mWindow != nullptr)
+		{
+			glfwDestroyWindow(mWindow);
+			glfwTerminate();
+		}
 	}
 
 	void Window::PollEvents()
@@ -78,19 +81,19 @@ namespace nx
 		glfwSetWindowTitle(mWindow, mTitle);
 	}
 
-	const std::string& Window::GetTitle() const
+	std::string Window::GetTitle() const
 	{
 		return std::string(mTitle);
 	}
 
 	void Window::SetSize(size_t aWidth, size_t aHeight)
 	{
-		glfwSetWindowSize(mWindow, aWidth, aHeight);
+		glfwSetWindowSize(mWindow, (int)aWidth, (int)aHeight);
 	}
 
 	// Sets window size back to initially specified default size
 	void Window::ResetSize()
 	{
-		glfwSetWindowSize(mWindow, mDefaultWidth, mDefaultHeight);
+		glfwSetWindowSize(mWindow, (int)mDefaultWidth, (int)mDefaultHeight);
 	}
 }

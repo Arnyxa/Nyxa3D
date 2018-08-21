@@ -3,8 +3,13 @@
 #pragma once
 
 #include <vulkan\vulkan.hpp>
+#include <string>
 
 namespace nx
 {
-	vk::Result PrintResult(vk::Result aResult);
+	VkResult PrintResult(VkResult aResult);
+
+
+	void Print(const std::string& aText);
+	vk::Result Print(vk::Result aResult);
 }

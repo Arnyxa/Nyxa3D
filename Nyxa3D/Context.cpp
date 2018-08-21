@@ -41,7 +41,7 @@ namespace nx
 		uint32_t myImageIndex = myResultPair.value;
 		vk::Result myResult = myResultPair.result;
 
-		if (PrintResult(myResult) == vk::Result::eErrorOutOfDateKHR)
+		if (Print(myResult) == vk::Result::eErrorOutOfDateKHR)
 		{
 			RecreateSwapchain();
 			return;
@@ -62,7 +62,7 @@ namespace nx
 
 		myResult = mPresentQueue.presentKHR(myPresentInfo);
 
-		if (PrintResult(myResult) == vk::Result::eErrorOutOfDateKHR || myResult == vk::Result::eSuboptimalKHR)
+		if (Print(myResult) == vk::Result::eErrorOutOfDateKHR || myResult == vk::Result::eSuboptimalKHR)
 		{
 			RecreateSwapchain();
 			return;
@@ -477,7 +477,7 @@ namespace nx
 		std::vector<const char*> myExtensions(myGlfwExtensions, myGlfwExtensions + myGlfwExtensionCount);
 
 		if (VALIDATION_LAYERS_ENABLED)
-			myExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+			myExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 
 		return myExtensions;
 	}
@@ -615,7 +615,7 @@ namespace nx
 
 	Context::~Context()
 	{
-		std::cout << "Terminating program...\n";
+		std::cout << "Destroying Context objects...\n";
 
 		CleanupSwapchain();
 
@@ -629,7 +629,7 @@ namespace nx
 
 		mInstance.destroy();
 
-		std::cout << "Application terminated. Exiting.\n";
+		std::cout << "Context successfully destroyed.\n";
 	}
 
 }

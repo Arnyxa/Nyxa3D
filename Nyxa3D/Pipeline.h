@@ -29,5 +29,7 @@ namespace nx
 		vk::Pipeline mPipeline;
 		vk::RenderPass mRenderPass;
 		vk::PipelineLayout mPipelineLayout;
+
+		bool mDestroyed;
 	};
 }

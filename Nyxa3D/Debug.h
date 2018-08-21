@@ -14,11 +14,21 @@ namespace nx
 		void Destroy();
 
 	private:
-		static VKAPI_ATTR vk::Bool32 VKAPI_CALL CallbackFunc(VkDebugReportFlagsEXT aFlags, VkDebugReportObjectTypeEXT anObjType, uint64_t anObj,
-			size_t aLocation, int32_t aCode, const char* aLayerPrefix, const char* aMsg, void* aUserData);
+		static VKAPI_ATTR VkBool32 VKAPI_CALL Callback(VkDebugUtilsMessageSeverityFlagBitsEXT aSeverity,
+														VkDebugUtilsMessageTypeFlagsEXT aType,
+														const VkDebugUtilsMessengerCallbackDataEXT* aCallbackData,
+														void* aUserData);
+
+		VkResult CreateDebugUtilsMessenger(const VkDebugUtilsMessengerCreateInfoEXT* aCreateInfo,
+											const VkAllocationCallbacks* anAllocator, VkDebugUtilsMessengerEXT* aCallback);
+
+		void DestroyDebugUtilsMessenger(VkDebugUtilsMessengerEXT aCallback, const VkAllocationCallbacks* anAllocator = nullptr);
 
 	private:
-		vk::DebugReportCallbackEXT mCallback;
+		VkDebugUtilsMessengerEXT mDbgMessenger;
 		vk::Instance& mInstance;
+
+		static constexpr char CREATE_DBG_MSGR_EXT[]  = "vkCreateDebugUtilsMessengerEXT";
+		static constexpr char DESTROY_DBG_MSGR_EXT[] = "vkDestroyDebugUtilsMessengerEXT";
 	};
 }

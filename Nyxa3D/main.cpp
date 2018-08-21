@@ -11,7 +11,7 @@ int main()
 {
 	int mySuccess = RunApp();
 
-#ifdef NXDBG
+#ifdef NXDEBUG
 	std::cout << "Press ENTER to close console.";
 	std::cin.get();
 #endif
@@ -21,7 +21,7 @@ int main()
 
 int RunApp()
 {
-#ifdef NXDBG
+#ifdef NXDEBUG
 	std::cout << "---------- DEBUG MODE ----------" << "\n" << std::endl;
 #endif
 

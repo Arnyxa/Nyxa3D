@@ -1,7 +1,10 @@
 #include "Debug.h"
 #include "Globals.h"
+#include "Util.h"
 
 #include <iostream>
+
+// leave this largely in C mode cause the C++ pointers to functions are giving me a headache
 
 namespace nx
 {
@@ -16,11 +19,15 @@ namespace nx
 
 		std::cout << "Initializing Debug Callback...\n";
 
-		vk::DebugReportCallbackCreateInfoEXT myCreateInfo(vk::DebugReportFlagBitsEXT::eError 
-														| vk::DebugReportFlagBitsEXT::eWarning, 
-															CallbackFunc);
+		VkDebugUtilsMessengerCreateInfoEXT myCreateInfo;
+		myCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+		myCreateInfo.flags = 0;
+		myCreateInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+		myCreateInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+		myCreateInfo.pfnUserCallback = Callback;
 
-		//mCallback = mInstance.createDebugReportCallbackEXT(myCreateInfo);
+		if (PrintResult(CreateDebugUtilsMessenger(&myCreateInfo, nullptr, &mDbgMessenger)) != VK_SUCCESS)
+			throw std::runtime_error("Failed to setup Debug Utilities Messenger.\n");
 	}
 
 	Debug::~Debug()
@@ -30,14 +37,34 @@ namespace nx
 
 	void Debug::Destroy()
 	{
-		//mInstance.destroyDebugReportCallbackEXT(mCallback);
+		if (mDbgMessenger != VK_NULL_HANDLE)
+			DestroyDebugUtilsMessenger(mDbgMessenger);
 	}
 
-	VKAPI_ATTR vk::Bool32 VKAPI_CALL Debug::CallbackFunc(VkDebugReportFlagsEXT aFlags, VkDebugReportObjectTypeEXT anObjType, uint64_t anObj,
-		size_t aLocation, int32_t aCode, const char* aLayerPrefix, const char* aMsg, void* aUserData)
+	VKAPI_ATTR VkBool32 VKAPI_CALL Debug::Callback(VkDebugUtilsMessageSeverityFlagBitsEXT aSeverity,
+		VkDebugUtilsMessageTypeFlagsEXT aType,
+		const VkDebugUtilsMessengerCallbackDataEXT* aCallbackData,
+		void* aUserData)
 	{
-		std::cerr << "\nValidation layer: " << aMsg << std::endl;
+		std::cerr << "\nValidation layer: " << aCallbackData->pMessage << std::endl;
 
 		return VK_FALSE;
+	}
+
+	VkResult Debug::CreateDebugUtilsMessenger(const VkDebugUtilsMessengerCreateInfoEXT* aCreateInfo, const VkAllocationCallbacks* anAllocator, VkDebugUtilsMessengerEXT* aMessenger)
+	{
+		auto myFunc = (PFN_vkCreateDebugUtilsMessengerEXT)mInstance.getProcAddr(CREATE_DBG_MSGR_EXT);
+
+		if (myFunc != nullptr)
+			return myFunc(mInstance, aCreateInfo, anAllocator, aMessenger);
+		else
+			return VK_ERROR_EXTENSION_NOT_PRESENT;
+	}
+
+	void Debug::DestroyDebugUtilsMessenger(VkDebugUtilsMessengerEXT aMessenger, const VkAllocationCallbacks* anAllocator)
+	{
+		auto myFunc = (PFN_vkDestroyDebugUtilsMessengerEXT)mInstance.getProcAddr(DESTROY_DBG_MSGR_EXT);
+		if (myFunc != nullptr)
+			myFunc(mInstance, aMessenger, anAllocator);
 	}
 }

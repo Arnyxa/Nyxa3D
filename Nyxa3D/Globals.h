@@ -12,7 +12,7 @@ namespace nx
 namespace nx
 {
 
-#ifdef NXDBG
+#ifdef NXDEBUG
 	extern constexpr bool VALIDATION_LAYERS_ENABLED = true;
 #else
 	extern constexpr bool VALIDATION_LAYERS_ENABLED = false;
