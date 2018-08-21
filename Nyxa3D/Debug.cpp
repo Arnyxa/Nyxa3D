@@ -20,7 +20,7 @@ namespace nx
 														| vk::DebugReportFlagBitsEXT::eWarning, 
 															CallbackFunc);
 
-		mCallback = mInstance.createDebugReportCallbackEXT(myCreateInfo);
+		//mCallback = mInstance.createDebugReportCallbackEXT(myCreateInfo);
 	}
 
 	Debug::~Debug()
@@ -30,7 +30,7 @@ namespace nx
 
 	void Debug::Destroy()
 	{
-		mInstance.destroyDebugReportCallbackEXT(mCallback);
+		//mInstance.destroyDebugReportCallbackEXT(mCallback);
 	}
 
 	VKAPI_ATTR vk::Bool32 VKAPI_CALL Debug::CallbackFunc(VkDebugReportFlagsEXT aFlags, VkDebugReportObjectTypeEXT anObjType, uint64_t anObj,

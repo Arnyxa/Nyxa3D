@@ -1,15 +1,45 @@
-#include "Window.h"
-
-#include <glfw/glfw3.h>
+#include "Context.h"
 
 #include <iostream>
+#include <stdexcept>
+
+// separate function for running the app to ensure 
+// that the app object is destroyed before we exit
+int RunApp();
 
 int main()
 {
-	std::cout << sizeof(float) << std::endl;
-	std::cout << sizeof(double) << std::endl;
-	std::cout << sizeof(long double) << std::endl;
+	int mySuccess = RunApp();
 
+#ifdef NXDBG
+	std::cout << "Press ENTER to close console.";
 	std::cin.get();
-	return 0;
+#endif
+
+	return mySuccess;
+}
+
+int RunApp()
+{
+#ifdef NXDBG
+	std::cout << "---------- DEBUG MODE ----------" << "\n" << std::endl;
+#endif
+
+	nx::Context myContext;
+
+	try
+	{
+		myContext.Run();
+	}
+	catch (const std::runtime_error& e)
+	{
+		std::cerr << e.what() << std::endl;
+
+		std::cout << "Press ENTER to close console.";
+		std::cin.get();
+
+		return EXIT_FAILURE;
+	}
+
+	return EXIT_SUCCESS;
 }

@@ -36,7 +36,7 @@ namespace nx
 
 	void Context::Draw()
 	{
-		vk::ResultValue<uint32_t> myResultPair = mDevice.acquireNextImageKHR(mSwapchain, UINT64_MAX_, mImageAvailableSema, nullptr);
+		vk::ResultValue<uint32_t> myResultPair = mDevice.acquireNextImageKHR(mSwapchain, UINT64_MAX, mImageAvailableSema, nullptr);
 
 		uint32_t myImageIndex = myResultPair.value;
 		vk::Result myResult = myResultPair.result;
@@ -383,7 +383,7 @@ namespace nx
 			}
 		}
 
-		if (mPhysicalDevice == VK_NULL_HANDLE)
+		if (mPhysicalDevice == vk::PhysicalDevice())
 			throw std::runtime_error("Failed to find a suitable GPU for Vulkan.");
 
 		std::cout << "Matching Vulkan-compatible GPU(s) successfully found.\n\n";
