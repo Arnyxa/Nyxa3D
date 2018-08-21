@@ -55,6 +55,7 @@ namespace nx
 		vk::PipelineViewportStateCreateInfo myViewportState({}, 1, &myViewport, 1, &myScissor);
 
 		vk::PipelineRasterizationStateCreateInfo myRasterizer({}, false, false, vk::PolygonMode::eFill, vk::CullModeFlagBits::eBack, vk::FrontFace::eClockwise);
+		myRasterizer.lineWidth = 1.0f;
 
 		vk::PipelineMultisampleStateCreateInfo myMultiSampling({}, vk::SampleCountFlagBits::e1, false, 1.0f);
 
@@ -78,6 +79,8 @@ namespace nx
 		vk::PipelineLayoutCreateInfo myLayoutInfo;
 
 		mPipelineLayout = mDevice.createPipelineLayout(myLayoutInfo);
+
+		std::cout << "Creating graphics pipeline...\n";
 
 		vk::GraphicsPipelineCreateInfo myPipelineInfo({}, 2, myShaderStages, &myVertexInputInfo, &myInputAssembly, nullptr, &myViewportState, 
 										&myRasterizer, &myMultiSampling, nullptr, &myColorBlendingGlobal, nullptr, mPipelineLayout, 

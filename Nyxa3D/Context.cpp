@@ -191,6 +191,8 @@ namespace nx
 			vk::ImageView myAttachments[] = { mSwapchainImageViews[i] };
 
 			vk::FramebufferCreateInfo myFramebufferInfo({}, mPipeline.GetRenderPass(), 1, myAttachments, mSwapchainExtent2D.width, mSwapchainExtent2D.height, 1);
+
+			mSwapchainFramebuffers[i] = mDevice.createFramebuffer(myFramebufferInfo);
 		}
 
 		std::cout << "Finished creating framebuffers.\n";
