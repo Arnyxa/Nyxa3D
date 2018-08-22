@@ -9,12 +9,11 @@
 
 namespace nx
 {
-#define VERTEX_COUNT 3
 
 	Context::Context()
 		: mPhysicalDevice()
 		, mDebugger(mInstance)
-		, mPipeline(mDevice, mSwapchainExtent2D)
+		, mPipeline(mDevice, mPhysicalDevice, mSwapchainExtent2D)
 	{}
 
 	void Context::Run()
@@ -28,10 +27,37 @@ namespace nx
 		while (!mWindow.ShouldClose())
 		{
 			mWindow.PollEvents();
+
+			mPipeline.UpdateVertexArray();
+			RecreateSwapchain();
+			
 			Draw();
 		}
 
 		vkDeviceWaitIdle(mDevice);
+	}
+
+	void Context::UpdateVertexArray()
+	{
+		//auto& myVertArray = mPipeline.GetVertexArray();
+		//for (int i = 0; i < myVertArray.size(); ++i)
+		//{
+		//	if (myVertArray[i].Color.r >= 1.0f)
+		//		myVertArray[i].Color.r -= 0.01f;
+		//	else if (myVertArray[i].Color.r <= 0.0f)
+		//		myVertArray[i].Color.r += 0.01f;
+
+		//	if (myVertArray[i].Color.g >= 1.0f)
+		//		myVertArray[i].Color.g -= 0.01f;
+		//	else if (myVertArray[i].Color.g <= 0.0f)
+		//		myVertArray[i].Color.g += 0.01f;
+
+		//	if (myVertArray[i].Color.b >= 1.0f)
+		//		myVertArray[i].Color.b -= 0.01f;
+		//	else if (myVertArray[i].Color.b <= 0.0f)
+		//		myVertArray[i].Color.b += 0.01f;
+		//}
+
 	}
 
 	void Context::Draw()
@@ -95,6 +121,7 @@ namespace nx
 		mPipeline.Create();
 		CreateFrameBuffers();
 		CreateCommandPool();
+		mPipeline.CreateVertexBuffer();
 		CreateCommandBuffers();
 		CreateSemaphores();
 
@@ -124,6 +151,7 @@ namespace nx
 		CreateRenderPass();
 		mPipeline.Create();
 		CreateFrameBuffers();
+		mPipeline.CreateVertexBuffer();
 		CreateCommandBuffers();
 	}
 
@@ -159,8 +187,12 @@ namespace nx
 			mCommandBuffers[i].beginRenderPass(myRenderPassInfo, vk::SubpassContents::eInline);
 			mCommandBuffers[i].bindPipeline(vk::PipelineBindPoint::eGraphics, mPipeline.GetRef());
 
+			vk::Buffer myVertexBuffers[] = { mPipeline.GetVertexBuffer() };
+			vk::DeviceSize myOffsets[] = { 0 };
+			mCommandBuffers[i].bindVertexBuffers(0, 1, myVertexBuffers, myOffsets);
+
 			// OWO WHAT'S THIS
-			mCommandBuffers[i].draw(VERTEX_COUNT, 1, 0, 0);
+			mCommandBuffers[i].draw(mPipeline.GetVertexArray().size(), 1, 0, 0);
 			mCommandBuffers[i].endRenderPass();
 			mCommandBuffers[i].end();
 		}
@@ -605,7 +637,9 @@ namespace nx
 			mDevice.destroyFramebuffer(iBuffer);
 
 		mDevice.freeCommandBuffers(mCommandPool, mCommandBuffers);
-		mPipeline.Destroy();
+
+		mPipeline.DestroyPipeline();
+		mPipeline.DestroyVertexBuffer();
 
 		for (auto iView : mSwapchainImageViews)
 			mDevice.destroyImageView(iView);
@@ -619,6 +653,7 @@ namespace nx
 
 		CleanupSwapchain();
 
+		mPipeline.DestroyVertexBuffer();
 		mDevice.destroySemaphore(mRenderFinishedSema);
 		mDevice.destroySemaphore(mImageAvailableSema);
 		mDevice.destroyCommandPool(mCommandPool);
@@ -629,7 +664,7 @@ namespace nx
 
 		mInstance.destroy();
 
-		std::cout << "Context successfully destroyed.\n";
+		std::cout << "Context successfully destroyed.\n\n";
 	}
 
 }

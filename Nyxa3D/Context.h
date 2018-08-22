@@ -39,6 +39,8 @@ namespace nx
 		void RecreateSwapchain();
 		void CleanupSwapchain();
 
+		void UpdateVertexArray();
+
 		void SelectPhysicalDevice();
 		bool IsDeviceSuitable(vk::PhysicalDevice aDevice);
 		bool CheckDeviceExtensionSupport(vk::PhysicalDevice aDevice);

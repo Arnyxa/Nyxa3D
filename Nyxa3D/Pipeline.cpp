@@ -7,16 +7,68 @@
 
 namespace nx
 {
-	Pipeline::Pipeline(const vk::Device& aDevice, const vk::Extent2D& aViewport)
+	Pipeline::Pipeline(const vk::Device& aDevice, const vk::PhysicalDevice& aPhysDevice, const vk::Extent2D& aViewport)
 		: mDevice(aDevice)
 		, mViewport(aViewport)
-		, mDestroyed(false)
-	{}
+		, mPhysDevice(aPhysDevice)
+		, mCleaned(false)
+	{
+		mVertices.push_back(Vertex({ { 0.0f, -0.5f }, { 0.4f, 0.7f, 0.3f } }));
+		mVertices.push_back(Vertex({ { 0.5f, 0.5f }, { 0.4f, 0.3f, 0.1f } }));
+		mVertices.push_back(Vertex({ { -0.5f, 0.5f }, { 0.1f, 0.2f, 0.8f } }));
+	}
 
 	Pipeline::~Pipeline()
+	{}
+
+	void Pipeline::DestroyPipeline()
 	{
-		if (!mDestroyed)
-			Destroy();
+		mDevice.destroyPipeline(mPipeline);
+		mDevice.destroyPipelineLayout(mPipelineLayout);
+		mDevice.destroyRenderPass(mRenderPass);
+	}
+
+	void Pipeline::DestroyVertexBuffer()
+	{
+		mDevice.destroyBuffer(mVertexBuffer);
+		mDevice.freeMemory(mVrtxBufferMemory);
+	}
+
+	void Pipeline::UpdateVertexArray()
+	{
+		static float val = 0.0015f;
+		const float upper = 1.f;
+		const float lower = 0.1f;
+
+		static float rm = val;
+		static float gm = val;
+		static float bm = val;
+		static float xm = val;
+		static float ym = val;
+
+		for (int i = 0; i < mVertices.size(); ++i)
+		{
+			// Red
+			if (mVertices[i].Color.r >= upper)
+				rm = -val;
+			else if (mVertices[i].Color.r <= lower)
+				rm = val;
+			mVertices[i].Color.r += rm;
+
+			// Green
+			if (mVertices[i].Color.g >= upper)
+				gm = -val;
+			else if (mVertices[i].Color.g <= lower)
+				gm = val;
+			mVertices[i].Color.g += gm;
+
+			// Blue
+			if (mVertices[i].Color.b >= upper)
+				bm = -val;
+			else if (mVertices[i].Color.b <= lower)
+				bm = val;
+			mVertices[i].Color.b += rm;
+		}
 	}
 
 	void Pipeline::Create()
@@ -38,7 +90,10 @@ namespace nx
 
 		vk::PipelineShaderStageCreateInfo myShaderStages[] = { myVertShaderInfo, myFragShaderInfo };
 
-		vk::PipelineVertexInputStateCreateInfo myVertexInputInfo;
+		auto myBinding = Vertex::GetBindingDescript();
+		auto myAttributes = Vertex::GetAttributeDescript();
+
+		vk::PipelineVertexInputStateCreateInfo myVertexInputInfo({}, 1, &myBinding, (uint32_t)myAttributes.size(), myAttributes.data());
 
 		vk::PipelineInputAssemblyStateCreateInfo myInputAssembly({}, vk::PrimitiveTopology::eTriangleList);
 
@@ -95,8 +150,47 @@ namespace nx
 
 		mDevice.destroyShaderModule(myVertShaderModule);
 		mDevice.destroyShaderModule(myFragShaderModule);
+	}
 
-		mDestroyed = false;
+	vk::Buffer& Pipeline::GetVertexBuffer()
+	{
+		return mVertexBuffer;
+	}
+
+	std::vector<Vertex>& Pipeline::GetVertexArray()
+	{
+		return mVertices;
+	}
+
+	void Pipeline::CreateVertexBuffer()
+	{
+		vk::BufferCreateInfo myBufferInfo({}, sizeof(mVertices[0]) * mVertices.size(), vk::BufferUsageFlagBits::eVertexBuffer, vk::SharingMode::eExclusive);
+		mVertexBuffer = mDevice.createBuffer(myBufferInfo);
+
+		vk::MemoryRequirements myMemReqs = mDevice.getBufferMemoryRequirements(mVertexBuffer);
+		vk::MemoryAllocateInfo myAllocInfo(myMemReqs.size, FindMemType(myMemReqs.memoryTypeBits, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent));
+
+		mVrtxBufferMemory = mDevice.allocateMemory(myAllocInfo, nullptr);
+		mDevice.bindBufferMemory(mVertexBuffer, mVrtxBufferMemory, 0);
+
+		void* myData = mDevice.mapMemory(mVrtxBufferMemory, 0, myBufferInfo.size);
+		memcpy(myData, mVertices.data(), (size_t)myBufferInfo.size);
+		mDevice.unmapMemory(mVrtxBufferMemory);
+	}
+
+	uint32_t Pipeline::FindMemType(uint32_t aTypeFilter, vk::MemoryPropertyFlags aProperties)
+	{
+		vk::PhysicalDeviceMemoryProperties myMemProperties = mPhysDevice.getMemoryProperties();
+
+		for (uint32_t i = 0; i < myMemProperties.memoryTypeCount; ++i)
+		{
+			// find index ofsuitable memory type by checking if the corresponding bit is set to 1
+			// also need to check if memory is suitable for writing to through property flags
+			if ((aTypeFilter & (1 << i) && (myMemProperties.memoryTypes[i].propertyFlags & aProperties) == aProperties))
+				return i;
+		}
+
+		throw std::runtime_error("Failed to find suitable memory type.");
 	}
 
 	vk::ShaderModule Pipeline::CreateShaderModule(const std::vector<char>& aByteCode)
@@ -148,13 +242,25 @@ namespace nx
 		return mRenderPass;
 	}
 
-	void Pipeline::Destroy()
+	vk::VertexInputBindingDescription Vertex::GetBindingDescript()
 	{
-		mDevice.destroyPipeline(mPipeline);
-		mDevice.destroyPipelineLayout(mPipelineLayout);
-		mDevice.destroyRenderPass(mRenderPass);
+		return vk::VertexInputBindingDescription(0, sizeof(Vertex), vk::VertexInputRate::eVertex);
+	}
 
-		// Track this to ensure object doesn't get destroyed if it has already been destroyed
-		mDestroyed = true;
+	std::array<vk::VertexInputAttributeDescription, 2> Vertex::GetAttributeDescript()
+	{
+		std::array<vk::VertexInputAttributeDescription, 2> myAttributes;
+
+		myAttributes[0].binding = 0;
+		myAttributes[0].location = 0;
+		myAttributes[0].format = vk::Format::eR32G32Sfloat;
+		myAttributes[0].offset = offsetof(Vertex, Pos);
+
+		myAttributes[1].binding = 0;
+		myAttributes[1].location = 1;
+		myAttributes[1].format = vk::Format::eR32G32B32Sfloat;
+		myAttributes[1].offset = offsetof(Vertex, Color);
+
+		return myAttributes;
 	}
 }
