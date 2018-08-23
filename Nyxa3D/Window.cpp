@@ -12,7 +12,7 @@ namespace nx
 		: mWindow(nullptr)
 		, mDefaultWidth(aDefaultWidth)
 		, mDefaultHeight(aDefaultHeight)
-		, mTitle("NyxaVK")
+		, mTitle("Nyxa3D")
 	{}
 
 	Window::~Window()
