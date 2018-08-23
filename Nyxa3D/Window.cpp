@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "Util.h"
 
 #include <glfw/glfw3.h>
 
@@ -61,9 +62,33 @@ namespace nx
 		glfwPollEvents();
 	}
 
-	GLFWwindow* Window::GetPtr()
+	GLFWwindow* Window::GetGlfwWindowPtr()
 	{
 		return mWindow;
+	}
+
+	void* Window::GetWindowUserPtr()
+	{
+		return glfwGetWindowUserPointer(mWindow);
+	}
+
+	vk::SurfaceKHR Window::CreateSurface(vk::Instance& anInstance)
+	{
+		VkSurfaceKHR myTempSurface;
+
+		if (PrintResult(glfwCreateWindowSurface(anInstance, mWindow, nullptr, &myTempSurface)) != VK_SUCCESS)
+			throw std::runtime_error("Failed to create Vulkan surface for GLFW window.");
+
+		return static_cast<vk::SurfaceKHR>(myTempSurface);
+
+	}
+
+	std::vector<const char*> Window::GetRequiredExtensions()
+	{
+		uint32_t myCount = 0;
+		const char** myExtensionList = glfwGetRequiredInstanceExtensions(&myCount);
+
+		return std::vector<const char*>(myExtensionList, myExtensionList + myCount);
 	}
 
 	Size<int> Window::GetSize() const

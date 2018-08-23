@@ -27,37 +27,10 @@ namespace nx
 		while (!mWindow.ShouldClose())
 		{
 			mWindow.PollEvents();
-
-			mPipeline.UpdateVertexArray();
-			RecreateSwapchain();
-			
 			Draw();
 		}
 
-		vkDeviceWaitIdle(mDevice);
-	}
-
-	void Context::UpdateVertexArray()
-	{
-		//auto& myVertArray = mPipeline.GetVertexArray();
-		//for (int i = 0; i < myVertArray.size(); ++i)
-		//{
-		//	if (myVertArray[i].Color.r >= 1.0f)
-		//		myVertArray[i].Color.r -= 0.01f;
-		//	else if (myVertArray[i].Color.r <= 0.0f)
-		//		myVertArray[i].Color.r += 0.01f;
-
-		//	if (myVertArray[i].Color.g >= 1.0f)
-		//		myVertArray[i].Color.g -= 0.01f;
-		//	else if (myVertArray[i].Color.g <= 0.0f)
-		//		myVertArray[i].Color.g += 0.01f;
-
-		//	if (myVertArray[i].Color.b >= 1.0f)
-		//		myVertArray[i].Color.b -= 0.01f;
-		//	else if (myVertArray[i].Color.b <= 0.0f)
-		//		myVertArray[i].Color.b += 0.01f;
-		//}
-
+		mDevice.waitIdle();
 	}
 
 	void Context::Draw()
@@ -96,7 +69,7 @@ namespace nx
 		else if (myResult != vk::Result::eSuccess)
 			throw std::runtime_error("Failed to present swapchain image.");
 
-		vkQueueWaitIdle(mPresentQueue);
+		mPresentQueue.waitIdle();
 	}
 
 	void Context::Init()
@@ -142,7 +115,7 @@ namespace nx
 		if (mySize.Width == 0 || mySize.Height == 0)
 			return;
 
-		vkDeviceWaitIdle(mDevice);
+		mDevice.waitIdle();
 
 		CleanupSwapchain();
 
@@ -192,7 +165,7 @@ namespace nx
 			mCommandBuffers[i].bindVertexBuffers(0, 1, myVertexBuffers, myOffsets);
 
 			// OWO WHAT'S THIS
-			mCommandBuffers[i].draw(mPipeline.GetVertexArray().size(), 1, 0, 0);
+			mCommandBuffers[i].draw((uint32_t)mPipeline.GetVertexArray().size(), 1, 0, 0);
 			mCommandBuffers[i].endRenderPass();
 			mCommandBuffers[i].end();
 		}
@@ -324,12 +297,7 @@ namespace nx
 	{
 		std::cout << "Creating Vulkan surface...\n";
 
-		/// NUCLEAR DANGER ///
-		VkSurfaceKHR myTempSurface;
-
-		glfwCreateWindowSurface(mInstance, mWindow.GetPtr(), nullptr, &myTempSurface);
-		mSurface = myTempSurface;
-		/// NUCLEAR DANGER ///
+		mSurface = mWindow.CreateSurface(mInstance);
 	}
 
 	void Context::CreateLogicalDevice()
@@ -425,14 +393,6 @@ namespace nx
 
 	bool Context::IsDeviceSuitable(vk::PhysicalDevice aDevice)
 	{
-		//vk::PhysicalDeviceProperties myProperties;
-		//vk::PhysicalDeviceFeatures myFeatures;
-		//vkGetPhysicalDeviceProperties(aDevice, &myProperties);
-		//vkGetPhysicalDeviceFeatures(aDevice, &myFeatures);
-
-		// return myProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
-		// myFeatures.geometryShader;
-
 		std::cout << "Evaluating device suitability...\n";
 
 		QueueFamilyIndices myIndices = FindQueueFamilies(aDevice);
@@ -502,11 +462,8 @@ namespace nx
 	std::vector<const char*> Context::GetRequiredExtensions()
 	{
 		std::cout << "Fetching required extensions...\n";
-		uint32_t myGlfwExtensionCount = 0;
-		const char** myGlfwExtensions;
-		myGlfwExtensions = glfwGetRequiredInstanceExtensions(&myGlfwExtensionCount);
 
-		std::vector<const char*> myExtensions(myGlfwExtensions, myGlfwExtensions + myGlfwExtensionCount);
+		std::vector<const char*> myExtensions = mWindow.GetRequiredExtensions();
 
 		if (VALIDATION_LAYERS_ENABLED)
 			myExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
@@ -533,7 +490,7 @@ namespace nx
 		if (VALIDATION_LAYERS_ENABLED && !CheckValidationLayerSupport())
 			throw std::runtime_error("Validation layers requested, but not available.");
 
-		vk::ApplicationInfo myAppInfo("Binch", VK_MAKE_VERSION(1, 0, 0), "Nyxa3D", VK_MAKE_VERSION(1, 0, 0), VK_API_VERSION_1_0);
+		vk::ApplicationInfo myAppInfo("Binch", VK_MAKE_VERSION(1, 0, 0), "Nyxa3D", VK_MAKE_VERSION(1, 0, 0), VK_API_VERSION_1_1);
 
 		auto myExtensions = GetRequiredExtensions();
 
@@ -568,7 +525,7 @@ namespace nx
 			bool isFound = false;
 			for (const auto& iProperty : myExtensionProperties)
 			{
-				if (strcmp(myExtensions[i], iProperty.extensionName) == 0)
+				if (std::strcmp(myExtensions[i], iProperty.extensionName) == 0)
 				{
 					isFound = true;
 					break;
@@ -610,7 +567,7 @@ namespace nx
 
 			for (const auto& iLayerProperties : myAvailableLayers)
 			{
-				if (strcmp(iLayerName, iLayerProperties.layerName) == 0)
+				if (std::strcmp(iLayerName, iLayerProperties.layerName) == 0)
 				{
 					isFound = true;
 					break;

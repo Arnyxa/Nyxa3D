@@ -4,12 +4,13 @@
 #include "Util.h"
 
 #include <string>
+#include <vector>
 
 struct GLFWwindow;
 typedef void(*GLFWwindowsizefun)(GLFWwindow*, int, int);
 
 namespace nx
-{
+{	
 	class Window
 	{
 	public:
@@ -23,7 +24,8 @@ namespace nx
 		bool ShouldClose() const;
 		void PollEvents();
 
-		GLFWwindow* GetPtr();
+		GLFWwindow* GetGlfwWindowPtr();
+		void* GetWindowUserPtr();
 
 		void ResetSize();
 		Size<int> GetSize() const;
@@ -32,6 +34,9 @@ namespace nx
 
 		void SetTitle(const std::string& aTitle);
 		std::string GetTitle() const;
+
+		vk::SurfaceKHR CreateSurface(vk::Instance& anInstance);
+		std::vector<const char*> GetRequiredExtensions();
 
 	private:
 		// GLFW

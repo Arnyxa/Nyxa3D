@@ -10,6 +10,7 @@
 #include <vulkan/vulkan.hpp>
 #include <vector>
 #include <sstream>
+#include <string>
 #include <iostream>
 
 namespace nx
@@ -91,6 +92,9 @@ namespace nx
 		Pipeline mPipeline;
 
 		// Const
+		//const std::vector<const char*> mValidationLayers = { LNG_STANDARD_VALIDATION_NAME };
+		//const std::vector<const char*> mDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+
 		const std::vector<const char*> mValidationLayers = { LNG_STANDARD_VALIDATION_NAME };
 		const std::vector<const char*> mDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 	};
