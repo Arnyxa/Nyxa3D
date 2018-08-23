@@ -6,6 +6,7 @@
 #include "Window.h"
 #include "Debug.h"
 #include "Pipeline.h"
+#include "VertexBuffer.h"
 
 #include <vulkan/vulkan.hpp>
 #include <vector>
@@ -39,8 +40,6 @@ namespace nx
 
 		void RecreateSwapchain();
 		void CleanupSwapchain();
-
-		void UpdateVertexArray();
 
 		void SelectPhysicalDevice();
 		bool IsDeviceSuitable(vk::PhysicalDevice aDevice);
@@ -86,14 +85,11 @@ namespace nx
 		std::vector<vk::Framebuffer> mSwapchainFramebuffers;
 		std::vector<vk::CommandBuffer> mCommandBuffers;
 
-		// NyxaVK
+		// Nyxa3D
 		Debug mDebugger;
 		Window mWindow;
 		Pipeline mPipeline;
-
-		// Const
-		//const std::vector<const char*> mValidationLayers = { LNG_STANDARD_VALIDATION_NAME };
-		//const std::vector<const char*> mDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+		VertexBuffer mVertexBuffer;
 
 		const std::vector<const char*> mValidationLayers = { LNG_STANDARD_VALIDATION_NAME };
 		const std::vector<const char*> mDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };

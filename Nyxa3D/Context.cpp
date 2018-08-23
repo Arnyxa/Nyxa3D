@@ -11,9 +11,9 @@ namespace nx
 {
 
 	Context::Context()
-		: mPhysicalDevice()
-		, mDebugger(mInstance)
-		, mPipeline(mDevice, mPhysicalDevice, mSwapchainExtent2D)
+		: mDebugger(mInstance)
+		, mPipeline(mDevice, mSwapchainExtent2D)
+		, mVertexBuffer(mDevice)
 	{}
 
 	void Context::Run()
@@ -94,7 +94,7 @@ namespace nx
 		mPipeline.Create();
 		CreateFrameBuffers();
 		CreateCommandPool();
-		mPipeline.CreateVertexBuffer();
+		mVertexBuffer.Create(mPhysicalDevice);
 		CreateCommandBuffers();
 		CreateSemaphores();
 
@@ -124,7 +124,7 @@ namespace nx
 		CreateRenderPass();
 		mPipeline.Create();
 		CreateFrameBuffers();
-		mPipeline.CreateVertexBuffer();
+		mVertexBuffer.Create(mPhysicalDevice);
 		CreateCommandBuffers();
 	}
 
@@ -160,12 +160,12 @@ namespace nx
 			mCommandBuffers[i].beginRenderPass(myRenderPassInfo, vk::SubpassContents::eInline);
 			mCommandBuffers[i].bindPipeline(vk::PipelineBindPoint::eGraphics, mPipeline.GetRef());
 
-			vk::Buffer myVertexBuffers[] = { mPipeline.GetVertexBuffer() };
+			vk::Buffer myVertexBuffers[] = { mVertexBuffer.Get() };
 			vk::DeviceSize myOffsets[] = { 0 };
 			mCommandBuffers[i].bindVertexBuffers(0, 1, myVertexBuffers, myOffsets);
 
 			// OWO WHAT'S THIS
-			mCommandBuffers[i].draw((uint32_t)mPipeline.GetVertexArray().size(), 1, 0, 0);
+			mCommandBuffers[i].draw((uint32_t)mVertexBuffer.GetVertexArray().size(), 1, 0, 0);
 			mCommandBuffers[i].endRenderPass();
 			mCommandBuffers[i].end();
 		}
@@ -595,8 +595,8 @@ namespace nx
 
 		mDevice.freeCommandBuffers(mCommandPool, mCommandBuffers);
 
-		mPipeline.DestroyPipeline();
-		mPipeline.DestroyVertexBuffer();
+		mPipeline.Destroy();
+		mVertexBuffer.Destroy();
 
 		for (auto iView : mSwapchainImageViews)
 			mDevice.destroyImageView(iView);
@@ -610,7 +610,6 @@ namespace nx
 
 		CleanupSwapchain();
 
-		mPipeline.DestroyVertexBuffer();
 		mDevice.destroySemaphore(mRenderFinishedSema);
 		mDevice.destroySemaphore(mImageAvailableSema);
 		mDevice.destroyCommandPool(mCommandPool);

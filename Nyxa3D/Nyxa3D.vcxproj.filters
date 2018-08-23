@@ -28,6 +28,9 @@
     <Filter Include="Source Files\Pipeline">
       <UniqueIdentifier>{e587c817-5346-4855-90d4-4dbc9c77013a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\VertexBuffer">
+      <UniqueIdentifier>{38b79d4f-a6be-445f-beb3-033a4163e46e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -47,6 +50,9 @@
     </ClCompile>
     <ClCompile Include="Util.cpp">
       <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>Source Files\VertexBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="Util.h">
       <Filter>Source Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
+      <Filter>Source Files\VertexBuffer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
