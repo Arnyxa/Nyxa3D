@@ -31,15 +31,10 @@ namespace nx
 		myWindow->ExecuteResizeCallbacks();
 	}
 
-	void Window::AddCallback(std::function<void(void*)> aFunction, void* anObjPtr) const
-	{
-		mResizeCallbackFunctions.push_back(std::make_pair(anObjPtr, aFunction));
-	}
-
 	void Window::ExecuteResizeCallbacks()
 	{
-		for (auto& iFunction : mResizeCallbackFunctions)
-			iFunction.second(iFunction.first);
+		for (auto& iCallback : mCallbacks)
+			iCallback->Execute();
 	}
 
 	void Window::Init()

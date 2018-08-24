@@ -37,7 +37,7 @@ namespace nx
 		std::cout << "Initializing Window...\n";
 
 		mWindow.Init();
-		mWindow.AddCallback(OnWindowResize, this);
+		mWindow.AddCallback(&Context::OnWindowResize, this);
 
 		std::cout << "Window initialized.\n\n";
 		
@@ -257,7 +257,7 @@ namespace nx
 		return true;
 	}
 
-	void Context::OnWindowResize(void* anObjPtr)
+	void Context::OnWindowResize()
 	{
 		std::cout << "Bloop\n";
 	}

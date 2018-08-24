@@ -6,16 +6,35 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <memory>
 
 struct GLFWwindow;
 typedef void(*GLFWwindowsizefun)(GLFWwindow*, int, int);
 
 namespace nx
 {	
-	enum class CallbackType
+	class CallbackImpl
 	{
-		RESIZE,
-		Total
+	public:
+		typedef std::unique_ptr<CallbackImpl> ptr;
+
+		virtual void Execute() = 0;
+	};
+
+	template<typename T>
+	class Callback : public CallbackImpl
+	{
+	public:
+		Callback(void (T::*aFunction)(), T* anObjPtr) 
+			: mFunction(aFunction), mObject(anObjPtr)
+		{}
+
+		void Execute() override
+		{ (mObject->*mFunction)(); }
+
+	private:
+		void(T::*mFunction)();
+		T* mObject;
 	};
 
 	class Window
@@ -38,8 +57,6 @@ namespace nx
 		Size<int> GetSize() const;
 		void SetSize(size_t aWidth, size_t aHeight);
 
-		void AddCallback(std::function<void(void*)> aCallbackFn, void* anObjPtr) const;
-
 		void SetTitle(const std::string& aTitle);
 		std::string GetTitle() const;
 
@@ -47,6 +64,14 @@ namespace nx
 		std::vector<const char*> GetRequiredExtensions();
 
 		static void OnResize(GLFWwindow* aWindow, int aWidth, int aHeight);
+
+		template<typename T>
+		void AddCallback(void (T::*aFunction)(), T* anObjPtr) const
+		{
+			CallbackImpl::ptr myCallback(new Callback<T>(aFunction, anObjPtr));
+
+			mCallbacks.push_back(std::move(myCallback));
+		}
 
 	private:
 		void ExecuteResizeCallbacks(); // may add callbacks for other things
@@ -59,8 +84,7 @@ namespace nx
 		size_t mDefaultWidth;
 		size_t mDefaultHeight;
 
-		// I KNOW THIS IS ATROCIOUS i'll change it later
-		mutable std::vector<std::pair<void*, std::function<void(void*)>>> mResizeCallbackFunctions;
+		mutable std::vector<CallbackImpl::ptr> mCallbacks;
 
 		const char* mTitle;
 	};

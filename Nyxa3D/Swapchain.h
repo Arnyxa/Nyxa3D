@@ -40,7 +40,7 @@ namespace nx
 		vk::Queue& GetGraphicsQueue();
 		vk::Queue& GetPresentQueue();
 
-		static void OnWindowResize(void* myObjPtr);
+		void OnWindowResize();
 
 	private:
 		void DestroySurface();

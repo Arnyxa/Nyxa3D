@@ -92,5 +92,8 @@
     <ClInclude Include="Swapchain.h">
       <Filter>Source Files\Swapchain</Filter>
     </ClInclude>
+    <ClInclude Include="Callback.h">
+      <Filter>Source Files\Window</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

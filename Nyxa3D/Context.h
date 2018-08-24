@@ -41,7 +41,7 @@ namespace nx
 
 		void MainLoop();
 
-		static void OnWindowResize(void* anObjPtr);
+		void OnWindowResize();
 
 	private:
 

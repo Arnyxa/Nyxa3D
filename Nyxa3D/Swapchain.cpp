@@ -27,7 +27,7 @@ namespace nx
 
 	void Swapchain::Init()
 	{
-		mWindow.AddCallback(OnWindowResize, this);
+		mWindow.AddCallback(&Swapchain::OnWindowResize, this);
 		Create();
 		CreateImageViews();
 		CreateRenderPass();
@@ -39,11 +39,10 @@ namespace nx
 		CreateSemaphores();
 	}
 
-	void Swapchain::OnWindowResize(void* myObjPtr)
+	void Swapchain::OnWindowResize()
 	{
-		Swapchain* mySwapchain = reinterpret_cast<Swapchain*>(myObjPtr);
-		mySwapchain->Recreate();
-		mySwapchain->Draw();
+		this->Recreate();
+		this->Draw();
 	}
 
 	void Swapchain::Draw()
