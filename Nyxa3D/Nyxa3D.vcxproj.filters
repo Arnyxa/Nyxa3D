@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Util">
-      <UniqueIdentifier>{0d6afa53-9500-4846-ae42-6bd71e393e90}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Window">
       <UniqueIdentifier>{88f137b7-2d75-4d9d-8104-bc3793c6e805}</UniqueIdentifier>
     </Filter>
@@ -33,6 +30,9 @@
     </Filter>
     <Filter Include="Source Files\Swapchain">
       <UniqueIdentifier>{82a83c7d-e694-4185-bcbd-ff0863330f26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Util">
+      <UniqueIdentifier>{0d6afa53-9500-4846-ae42-6bd71e393e90}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

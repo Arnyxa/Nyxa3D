@@ -45,7 +45,7 @@ namespace nx
 
 		CreateInstance();
 		mDebugger.Init();
-		mSwapchain.CreateSurface();
+		mSwapchain.CreateWindowSurface();
 		SelectPhysicalDevice();
 		CreateLogicalDevice();
 		mSwapchain.Init();
@@ -266,7 +266,7 @@ namespace nx
 	{
 		std::cout << "Destroying Context objects...\n";
 
-		mSwapchain.Cleanup();
+		mSwapchain.Destroy();
 
 		mDevice.destroy();
 		mDebugger.Destroy();

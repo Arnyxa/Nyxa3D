@@ -22,7 +22,7 @@ namespace nx
 	Swapchain::~Swapchain()
 	{
 		if (!mDestroyed)
-			Cleanup();
+			Destroy();
 	}
 
 	void Swapchain::Init()
@@ -154,7 +154,7 @@ namespace nx
 		std::cout << "Image views created.\n\n";
 	}
 
-	void Swapchain::CreateSurface()
+	void Swapchain::CreateWindowSurface()
 	{
 		std::cout << "Creating Vulkan surface...\n";
 
@@ -185,7 +185,7 @@ namespace nx
 		return myIndices;
 	}
 
-	void Swapchain::DestroySurface()
+	void Swapchain::DestroyWindowSurface()
 	{
 		mInstance.destroySurfaceKHR(mSurface);
 	}
@@ -276,10 +276,15 @@ namespace nx
 			mDevice.destroyImageView(iView);
 
 		mDevice.destroySwapchainKHR(mSwapchain);
+
+		mDestroyed = true;
 	}
 
 	void Swapchain::Destroy()
 	{
+		if (!mDestroyed)
+			Cleanup();
+
 		mDevice.destroySemaphore(mRenderFinishedSema);
 		mDevice.destroySemaphore(mImageAvailableSema);
 		mDevice.destroyCommandPool(mCommandPool);
@@ -321,6 +326,8 @@ namespace nx
 		CreateFrameBuffers();
 		mVertexBuffer.Create(mPhysicalDevice);
 		CreateCommandBuffers();
+
+		mDestroyed = false;
 	}
 
 	void Swapchain::CreateSemaphores()

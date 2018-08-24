@@ -18,7 +18,7 @@ namespace nx
 	{
 	public:
 		Swapchain(const vk::Device& aDevice, 
-				const Window& aWindow, 
+				const Window& aWindow,
 				const vk::Instance& anInstance,
 				const vk::PhysicalDevice& aPhysicalDevice);
 		~Swapchain();
@@ -32,7 +32,7 @@ namespace nx
 		void Cleanup();
 		void Destroy();
 
-		void CreateSurface();
+		void CreateWindowSurface();
 
 		SwapchainDetails QuerySupport(vk::PhysicalDevice aDevice);
 		QueueFamilyIndices FindQueueFamilies(vk::PhysicalDevice aDevice);
@@ -43,7 +43,7 @@ namespace nx
 		void OnWindowResize();
 
 	private:
-		void DestroySurface();
+		void DestroyWindowSurface();
 		void CreateImageViews();
 		void CreateFrameBuffers();
 		void CreateCommandPool();
