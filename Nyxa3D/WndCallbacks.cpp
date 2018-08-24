@@ -1,6 +1,8 @@
-#include "WindowCallbacks.h"
+#include "WndCallbacks.h"
 
 #include <glfw/glfw3.h>
+
+#include <iostream>
 
 namespace nx
 {
@@ -30,32 +32,39 @@ namespace nx
 
 	void WindowCallbacks::OnResize(GLFWwindow* aWindow, int aWidth, int aHeight)
 	{
-		_WindowCallbacks.Execute(CallType::Resize);
+		GetInstance().Execute(CallType::Resize);
 	}
 
 	void WindowCallbacks::OnClose(GLFWwindow* aWindow)
 	{
-		_WindowCallbacks.Execute(CallType::Close);
+		GetInstance().Execute(CallType::Close);
 	}
 
 	void WindowCallbacks::OnFocus(GLFWwindow* aWindow, CBool wasFocusGained)
 	{
-		_WindowCallbacks.Execute(CallType::Focus);
+		if (wasFocusGained != GLFW_TRUE && wasFocusGained != GLFW_FALSE)
+			std::cout << "\nWarning: 'wasFocusGained' in 'WindowCallbacks::OnFocus(GLFWwindow* aWindow, CBool wasFocusGained)'"
+			<< "\nValue evaluated to: " << wasFocusGained << " (non-bool).\n\n";
+
+		if (wasFocusGained)
+			GetInstance().Execute(CallType::Focus);
+		else
+			GetInstance().Execute(CallType::Unfocus);
 	}
 
 	void WindowCallbacks::OnReposition(GLFWwindow* aWindow, int xPos, int yPos)
 	{
-		_WindowCallbacks.Execute(CallType::Reposition);
+		GetInstance().Execute(CallType::Reposition);
 	}
 
 	void WindowCallbacks::OnRefresh(GLFWwindow* aWindow)
 	{
-		_WindowCallbacks.Execute(CallType::Refresh);
+		GetInstance().Execute(CallType::Refresh);
 	}
 
 	void WindowCallbacks::OnIconify(GLFWwindow* aWindow, CBool wasIconified)
 	{
-		_WindowCallbacks.Execute(CallType::Iconify);
+		GetInstance().Execute(CallType::Iconify);
 	}
 
 	void WindowCallbacks::Execute(CallType aType)

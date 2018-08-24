@@ -41,6 +41,8 @@ namespace nx
 		vk::Queue& GetPresentQueue();
 
 		void OnWindowResize();
+		void OnWindowFocus();
+		void OnWindowUnfocus();
 
 	private:
 		void DestroyWindowSurface();

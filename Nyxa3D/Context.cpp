@@ -1,5 +1,5 @@
 #include "Context.h"
-#include "WindowCallbacks.h"
+#include "Callbacks.h"
 #include "Util.h"
 
 #include <glfw/glfw3.h>
@@ -38,7 +38,7 @@ namespace nx
 		std::cout << "Initializing Window...\n";
 
 		mWindow.Init();
-		_WindowCallbacks.AddCallback(&Context::OnWindowResize, this, CallType::Resize);
+		WndCallbacks.Add(&Context::OnWindowResize, this, CallType::Resize);
 
 		std::cout << "Window initialized.\n\n";
 		

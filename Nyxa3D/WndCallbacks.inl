@@ -1,7 +1,7 @@
 namespace nx
 {
 	template<typename T>
-	void WindowCallbacks::AddCallback(void (T::*aFunction)(), T* anObjPtr, CallType aType)
+	void WindowCallbacks::Add(void (T::*aFunction)(), T* anObjPtr, CallType aType)
 	{
 		Callbacks::ptr myCallback(new Call<T>(aFunction, anObjPtr));
 

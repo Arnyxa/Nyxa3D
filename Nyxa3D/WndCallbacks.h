@@ -22,6 +22,7 @@ namespace nx
 		Resize,
 		Close,
 		Focus,
+		Unfocus,
 		Reposition,
 		Refresh,
 		Iconify,
@@ -44,7 +45,7 @@ namespace nx
 		void Init(GLFWwindow* aWindow);
 
 		template<typename T>
-		void AddCallback(void (T::*aFunction)(), T* anObjPtr, CallType aType);
+		void Add(void (T::*aFunction)(), T* anObjPtr, CallType aType);
 
 	private:
 		WindowCallbacks() {}
@@ -55,7 +56,7 @@ namespace nx
 		std::vector<std::pair<Callbacks::ptr, CallType>> mCallbacks;
 	};
 
-#define _WindowCallbacks WindowCallbacks::GetInstance() 
+#define WndCallbacks WindowCallbacks::GetInstance() 
 }
 
-#include "WindowCallbacks.inl"
+#include "WndCallbacks.inl"

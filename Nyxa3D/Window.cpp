@@ -1,5 +1,5 @@
 #include "Window.h"
-#include "WindowCallbacks.h"
+#include "Callbacks.h"
 #include "Util.h"
 
 #include <vulkan/vulkan.hpp>
@@ -40,7 +40,7 @@ namespace nx
 
 		mWindow = glfwCreateWindow((int)mDefaultWidth, (int)mDefaultHeight, mTitle, nullptr, nullptr);
 
-		_WindowCallbacks.Init(mWindow);
+		WndCallbacks.Init(mWindow);
 
 		std::cout << "GLFW Initialized.\n";
 	}

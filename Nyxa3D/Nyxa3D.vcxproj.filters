@@ -63,7 +63,7 @@
     <ClCompile Include="Swapchain.cpp">
       <Filter>Source Files\Swapchain</Filter>
     </ClCompile>
-    <ClCompile Include="WindowCallbacks.cpp">
+    <ClCompile Include="WndCallbacks.cpp">
       <Filter>Source Files\Callback</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,12 +101,15 @@
     <ClInclude Include="Callback.h">
       <Filter>Source Files\Callback</Filter>
     </ClInclude>
-    <ClInclude Include="WindowCallbacks.h">
+    <ClInclude Include="WndCallbacks.h">
+      <Filter>Source Files\Callback</Filter>
+    </ClInclude>
+    <ClInclude Include="Callbacks.h">
       <Filter>Source Files\Callback</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="WindowCallbacks.inl">
+    <None Include="WndCallbacks.inl">
       <Filter>Source Files\Callback</Filter>
     </None>
   </ItemGroup>
