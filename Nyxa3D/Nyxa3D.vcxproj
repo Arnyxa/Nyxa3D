@@ -137,6 +137,7 @@
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pipeline.cpp" />
+    <ClCompile Include="Swapchain.cpp" />
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Pipeline.h" />
+    <ClInclude Include="Swapchain.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VulkanStructs.h" />

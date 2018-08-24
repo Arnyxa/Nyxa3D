@@ -5,12 +5,19 @@
 
 #include <string>
 #include <vector>
+#include <functional>
 
 struct GLFWwindow;
 typedef void(*GLFWwindowsizefun)(GLFWwindow*, int, int);
 
 namespace nx
 {	
+	enum class CallbackType
+	{
+		RESIZE,
+		Total
+	};
+
 	class Window
 	{
 	public:
@@ -30,13 +37,20 @@ namespace nx
 		void ResetSize();
 		Size<int> GetSize() const;
 		void SetSize(size_t aWidth, size_t aHeight);
-		void SetResizeCallback(GLFWwindowsizefun aFunction, void* aUserPointer);
+
+		void AddCallback(std::function<void(void*)> aCallbackFn, void* anObjPtr) const;
 
 		void SetTitle(const std::string& aTitle);
 		std::string GetTitle() const;
 
-		vk::SurfaceKHR CreateSurface(vk::Instance& anInstance);
+		vk::SurfaceKHR CreateSurface(const vk::Instance& anInstance) const;
 		std::vector<const char*> GetRequiredExtensions();
+
+		static void OnResize(GLFWwindow* aWindow, int aWidth, int aHeight);
+
+	private:
+		void ExecuteResizeCallbacks(); // may add callbacks for other things
+
 
 	private:
 		// GLFW
@@ -45,7 +59,9 @@ namespace nx
 		size_t mDefaultWidth;
 		size_t mDefaultHeight;
 
+		// I KNOW THIS IS ATROCIOUS i'll change it later
+		mutable std::vector<std::pair<void*, std::function<void(void*)>>> mResizeCallbackFunctions;
+
 		const char* mTitle;
 	};
 }
-

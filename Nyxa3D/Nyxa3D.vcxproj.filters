@@ -31,6 +31,9 @@
     <Filter Include="Source Files\VertexBuffer">
       <UniqueIdentifier>{38b79d4f-a6be-445f-beb3-033a4163e46e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Swapchain">
+      <UniqueIdentifier>{82a83c7d-e694-4185-bcbd-ff0863330f26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -53,6 +56,9 @@
     </ClCompile>
     <ClCompile Include="VertexBuffer.cpp">
       <Filter>Source Files\VertexBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Swapchain.cpp">
+      <Filter>Source Files\Swapchain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="VertexBuffer.h">
       <Filter>Source Files\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Swapchain.h">
+      <Filter>Source Files\Swapchain</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

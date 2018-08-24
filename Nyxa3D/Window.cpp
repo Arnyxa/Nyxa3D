@@ -25,6 +25,23 @@ namespace nx
 		return glfwWindowShouldClose(mWindow);
 	}
 
+	void Window::OnResize(GLFWwindow* aWindow, int aWidth, int aHeight)
+	{
+		Window* myWindow = reinterpret_cast<Window*>(glfwGetWindowUserPointer(aWindow));
+		myWindow->ExecuteResizeCallbacks();
+	}
+
+	void Window::AddCallback(std::function<void(void*)> aFunction, void* anObjPtr) const
+	{
+		mResizeCallbackFunctions.push_back(std::make_pair(anObjPtr, aFunction));
+	}
+
+	void Window::ExecuteResizeCallbacks()
+	{
+		for (auto& iFunction : mResizeCallbackFunctions)
+			iFunction.second(iFunction.first);
+	}
+
 	void Window::Init()
 	{
 		std::cout << "Initializing GLFW...\n";
@@ -38,14 +55,10 @@ namespace nx
 
 		mWindow = glfwCreateWindow((int)mDefaultWidth, (int)mDefaultHeight, mTitle, nullptr, nullptr);
 
-		std::cout << "GLFW Initialized.\n";
-	}
+		glfwSetWindowUserPointer(mWindow, this);
+		glfwSetWindowSizeCallback(mWindow, OnResize);
 
-	// Defines callback function to invoke on window resize
-	void Window::SetResizeCallback(GLFWwindowsizefun aFunction, void* aUserPointer)
-	{
-		glfwSetWindowUserPointer(mWindow, aUserPointer);
-		glfwSetWindowSizeCallback(mWindow, aFunction);
+		std::cout << "GLFW Initialized.\n";
 	}
 
 	void Window::Destroy()
@@ -72,7 +85,7 @@ namespace nx
 		return glfwGetWindowUserPointer(mWindow);
 	}
 
-	vk::SurfaceKHR Window::CreateSurface(vk::Instance& anInstance)
+	vk::SurfaceKHR Window::CreateSurface(const vk::Instance& anInstance) const
 	{
 		VkSurfaceKHR myTempSurface;
 
