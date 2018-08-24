@@ -2,7 +2,6 @@
 
 #include "Structs.h"
 #include "Util.h"
-#include "Callback.h"
 
 #include <string>
 #include <vector>
@@ -14,6 +13,8 @@ namespace vk
 	class SurfaceKHR;
 	class Instance;
 }
+
+struct GLFWwindow;
 
 namespace nx
 {	
@@ -42,10 +43,6 @@ namespace nx
 
 		vk::SurfaceKHR CreateSurface(const vk::Instance& anInstance) const;
 		std::vector<const char*> GetRequiredExtensions();
-
-	private:
-		void ExecuteResizeCallbacks(); // may add callbacks for other things
-
 
 	private:
 		// GLFW

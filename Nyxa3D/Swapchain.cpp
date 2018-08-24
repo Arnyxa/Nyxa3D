@@ -1,7 +1,6 @@
 #include "Swapchain.h"
 #include "Context.h"
-
-#include <glfw/glfw3.h>
+#include "WindowCallbacks.h"
 
 #include <iostream>
 
@@ -27,7 +26,7 @@ namespace nx
 
 	void Swapchain::Init()
 	{
-		mWindow.AddCallback(&Swapchain::OnWindowResize, this);
+		_WindowCallbacks.AddCallback(&Swapchain::OnWindowResize, this, CallType::Resize);
 		Create();
 		CreateImageViews();
 		CreateRenderPass();

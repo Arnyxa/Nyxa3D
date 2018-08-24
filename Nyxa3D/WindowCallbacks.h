@@ -17,11 +17,18 @@ namespace nx
 {
 	using CBool = int;
 
+	enum class CallType
+	{
+		Resize,
+		Close,
+		Focus,
+		Reposition,
+		Refresh,
+		Iconify,
+	};
+
 	class WindowCallbacks : public CommonChecks
 	{
-	public:
-		enum class Type;
-
 	public:
 		static WindowCallbacks& GetInstance();
 
@@ -37,20 +44,15 @@ namespace nx
 		void Init(GLFWwindow* aWindow);
 
 		template<typename T>
-		void AddCallback(void (T::*aFunction)(), T* anObjPtr);
+		void AddCallback(void (T::*aFunction)(), T* anObjPtr, CallType aType);
 
 	private:
 		WindowCallbacks() {}
 
-		void Execute(Type aType);
-		void Close();
-		void Focus();
-		void Reposition();
-		void Refresh();
-		void Iconify();
+		void Execute(CallType aType);
 
 	private:
-		std::vector<std::pair<Callbacks::ptr, Type>> mCallbacks;
+		std::vector<std::pair<Callbacks::ptr, CallType>> mCallbacks;
 	};
 
 #define _WindowCallbacks WindowCallbacks::GetInstance() 

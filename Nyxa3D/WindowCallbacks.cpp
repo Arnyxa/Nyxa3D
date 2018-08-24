@@ -4,16 +4,6 @@
 
 namespace nx
 {
-	enum class WindowCallbacks::Type
-	{
-		Resize,
-		Close,
-		Focus,
-		Reposition,
-		Refresh,
-		Iconify
-	};
-
 	WindowCallbacks& WindowCallbacks::GetInstance()
 	{
 		static WindowCallbacks myInstance;
@@ -40,35 +30,35 @@ namespace nx
 
 	void WindowCallbacks::OnResize(GLFWwindow* aWindow, int aWidth, int aHeight)
 	{
-		_WindowCallbacks.Execute(Type::Resize);
+		_WindowCallbacks.Execute(CallType::Resize);
 	}
 
 	void WindowCallbacks::OnClose(GLFWwindow* aWindow)
 	{
-		_WindowCallbacks.Execute(Type::Close);
+		_WindowCallbacks.Execute(CallType::Close);
 	}
 
 	void WindowCallbacks::OnFocus(GLFWwindow* aWindow, CBool wasFocusGained)
 	{
-		_WindowCallbacks.Execute(Type::Focus);
+		_WindowCallbacks.Execute(CallType::Focus);
 	}
 
 	void WindowCallbacks::OnReposition(GLFWwindow* aWindow, int xPos, int yPos)
 	{
-		_WindowCallbacks.Execute(Type::Reposition);
+		_WindowCallbacks.Execute(CallType::Reposition);
 	}
 
 	void WindowCallbacks::OnRefresh(GLFWwindow* aWindow)
 	{
-		_WindowCallbacks.Execute(Type::Refresh);
+		_WindowCallbacks.Execute(CallType::Refresh);
 	}
 
 	void WindowCallbacks::OnIconify(GLFWwindow* aWindow, CBool wasIconified)
 	{
-		_WindowCallbacks.Execute(Type::Iconify);
+		_WindowCallbacks.Execute(CallType::Iconify);
 	}
 
-	void WindowCallbacks::Execute(Type aType)
+	void WindowCallbacks::Execute(CallType aType)
 	{
 		for (auto& iCallback : mCallbacks)
 		{
