@@ -2,6 +2,8 @@
 #include "Util.h"
 
 #include <glfw/glfw3.h>
+#include <vulkan/vulkan.hpp>
+
 
 #include <iostream>
 #include <string>
@@ -25,18 +27,6 @@ namespace nx
 		return glfwWindowShouldClose(mWindow);
 	}
 
-	void Window::OnResize(GLFWwindow* aWindow, int aWidth, int aHeight)
-	{
-		Window* myWindow = reinterpret_cast<Window*>(glfwGetWindowUserPointer(aWindow));
-		myWindow->ExecuteResizeCallbacks();
-	}
-
-	void Window::ExecuteResizeCallbacks()
-	{
-		for (auto& iCallback : mCallbacks)
-			iCallback->Execute();
-	}
-
 	void Window::Init()
 	{
 		std::cout << "Initializing GLFW...\n";
@@ -49,9 +39,6 @@ namespace nx
 		std::cout << "Creating window...\n";
 
 		mWindow = glfwCreateWindow((int)mDefaultWidth, (int)mDefaultHeight, mTitle, nullptr, nullptr);
-
-		glfwSetWindowUserPointer(mWindow, this);
-		glfwSetWindowSizeCallback(mWindow, OnResize);
 
 		std::cout << "GLFW Initialized.\n";
 	}

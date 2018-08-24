@@ -141,6 +141,7 @@
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="WindowCallbacks.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Callback.h" />
@@ -154,6 +155,10 @@
     <ClInclude Include="VulkanStructs.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="WindowCallbacks.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WindowCallbacks.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,9 +1,13 @@
 #pragma once
 
-#pragma once
-
-#include <vulkan\vulkan.hpp>
 #include <string>
+
+enum VkResult;
+
+namespace vk
+{
+	enum class Result;
+}
 
 namespace nx
 {

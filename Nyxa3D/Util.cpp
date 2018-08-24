@@ -1,5 +1,7 @@
 #include "Util.h"
 
+#include <vulkan\vulkan.hpp>
+
 #include <iostream>
 
 namespace nx

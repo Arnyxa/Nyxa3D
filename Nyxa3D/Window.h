@@ -2,41 +2,21 @@
 
 #include "Structs.h"
 #include "Util.h"
+#include "Callback.h"
 
 #include <string>
 #include <vector>
 #include <functional>
 #include <memory>
 
-struct GLFWwindow;
-typedef void(*GLFWwindowsizefun)(GLFWwindow*, int, int);
+namespace vk
+{
+	class SurfaceKHR;
+	class Instance;
+}
 
 namespace nx
 {	
-	class CallbackImpl
-	{
-	public:
-		typedef std::unique_ptr<CallbackImpl> ptr;
-
-		virtual void Execute() = 0;
-	};
-
-	template<typename T>
-	class Callback : public CallbackImpl
-	{
-	public:
-		Callback(void (T::*aFunction)(), T* anObjPtr) 
-			: mFunction(aFunction), mObject(anObjPtr)
-		{}
-
-		void Execute() override
-		{ (mObject->*mFunction)(); }
-
-	private:
-		void(T::*mFunction)();
-		T* mObject;
-	};
-
 	class Window
 	{
 	public:
@@ -63,16 +43,6 @@ namespace nx
 		vk::SurfaceKHR CreateSurface(const vk::Instance& anInstance) const;
 		std::vector<const char*> GetRequiredExtensions();
 
-		static void OnResize(GLFWwindow* aWindow, int aWidth, int aHeight);
-
-		template<typename T>
-		void AddCallback(void (T::*aFunction)(), T* anObjPtr) const
-		{
-			CallbackImpl::ptr myCallback(new Callback<T>(aFunction, anObjPtr));
-
-			mCallbacks.push_back(std::move(myCallback));
-		}
-
 	private:
 		void ExecuteResizeCallbacks(); // may add callbacks for other things
 
@@ -83,8 +53,6 @@ namespace nx
 
 		size_t mDefaultWidth;
 		size_t mDefaultHeight;
-
-		mutable std::vector<CallbackImpl::ptr> mCallbacks;
 
 		const char* mTitle;
 	};

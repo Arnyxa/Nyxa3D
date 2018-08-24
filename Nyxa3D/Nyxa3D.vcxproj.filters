@@ -34,6 +34,9 @@
     <Filter Include="Source Files\Util">
       <UniqueIdentifier>{0d6afa53-9500-4846-ae42-6bd71e393e90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Callback">
+      <UniqueIdentifier>{634c900b-d9ad-4c83-8e02-159ad37f1aeb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -59,6 +62,9 @@
     </ClCompile>
     <ClCompile Include="Swapchain.cpp">
       <Filter>Source Files\Swapchain</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowCallbacks.cpp">
+      <Filter>Source Files\Callback</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -93,7 +99,15 @@
       <Filter>Source Files\Swapchain</Filter>
     </ClInclude>
     <ClInclude Include="Callback.h">
-      <Filter>Source Files\Window</Filter>
+      <Filter>Source Files\Callback</Filter>
     </ClInclude>
+    <ClInclude Include="WindowCallbacks.h">
+      <Filter>Source Files\Callback</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WindowCallbacks.inl">
+      <Filter>Source Files\Callback</Filter>
+    </None>
   </ItemGroup>
 </Project>
