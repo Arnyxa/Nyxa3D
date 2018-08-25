@@ -33,16 +33,13 @@ namespace nx
 		void Destroy();
 
 		void CreateWindowSurface();
+		void OnWindowResize();
 
 		SwapchainDetails QuerySupport(vk::PhysicalDevice aDevice);
 		QueueFamilyIndices FindQueueFamilies(vk::PhysicalDevice aDevice);
 
 		vk::Queue& GetGraphicsQueue();
 		vk::Queue& GetPresentQueue();
-
-		void OnWindowResize();
-		void OnWindowFocus();
-		void OnWindowUnfocus();
 
 	private:
 		void DestroyWindowSurface();

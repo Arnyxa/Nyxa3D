@@ -27,8 +27,6 @@ namespace nx
 	void Swapchain::Init()
 	{
 		WndCallbacks.Add(&Swapchain::OnWindowResize, this, CallType::Resize);
-		WndCallbacks.Add(&Swapchain::OnWindowFocus, this, CallType::Focus);
-		WndCallbacks.Add(&Swapchain::OnWindowUnfocus, this, CallType::Unfocus);
 		Create();
 		CreateImageViews();
 		CreateRenderPass();
@@ -44,16 +42,6 @@ namespace nx
 	{
 		this->Recreate();
 		this->Draw();
-	}
-
-	void Swapchain::OnWindowFocus()
-	{
-		std::cout << "plep\n";
-	}
-
-	void Swapchain::OnWindowUnfocus()
-	{
-		std::cout << "plop\n";
 	}
 
 	void Swapchain::Draw()

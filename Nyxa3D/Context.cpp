@@ -38,11 +38,8 @@ namespace nx
 		std::cout << "Initializing Window...\n";
 
 		mWindow.Init();
-		WndCallbacks.Add(&Context::OnWindowResize, this, CallType::Resize);
 
-		std::cout << "Window initialized.\n\n";
-		
-		std::cout << "Initializing Vulkan...\n";
+		std::cout << "Window initialized.\n\nInitializing Vulkan...\n";
 
 		CreateInstance();
 		mDebugger.Init();
@@ -83,8 +80,8 @@ namespace nx
 
 		if (VALIDATION_LAYERS_ENABLED)
 		{
-			myDeviceCreateInfo.enabledLayerCount = static_cast<uint32_t>(mValidationLayers.size());
-			myDeviceCreateInfo.ppEnabledLayerNames = mValidationLayers.data();
+			myDeviceCreateInfo.enabledLayerCount = mDebugger.GetEnabledLayerCount();
+			myDeviceCreateInfo.ppEnabledLayerNames = mDebugger.GetEnabledLayerNames();
 		}
 		else
 			myDeviceCreateInfo.enabledLayerCount = 0;
@@ -167,7 +164,7 @@ namespace nx
 
 	void Context::CreateInstance()
 	{
-		if (VALIDATION_LAYERS_ENABLED && !CheckValidationLayerSupport())
+		if (VALIDATION_LAYERS_ENABLED && !mDebugger.CheckValidationLayerSupport())
 			throw std::runtime_error("Validation layers requested, but not available.");
 
 		vk::ApplicationInfo myAppInfo("Binch", VK_MAKE_VERSION(1, 0, 0), "Nyxa3D", VK_MAKE_VERSION(1, 0, 0), VK_API_VERSION_1_1);
@@ -182,8 +179,8 @@ namespace nx
 
 		if (VALIDATION_LAYERS_ENABLED)
 		{
-			myCreateInfo.enabledLayerCount = static_cast<uint32_t>(mValidationLayers.size());
-			myCreateInfo.ppEnabledLayerNames = mValidationLayers.data();
+			myCreateInfo.enabledLayerCount = mDebugger.GetEnabledLayerCount();
+			myCreateInfo.ppEnabledLayerNames = mDebugger.GetEnabledLayerNames();
 		}
 		else
 			myCreateInfo.enabledLayerCount = 0;
@@ -225,50 +222,11 @@ namespace nx
 		std::cout << "Created Vulkan instance.\n\n";
 	}
 
-	bool Context::CheckValidationLayerSupport()
-	{
-		std::cout << "Checking for validation layer compatibility...\n";
-
-		std::vector<vk::LayerProperties> myAvailableLayers = vk::enumerateInstanceLayerProperties();
-
-		for (const char* iLayerName : mValidationLayers)
-		{
-			bool isFound = false;
-
-			for (const auto& iLayerProperties : myAvailableLayers)
-			{
-				if (std::strcmp(iLayerName, iLayerProperties.layerName) == 0)
-				{
-					isFound = true;
-					break;
-				}
-			}
-
-			if (!isFound)
-			{
-				std::cout << iLayerName << " is not supported.\n";
-				return false;
-			}
-
-			std::cout << iLayerName << " is supported.\n";
-		}
-
-		std::cout << "All validation layers are supported.\n\n";
-
-		return true;
-	}
-
-	void Context::OnWindowResize()
-	{
-		std::cout << "Bloop\n";
-	}
-
 	Context::~Context()
 	{
 		std::cout << "Destroying Context objects...\n";
 
 		mSwapchain.Destroy();
-
 		mDevice.destroy();
 		mDebugger.Destroy();
 		mInstance.destroy();

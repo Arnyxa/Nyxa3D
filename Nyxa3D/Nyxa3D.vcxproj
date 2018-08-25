@@ -161,6 +161,9 @@
   <ItemGroup>
     <None Include="WndCallbacks.inl" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Todo.inl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

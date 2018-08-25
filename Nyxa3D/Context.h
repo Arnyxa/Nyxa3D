@@ -35,13 +35,10 @@ namespace nx
 		bool IsDeviceSuitable(vk::PhysicalDevice aDevice);
 
 		bool CheckDeviceExtensionSupport(vk::PhysicalDevice aDevice);
-		bool CheckValidationLayerSupport();
 
 		std::vector<const char*> GetRequiredExtensions();
 
 		void MainLoop();
-
-		void OnWindowResize();
 
 	private:
 
@@ -56,7 +53,6 @@ namespace nx
 		Window mWindow;
 		Swapchain mSwapchain;
 
-		const std::vector<const char*> mValidationLayers = { LNG_STANDARD_VALIDATION_NAME };
 		const std::vector<const char*> mDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 	};
 }
