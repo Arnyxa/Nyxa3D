@@ -67,4 +67,47 @@ namespace nx
 		if (myFunc != nullptr)
 			myFunc(mInstance, aMessenger, anAllocator);
 	}
+
+	uint32_t Debug::GetEnabledLayerCount() const
+	{
+		return static_cast<uint32_t>(mValidationLayers.size());
+	}
+
+	const char* const* Debug::GetEnabledLayerNames() const
+	{
+		return mValidationLayers.data();
+	}
+
+	bool Debug::CheckValidationLayerSupport() const
+	{
+		std::cout << "Checking for validation layer compatibility...\n";
+
+		std::vector<vk::LayerProperties> myAvailableLayers = vk::enumerateInstanceLayerProperties();
+
+		for (const char* iLayerName : mValidationLayers)
+		{
+			bool isFound = false;
+
+			for (const auto& iLayerProperties : myAvailableLayers)
+			{
+				if (std::strcmp(iLayerName, iLayerProperties.layerName) == 0)
+				{
+					isFound = true;
+					break;
+				}
+			}
+
+			if (!isFound)
+			{
+				std::cout << iLayerName << " is not supported.\n";
+				return false;
+			}
+
+			std::cout << iLayerName << " is supported.\n";
+		}
+
+		std::cout << "All validation layers are supported.\n\n";
+
+		return true;
+	}
 }

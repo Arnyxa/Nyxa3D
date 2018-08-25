@@ -1,6 +1,9 @@
 #pragma once
+#include "VertexBuffer.h"
 
 #include <vulkan/vulkan.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
 #include <vector>
 
@@ -30,6 +33,6 @@ namespace nx
 		vk::RenderPass mRenderPass;
 		vk::PipelineLayout mPipelineLayout;
 
-		bool mDestroyed;
+		bool mCleaned;
 	};
 }

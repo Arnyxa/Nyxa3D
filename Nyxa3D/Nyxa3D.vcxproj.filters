@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Util">
-      <UniqueIdentifier>{0d6afa53-9500-4846-ae42-6bd71e393e90}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Window">
       <UniqueIdentifier>{88f137b7-2d75-4d9d-8104-bc3793c6e805}</UniqueIdentifier>
     </Filter>
@@ -27,6 +24,18 @@
     </Filter>
     <Filter Include="Source Files\Pipeline">
       <UniqueIdentifier>{e587c817-5346-4855-90d4-4dbc9c77013a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\VertexBuffer">
+      <UniqueIdentifier>{38b79d4f-a6be-445f-beb3-033a4163e46e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Swapchain">
+      <UniqueIdentifier>{82a83c7d-e694-4185-bcbd-ff0863330f26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Util">
+      <UniqueIdentifier>{0d6afa53-9500-4846-ae42-6bd71e393e90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Callback">
+      <UniqueIdentifier>{634c900b-d9ad-4c83-8e02-159ad37f1aeb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -47,6 +56,15 @@
     </ClCompile>
     <ClCompile Include="Util.cpp">
       <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>Source Files\VertexBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Swapchain.cpp">
+      <Filter>Source Files\Swapchain</Filter>
+    </ClCompile>
+    <ClCompile Include="WndCallbacks.cpp">
+      <Filter>Source Files\Callback</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -74,5 +92,30 @@
     <ClInclude Include="Util.h">
       <Filter>Source Files\Util</Filter>
     </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
+      <Filter>Source Files\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Swapchain.h">
+      <Filter>Source Files\Swapchain</Filter>
+    </ClInclude>
+    <ClInclude Include="Callback.h">
+      <Filter>Source Files\Callback</Filter>
+    </ClInclude>
+    <ClInclude Include="WndCallbacks.h">
+      <Filter>Source Files\Callback</Filter>
+    </ClInclude>
+    <ClInclude Include="Callbacks.h">
+      <Filter>Source Files\Callback</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WndCallbacks.inl">
+      <Filter>Source Files\Callback</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Todo.inl">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

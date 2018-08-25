@@ -10,14 +10,19 @@ namespace nx
 	Pipeline::Pipeline(const vk::Device& aDevice, const vk::Extent2D& aViewport)
 		: mDevice(aDevice)
 		, mViewport(aViewport)
-		, mDestroyed(false)
+		, mCleaned(false)
 	{}
 
 	Pipeline::~Pipeline()
+	{}
+
+	void Pipeline::Destroy()
 	{
-		if (!mDestroyed)
-			Destroy();
+		mDevice.destroyPipeline(mPipeline);
+		mDevice.destroyPipelineLayout(mPipelineLayout);
+		mDevice.destroyRenderPass(mRenderPass);
 	}
+
 
 	void Pipeline::Create()
 	{
@@ -38,7 +43,10 @@ namespace nx
 
 		vk::PipelineShaderStageCreateInfo myShaderStages[] = { myVertShaderInfo, myFragShaderInfo };
 
-		vk::PipelineVertexInputStateCreateInfo myVertexInputInfo;
+		auto myBinding = Vertex::GetBindingDescript();
+		auto myAttributes = Vertex::GetAttributeDescript();
+
+		vk::PipelineVertexInputStateCreateInfo myVertexInputInfo({}, 1, &myBinding, (uint32_t)myAttributes.size(), myAttributes.data());
 
 		vk::PipelineInputAssemblyStateCreateInfo myInputAssembly({}, vk::PrimitiveTopology::eTriangleList);
 
@@ -95,8 +103,6 @@ namespace nx
 
 		mDevice.destroyShaderModule(myVertShaderModule);
 		mDevice.destroyShaderModule(myFragShaderModule);
-
-		mDestroyed = false;
 	}
 
 	vk::ShaderModule Pipeline::CreateShaderModule(const std::vector<char>& aByteCode)
@@ -146,15 +152,5 @@ namespace nx
 	vk::RenderPass& Pipeline::GetRenderPass()
 	{
 		return mRenderPass;
-	}
-
-	void Pipeline::Destroy()
-	{
-		mDevice.destroyPipeline(mPipeline);
-		mDevice.destroyPipelineLayout(mPipelineLayout);
-		mDevice.destroyRenderPass(mRenderPass);
-
-		// Track this to ensure object doesn't get destroyed if it has already been destroyed
-		mDestroyed = true;
 	}
 }

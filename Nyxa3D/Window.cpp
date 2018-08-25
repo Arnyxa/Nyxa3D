@@ -1,5 +1,8 @@
 #include "Window.h"
+#include "Callbacks.h"
+#include "Util.h"
 
+#include <vulkan/vulkan.hpp>
 #include <glfw/glfw3.h>
 
 #include <iostream>
@@ -11,7 +14,7 @@ namespace nx
 		: mWindow(nullptr)
 		, mDefaultWidth(aDefaultWidth)
 		, mDefaultHeight(aDefaultHeight)
-		, mTitle("NyxaVK")
+		, mTitle("Nyxa3D")
 	{}
 
 	Window::~Window()
@@ -37,14 +40,9 @@ namespace nx
 
 		mWindow = glfwCreateWindow((int)mDefaultWidth, (int)mDefaultHeight, mTitle, nullptr, nullptr);
 
-		std::cout << "GLFW Initialized.\n";
-	}
+		WndCallbacks.Init(mWindow);
 
-	// Defines callback function to invoke on window resize
-	void Window::SetResizeCallback(GLFWwindowsizefun aFunction, void* aUserPointer)
-	{
-		glfwSetWindowUserPointer(mWindow, aUserPointer);
-		glfwSetWindowSizeCallback(mWindow, aFunction);
+		std::cout << "GLFW Initialized.\n";
 	}
 
 	void Window::Destroy()
@@ -61,9 +59,33 @@ namespace nx
 		glfwPollEvents();
 	}
 
-	GLFWwindow* Window::GetPtr()
+	GLFWwindow* Window::GetGlfwWindowPtr()
 	{
 		return mWindow;
+	}
+
+	void* Window::GetWindowUserPtr()
+	{
+		return glfwGetWindowUserPointer(mWindow);
+	}
+
+	vk::SurfaceKHR Window::CreateSurface(const vk::Instance& anInstance) const
+	{
+		VkSurfaceKHR myTempSurface;
+
+		if (PrintResult(glfwCreateWindowSurface(anInstance, mWindow, nullptr, &myTempSurface)) != VK_SUCCESS)
+			throw std::runtime_error("Failed to create Vulkan surface for GLFW window.");
+
+		return static_cast<vk::SurfaceKHR>(myTempSurface);
+
+	}
+
+	std::vector<const char*> Window::GetRequiredExtensions()
+	{
+		uint32_t myCount = 0;
+		const char** myExtensionList = glfwGetRequiredInstanceExtensions(&myCount);
+
+		return std::vector<const char*>(myExtensionList, myExtensionList + myCount);
 	}
 
 	Size<int> Window::GetSize() const

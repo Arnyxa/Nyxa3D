@@ -137,18 +137,32 @@
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pipeline.cpp" />
+    <ClCompile Include="Swapchain.cpp" />
     <ClCompile Include="Util.cpp" />
+    <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="WndCallbacks.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Callback.h" />
+    <ClInclude Include="Callbacks.h" />
     <ClInclude Include="Context.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Pipeline.h" />
+    <ClInclude Include="Swapchain.h" />
     <ClInclude Include="Util.h" />
+    <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VulkanStructs.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="WndCallbacks.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WndCallbacks.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Todo.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

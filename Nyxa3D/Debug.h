@@ -2,6 +2,8 @@
 
 #include <vulkan/vulkan.hpp>
 
+#include "Globals.h"
+
 namespace nx
 {
 	class Debug
@@ -12,6 +14,10 @@ namespace nx
 
 		void Init();
 		void Destroy();
+
+		bool CheckValidationLayerSupport() const;
+		uint32_t GetEnabledLayerCount() const;
+		const char* const* GetEnabledLayerNames() const;
 
 	private:
 		static VKAPI_ATTR VkBool32 VKAPI_CALL Callback(VkDebugUtilsMessageSeverityFlagBitsEXT aSeverity,
@@ -30,5 +36,7 @@ namespace nx
 
 		static constexpr char CREATE_DBG_MSGR_EXT[]  = "vkCreateDebugUtilsMessengerEXT";
 		static constexpr char DESTROY_DBG_MSGR_EXT[] = "vkDestroyDebugUtilsMessengerEXT";
+
+		const std::vector<const char*> mValidationLayers = { LNG_STANDARD_VALIDATION_NAME };
 	};
 }
