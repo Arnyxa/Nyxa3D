@@ -24,14 +24,14 @@ namespace nx
 	public:
 		CommonChecks() 
 			: mDestroyed(false)
-			, mInitialized(false) 
+			, mInitialised(false) 
 		{}
 
 		bool IsInitialized() const
-		{ return mInitialized; }
+		{ return mInitialised; }
 
 	protected:
 		bool mDestroyed;
-		bool mInitialized;
+		bool mInitialised;
 	};
 }

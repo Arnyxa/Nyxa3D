@@ -35,11 +35,11 @@ namespace nx
 
 	void Context::Init()
 	{
-		std::cout << "Initializing Window...\n";
+		DbgPrint("Initializing Window...\n");
 
 		mWindow.Init();
 
-		std::cout << "Window initialized.\n\nInitializing Vulkan...\n";
+		DbgPrint("Window initialized.\n\nInitializing Vulkan...\n");
 
 		CreateInstance();
 		mDebugger.Init();
@@ -48,12 +48,12 @@ namespace nx
 		CreateLogicalDevice();
 		mSwapchain.Init();
 
-		std::cout << "Vulkan initialized.\n\n";
+		DbgPrint("Vulkan initialized.\n\n");
 	}
 
 	void Context::CreateLogicalDevice()
 	{
-		std::cout << "Creating logical Vulkan Device...\n";
+		DeepPrint("Creating logical Vulkan Device...\n");
 
 		QueueFamilyIndices myIndices = mSwapchain.FindQueueFamilies(mPhysicalDevice);
 
@@ -91,12 +91,12 @@ namespace nx
 		mSwapchain.GetGraphicsQueue() = mDevice.getQueue(myIndices.Graphics, 0);
 		mSwapchain.GetPresentQueue() = mDevice.getQueue(myIndices.Present, 0);
 
-		std::cout << "Successfully created logical Vulkan Device.\ngg\n";
+		DeepPrint("Successfully created logical Vulkan Device.\n\n");
 	}
 
 	void Context::SelectPhysicalDevice()
 	{
-		std::cout << "Searching for viable physical device...\n";
+		DeepPrint("Searching for viable physical device...\n");
 
 		std::vector<vk::PhysicalDevice> myDevices = mInstance.enumeratePhysicalDevices();
 
@@ -115,12 +115,12 @@ namespace nx
 		if (mPhysicalDevice == vk::PhysicalDevice())
 			throw std::runtime_error("Failed to find a suitable GPU for Vulkan.");
 
-		std::cout << "Matching Vulkan-compatible GPU(s) successfully found.\n\n";
+		DeepPrint("Matching Vulkan-compatible GPU(s) successfully found.\n\n");
 	}
 
 	bool Context::IsDeviceSuitable(vk::PhysicalDevice aDevice)
 	{
-		std::cout << "Evaluating device suitability...\n";
+		DeepPrint("Evaluating device suitability...\n");
 
 		QueueFamilyIndices myIndices = mSwapchain.FindQueueFamilies(aDevice);
 
@@ -138,7 +138,7 @@ namespace nx
 
 	std::vector<const char*> Context::GetRequiredExtensions()
 	{
-		std::cout << "Fetching required extensions...\n";
+		DeepPrint("Fetching required extensions...\n");
 
 		std::vector<const char*> myExtensions = mWindow.GetRequiredExtensions();
 
@@ -150,7 +150,7 @@ namespace nx
 
 	bool Context::CheckDeviceExtensionSupport(vk::PhysicalDevice aDevice)
 	{
-		std::cout << "Checking device extension support...\n";
+		DeepPrint("Checking device extension support...\n");
 
 		std::vector<vk::ExtensionProperties> myAvailableExtensions = aDevice.enumerateDeviceExtensionProperties();
 
@@ -187,14 +187,14 @@ namespace nx
 
 		std::vector<vk::ExtensionProperties> myExtensionProperties = vk::enumerateInstanceExtensionProperties();
 
-		std::cout << "Available extensions:\n";
+		DeepPrint("Available extensions:\n");
 		for (const auto& iProperty : myExtensionProperties)
 		{
-			std::cout << "\t" << iProperty.extensionName << "\n";
+			DeepPrint(std::string("\t") + iProperty.extensionName + "\n");
 		}
-		std::cout << myExtensionProperties.size() << " extensions found in total.\n\n";
+		DeepPrint(myExtensionProperties.size() + " extensions found in total.\n\n");
 
-		std::cout << "Checking for GLFW extension compatibility...\n";
+		DeepPrint("Checking for GLFW extension compatibility...\n");
 
 		// check whether extensions required by GLFW are in available extension list
 		for (size_t i = 0; i < myExtensions.size(); ++i)
@@ -212,26 +212,26 @@ namespace nx
 			if (!isFound)
 				throw std::runtime_error("Could not find required GLFW extension for Vulkan on this system.");
 
-			std::cout << "        " << myExtensions[i] << " found.\n";
+			DeepPrint(std::string("        ") + myExtensions[i] + " found.\n");
 		}
 
-		std::cout << "Extension check successful.\n\n";
+		DeepPrint("Extension check successful.\n\n");
 
 		mInstance = vk::createInstance(myCreateInfo);
 
-		std::cout << "Created Vulkan instance.\n\n";
+		DeepPrint("Created Vulkan instance.\n\n");
 	}
 
 	Context::~Context()
 	{
-		std::cout << "Destroying Context objects...\n";
+		DbgPrint("Destroying Context objects...\n");
 
 		mSwapchain.Destroy();
 		mDevice.destroy();
 		mDebugger.Destroy();
 		mInstance.destroy();
 
-		std::cout << "Context successfully destroyed.\n\n";
+		DbgPrint("Context successfully destroyed.\n\n");
 	}
 
 }

@@ -1,6 +1,7 @@
 #include "Swapchain.h"
 #include "Context.h"
 #include "Callbacks.h"
+#include "DbgMsgr.h"
 
 #include <iostream>
 
@@ -36,6 +37,8 @@ namespace nx
 		mVertexBuffer.Create(mPhysicalDevice);
 		CreateCommandBuffers();
 		CreateSemaphores();
+
+		mInitialised = true;
 	}
 
 	void Swapchain::OnWindowResize()
@@ -85,7 +88,10 @@ namespace nx
 
 	void Swapchain::Create()
 	{
-		std::cout << "Initializing Vulkan Swapchain...\n";
+		if (!mInitialised)
+			DbgPrint("Creating Swapchain...\n");
+		else
+			DeepPrint("Creating Swapchain...\n");
 
 		SwapchainDetails mySwapchainSupport = QuerySupport(mPhysicalDevice);
 
@@ -102,23 +108,23 @@ namespace nx
 		QueueFamilyIndices myIndices = FindQueueFamilies(mPhysicalDevice);
 		uint32_t myQueueFamilies[] = { (uint32_t)myIndices.Graphics, (uint32_t)myIndices.Present };
 
-		std::cout << "Evaluating image sharing mode...\n";
-		std::cout << "Using ";
+		DeepPrint("Evaluating image sharing mode...\n");
+		DeepPrint("Using ");
 		if (myIndices.Graphics != myIndices.Present)
 		{
-			std::cout << "Concurrent ";
+			DeepPrint("Concurrent ");
 			mySwapCreateInfo.imageSharingMode = vk::SharingMode::eConcurrent;
 			mySwapCreateInfo.queueFamilyIndexCount = 2;
 			mySwapCreateInfo.pQueueFamilyIndices = myQueueFamilies;
 		}
 		else
 		{
-			std::cout << "Exclusive ";
+			DeepPrint("Exclusive ");
 			mySwapCreateInfo.imageSharingMode = vk::SharingMode::eExclusive;
 			mySwapCreateInfo.queueFamilyIndexCount = NULL; // optional
 			mySwapCreateInfo.pQueueFamilyIndices = nullptr; // optional
 		}
-		std::cout << "sharing mode.\n";
+		DeepPrint("sharing mode.\n");
 
 		mySwapCreateInfo.preTransform = mySwapchainSupport.Capabilities.currentTransform;
 		mySwapCreateInfo.compositeAlpha = vk::CompositeAlphaFlagBitsKHR::eOpaque;
@@ -133,7 +139,7 @@ namespace nx
 		mImageFormat = mySurfaceFormat.format;
 		mExtent2D = myExtent2D;
 
-		std::cout << "Successfully created Vulkan Swapchain.\n\n";
+		DeepPrint("Successfully created Swapchain.\n");
 	}
 
 	void Swapchain::CreateImageViews()
@@ -142,7 +148,7 @@ namespace nx
 
 		for (size_t i = 0; i < mSwapchainImages.size(); ++i)
 		{
-			std::cout << "Creating Swapchain image view...\n";
+			DeepPrint("Creating Swapchain image view...\n");
 
 			vk::ImageSubresourceRange mySubRange(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
 			vk::ImageViewCreateInfo myCreateInfo({}, mSwapchainImages[i], vk::ImageViewType::e2D, mImageFormat, vk::ComponentMapping(), mySubRange);
@@ -150,19 +156,19 @@ namespace nx
 			mImageViews[i] = mDevice.createImageView(myCreateInfo);
 		}
 
-		std::cout << "Image views created.\n\n";
+		DeepPrint("Image views created.\n\n");
 	}
 
 	void Swapchain::CreateWindowSurface()
 	{
-		std::cout << "Creating Vulkan surface...\n";
+		DeepPrint("Creating Vulkan surface...\n");
 
 		mSurface = mWindow.CreateSurface(mInstance);
 	}
 
 	QueueFamilyIndices Swapchain::FindQueueFamilies(vk::PhysicalDevice aDevice)
 	{
-		std::cout << "Searching for available queue families...\n";
+		DeepPrint("Searching for available queue families...\n");
 
 		QueueFamilyIndices myIndices;
 
@@ -191,7 +197,7 @@ namespace nx
 
 	vk::SurfaceFormatKHR Swapchain::ChooseSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& anAvailableFormats)
 	{
-		std::cout << "Checking available Swapchain Surface Format...\n";
+		DeepPrint("Checking available Swapchain Surface Format...\n");
 		if (anAvailableFormats.size() == 1 && anAvailableFormats[0].format == vk::Format::eUndefined)
 			return { vk::Format::eB8G8R8A8Unorm, vk::ColorSpaceKHR::eSrgbNonlinear };
 
@@ -206,7 +212,7 @@ namespace nx
 
 	vk::PresentModeKHR Swapchain::ChoosePresentMode(const std::vector<vk::PresentModeKHR> anAvailablePresentModes)
 	{
-		std::cout << "Determining optimal Swapchain Present mode...\n";
+		DeepPrint("Determining optimal Swapchain Present mode...\n");
 		vk::PresentModeKHR myBestMode = vk::PresentModeKHR::eFifo;
 
 		for (const auto& iAvailableMode : anAvailablePresentModes)
@@ -222,7 +228,7 @@ namespace nx
 
 	vk::Extent2D Swapchain::ChooseExtent(const vk::SurfaceCapabilitiesKHR& aCapabilities)
 	{
-		std::cout << "Choosing Swapchain Extent...\n";
+		DeepPrint("Choosing Swapchain Extent...\n");
 
 		if (aCapabilities.currentExtent.width != std::numeric_limits<uint32_t>::max())
 			return aCapabilities.currentExtent;
@@ -241,7 +247,7 @@ namespace nx
 
 	SwapchainDetails Swapchain::QuerySupport(vk::PhysicalDevice aDevice)
 	{
-		std::cout << "Querying Swapchain support...\n";
+		DeepPrint("Querying Swapchain support...\n");
 
 		SwapchainDetails myDetails;
 		myDetails.Capabilities = aDevice.getSurfaceCapabilitiesKHR(mSurface);
@@ -291,7 +297,7 @@ namespace nx
 
 	void Swapchain::CreateFrameBuffers()
 	{
-		std::cout << "Creating framebuffers...\n";
+		DeepPrint("Creating framebuffers...\n");
 
 		mFramebuffers.resize(mImageViews.size());
 
@@ -304,7 +310,7 @@ namespace nx
 			mFramebuffers[i] = mDevice.createFramebuffer(myFramebufferInfo);
 		}
 
-		std::cout << "Finished creating framebuffers.\n";
+		DeepPrint("Finished creating framebuffers.\n");
 	}
 
 	void Swapchain::Recreate()
@@ -341,7 +347,7 @@ namespace nx
 
 	void Swapchain::CreateCommandBuffers()
 	{
-		std::cout << "Creating Command Buffers...\n";
+		DeepPrint("Creating Command Buffers...\n");
 
 		mCommandBuffers.resize(mFramebuffers.size());
 
@@ -370,20 +376,16 @@ namespace nx
 			mCommandBuffers[i].endRenderPass();
 			mCommandBuffers[i].end();
 		}
-
-		std::cout << "Command Buffers created.\n\n";
 	}
 
 	void Swapchain::CreateCommandPool()
 	{
-		std::cout << "Creating Command Pool...\n";
+		DeepPrint("Creating Command Pool...\n");
 
 		QueueFamilyIndices myQueueFamilyIndices = FindQueueFamilies(mPhysicalDevice);
 
 		vk::CommandPoolCreateInfo myPoolInfo({}, myQueueFamilyIndices.Graphics);
 		mCommandPool = mDevice.createCommandPool(myPoolInfo);
-
-		std::cout << "Command Pool created.\n\n";
 	}
 
 	void Swapchain::CreateRenderPass()

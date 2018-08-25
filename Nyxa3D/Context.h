@@ -49,7 +49,7 @@ namespace nx
 		vk::PhysicalDevice mPhysicalDevice;
 
 		// Nyxa3D
-		Debug mDebugger;
+		Debugger mDebugger;
 		Window mWindow;
 		Swapchain mSwapchain;
 

@@ -48,9 +48,6 @@
     <ClCompile Include="Context.cpp">
       <Filter>Source Files\Context</Filter>
     </ClCompile>
-    <ClCompile Include="Debug.cpp">
-      <Filter>Source Files\Debug</Filter>
-    </ClCompile>
     <ClCompile Include="Pipeline.cpp">
       <Filter>Source Files\Pipeline</Filter>
     </ClCompile>
@@ -66,6 +63,12 @@
     <ClCompile Include="WndCallbacks.cpp">
       <Filter>Source Files\Callback</Filter>
     </ClCompile>
+    <ClCompile Include="DbgMsgr.cpp">
+      <Filter>Source Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Debugger.cpp">
+      <Filter>Source Files\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -79,9 +82,6 @@
     </ClInclude>
     <ClInclude Include="Context.h">
       <Filter>Source Files\Context</Filter>
-    </ClInclude>
-    <ClInclude Include="Debug.h">
-      <Filter>Source Files\Debug</Filter>
     </ClInclude>
     <ClInclude Include="Pipeline.h">
       <Filter>Source Files\Pipeline</Filter>
@@ -106,6 +106,15 @@
     </ClInclude>
     <ClInclude Include="Callbacks.h">
       <Filter>Source Files\Callback</Filter>
+    </ClInclude>
+    <ClInclude Include="Debugger.h">
+      <Filter>Source Files\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Source Files\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="DbgMsgr.h">
+      <Filter>Source Files\Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

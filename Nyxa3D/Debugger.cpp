@@ -1,6 +1,7 @@
-#include "Debug.h"
 #include "Globals.h"
 #include "Util.h"
+#include "Debug.h"
+
 
 #include <iostream>
 
@@ -8,16 +9,16 @@
 
 namespace nx
 {
-	Debug::Debug(vk::Instance& anInstance)
+	Debugger::Debugger(vk::Instance& anInstance)
 		: mInstance(anInstance)
 	{}
 
-	void Debug::Init()
+	void Debugger::Init()
 	{
 		if (!VALIDATION_LAYERS_ENABLED)
 			return;
 
-		std::cout << "Initializing Debug Callback...\n";
+		DbgPrint("Initializing Debugger Callback...\n");
 
 		VkDebugUtilsMessengerCreateInfoEXT myCreateInfo;
 		myCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -27,21 +28,21 @@ namespace nx
 		myCreateInfo.pfnUserCallback = Callback;
 
 		if (PrintResult(CreateDebugUtilsMessenger(&myCreateInfo, nullptr, &mDbgMessenger)) != VK_SUCCESS)
-			throw std::runtime_error("Failed to setup Debug Utilities Messenger.\n");
+			throw std::runtime_error("Failed to setup Debugger Utilities Messenger.\n");
 	}
 
-	Debug::~Debug()
+	Debugger::~Debugger()
 	{
 		Destroy();
 	}
 
-	void Debug::Destroy()
+	void Debugger::Destroy()
 	{
 		if (mDbgMessenger != VK_NULL_HANDLE)
 			DestroyDebugUtilsMessenger(mDbgMessenger);
 	}
 
-	VKAPI_ATTR VkBool32 VKAPI_CALL Debug::Callback(VkDebugUtilsMessageSeverityFlagBitsEXT aSeverity,
+	VKAPI_ATTR VkBool32 VKAPI_CALL Debugger::Callback(VkDebugUtilsMessageSeverityFlagBitsEXT aSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT aType,
 		const VkDebugUtilsMessengerCallbackDataEXT* aCallbackData,
 		void* aUserData)
@@ -51,7 +52,7 @@ namespace nx
 		return VK_FALSE;
 	}
 
-	VkResult Debug::CreateDebugUtilsMessenger(const VkDebugUtilsMessengerCreateInfoEXT* aCreateInfo, const VkAllocationCallbacks* anAllocator, VkDebugUtilsMessengerEXT* aMessenger)
+	VkResult Debugger::CreateDebugUtilsMessenger(const VkDebugUtilsMessengerCreateInfoEXT* aCreateInfo, const VkAllocationCallbacks* anAllocator, VkDebugUtilsMessengerEXT* aMessenger)
 	{
 		auto myFunc = (PFN_vkCreateDebugUtilsMessengerEXT)mInstance.getProcAddr(CREATE_DBG_MSGR_EXT);
 
@@ -61,26 +62,26 @@ namespace nx
 			return VK_ERROR_EXTENSION_NOT_PRESENT;
 	}
 
-	void Debug::DestroyDebugUtilsMessenger(VkDebugUtilsMessengerEXT aMessenger, const VkAllocationCallbacks* anAllocator)
+	void Debugger::DestroyDebugUtilsMessenger(VkDebugUtilsMessengerEXT aMessenger, const VkAllocationCallbacks* anAllocator)
 	{
 		auto myFunc = (PFN_vkDestroyDebugUtilsMessengerEXT)mInstance.getProcAddr(DESTROY_DBG_MSGR_EXT);
 		if (myFunc != nullptr)
 			myFunc(mInstance, aMessenger, anAllocator);
 	}
 
-	uint32_t Debug::GetEnabledLayerCount() const
+	uint32_t Debugger::GetEnabledLayerCount() const
 	{
 		return static_cast<uint32_t>(mValidationLayers.size());
 	}
 
-	const char* const* Debug::GetEnabledLayerNames() const
+	const char* const* Debugger::GetEnabledLayerNames() const
 	{
 		return mValidationLayers.data();
 	}
 
-	bool Debug::CheckValidationLayerSupport() const
+	bool Debugger::CheckValidationLayerSupport() const
 	{
-		std::cout << "Checking for validation layer compatibility...\n";
+		DeepPrint("Checking for validation layer compatibility...\n");
 
 		std::vector<vk::LayerProperties> myAvailableLayers = vk::enumerateInstanceLayerProperties();
 
@@ -99,14 +100,14 @@ namespace nx
 
 			if (!isFound)
 			{
-				std::cout << iLayerName << " is not supported.\n";
+				DeepPrint(std::string(iLayerName) + " is not supported.\n");
 				return false;
 			}
 
-			std::cout << iLayerName << " is supported.\n";
+			DeepPrint(std::string(iLayerName) + " is supported.\n");
 		}
 
-		std::cout << "All validation layers are supported.\n\n";
+		DeepPrint("All validation layers are supported.\n\n");
 
 		return true;
 	}

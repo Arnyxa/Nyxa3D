@@ -1,6 +1,7 @@
 #include "Window.h"
 #include "Callbacks.h"
 #include "Util.h"
+#include "DbgMsgr.h"
 
 #include <vulkan/vulkan.hpp>
 #include <glfw/glfw3.h>
@@ -29,20 +30,20 @@ namespace nx
 
 	void Window::Init()
 	{
-		std::cout << "Initializing GLFW...\n";
+		DbgPrint("Initializing GLFW...\n");
 
 		glfwInit();
 
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-		std::cout << "Creating window...\n";
+		DbgPrint("Creating window...\n");
 
 		mWindow = glfwCreateWindow((int)mDefaultWidth, (int)mDefaultHeight, mTitle, nullptr, nullptr);
 
 		WndCallbacks.Init(mWindow);
 
-		std::cout << "GLFW Initialized.\n";
+		DbgPrint("GLFW Initialized.\n");
 	}
 
 	void Window::Destroy()

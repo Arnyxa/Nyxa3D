@@ -1,5 +1,6 @@
 #pragma once
 #include "VertexBuffer.h"
+#include "Util.h"
 
 #include <vulkan/vulkan.hpp>
 #include <glm/vec2.hpp>
@@ -9,7 +10,7 @@
 
 namespace nx
 {
-	class Pipeline
+	class Pipeline : public CommonChecks
 	{
 	public:
 		Pipeline(const vk::Device& aDevice, const vk::Extent2D& aViewportSize);

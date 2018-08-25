@@ -1,4 +1,5 @@
 #include "WndCallbacks.h"
+#include "DbgMsgr.h"
 
 #include <glfw/glfw3.h>
 
@@ -19,6 +20,8 @@ namespace nx
 
 		if (!mInitialised)
 		{
+			DeepPrint("Initializing window callbacks...\n");
+
 			glfwSetWindowSizeCallback(aWindow, OnResize);
 			glfwSetWindowCloseCallback(aWindow, OnClose);
 			glfwSetWindowFocusCallback(aWindow, OnFocus);
@@ -27,6 +30,8 @@ namespace nx
 			glfwSetWindowIconifyCallback(aWindow, OnIconify);
 
 			mInitialised = true;
+
+			DeepPrint("Window callbacks initialized.\n\n");
 		}
 	}
 
@@ -43,8 +48,8 @@ namespace nx
 	void WindowCallbacks::OnFocus(GLFWwindow* aWindow, CBool wasFocusGained)
 	{
 		if (wasFocusGained != GLFW_TRUE && wasFocusGained != GLFW_FALSE)
-			std::cout << "\nWarning: 'wasFocusGained' in 'WindowCallbacks::OnFocus(GLFWwindow* aWindow, CBool wasFocusGained)'"
-			<< "\nValue evaluated to: " << wasFocusGained << " (non-bool).\n\n";
+			DbgPrint(std::string("\nWarning: 'wasFocusGained' in 'WindowCallbacks::OnFocus(GLFWwindow* aWindow, CBool wasFocusGained)'") 
+								+ "\nValue evaluated to: " + std::to_string(wasFocusGained) + " (non-bool).\n\n");
 
 		if (wasFocusGained)
 			GetInstance().Execute(CallType::Focus);

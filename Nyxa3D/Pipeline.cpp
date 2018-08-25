@@ -1,5 +1,6 @@
 #include "Pipeline.h"
 #include "Util.h"
+#include "DbgMsgr.h"
 
 #include <iostream>
 #include <fstream>
@@ -26,7 +27,10 @@ namespace nx
 
 	void Pipeline::Create()
 	{
-		std::cout << "Creating graphics pipeline...\n";
+		if (!mInitialised)
+			DbgPrint("Creating graphics pipeline...\n");
+		else
+			DeepPrint("Creating graphics pipeline...\n");
 
 		auto myVertShaderCode = ReadShader("shaders/vert.spv");
 		auto myFragShaderCode = ReadShader("shaders/frag.spv");
@@ -34,9 +38,9 @@ namespace nx
 		vk::ShaderModule myVertShaderModule = CreateShaderModule(myVertShaderCode);
 		vk::ShaderModule myFragShaderModule = CreateShaderModule(myFragShaderCode);
 
-		std::cout << "Shaders loaded.\n";
+		DeepPrint("Shaders loaded.\n");
 
-		std::cout << "Initializing shader and pipeline info...\n";
+		DeepPrint("Initializing shader and pipeline info...\n");
 
 		vk::PipelineShaderStageCreateInfo myVertShaderInfo({}, vk::ShaderStageFlagBits::eVertex, myVertShaderModule, "main");
 		vk::PipelineShaderStageCreateInfo myFragShaderInfo({}, vk::ShaderStageFlagBits::eFragment, myFragShaderModule, "main");
@@ -84,13 +88,11 @@ namespace nx
 		myColorBlendingGlobal.attachmentCount = 1;
 		myColorBlendingGlobal.pAttachments = &myColorBlendAttachment;
 
-		std::cout << "Creating pipeline layout...\n";
+		DeepPrint("Creating pipeline layout...\n");
 
 		vk::PipelineLayoutCreateInfo myLayoutInfo;
 
 		mPipelineLayout = mDevice.createPipelineLayout(myLayoutInfo);
-
-		std::cout << "Creating graphics pipeline...\n";
 
 		vk::GraphicsPipelineCreateInfo myPipelineInfo({}, 2, myShaderStages, &myVertexInputInfo, &myInputAssembly, nullptr, &myViewportState, 
 										&myRasterizer, &myMultiSampling, nullptr, &myColorBlendingGlobal, nullptr, mPipelineLayout, 
@@ -99,15 +101,18 @@ namespace nx
 		if (Print(mDevice.createGraphicsPipelines(vk::PipelineCache(), 1, &myPipelineInfo, nullptr, &mPipeline)) != vk::Result::eSuccess)
 			throw std::runtime_error("Failed to create Vulkan Graphics Pipeline.");
 
-		std::cout << "Graphics pipeline successfully created.\n\n";
+		DeepPrint("Graphics pipeline successfully created.\n");
 
 		mDevice.destroyShaderModule(myVertShaderModule);
 		mDevice.destroyShaderModule(myFragShaderModule);
+
+		if (!mInitialised)
+			mInitialised = true;
 	}
 
 	vk::ShaderModule Pipeline::CreateShaderModule(const std::vector<char>& aByteCode)
 	{
-		std::cout << "Creating shader module...\n";
+		DeepPrint("Creating shader module...\n");
 
 		vk::ShaderModuleCreateInfo myCreateInfo({}, aByteCode.size(), reinterpret_cast<const uint32_t*>(aByteCode.data()));
 		vk::ShaderModule myShaderModule = mDevice.createShaderModule(myCreateInfo);
@@ -126,7 +131,7 @@ namespace nx
 		// figure out file size based on buffer position
 		size_t myFileSize = (size_t)myFile.tellg();
 
-		std::cout << aFileName << " size: " << myFileSize << std::endl;
+		DeepPrint(std::string(aFileName) + " size: " + std::to_string(myFileSize) + "\n");
 
 		std::vector<char> myBuffer(myFileSize);
 
