@@ -47,7 +47,7 @@ namespace nx
 		const VkDebugUtilsMessengerCallbackDataEXT* aCallbackData,
 		void* aUserData)
 	{
-		std::cerr << "\nValidation layer: " << aCallbackData->pMessage << std::endl;
+		std::cerr << "Validation layer: " << aCallbackData->pMessage << std::endl;
 
 		return VK_FALSE;
 	}

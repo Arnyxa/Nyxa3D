@@ -9,7 +9,6 @@
 #include "VertexBuffer.h"
 #include "Swapchain.h"
 
-#include <vulkan/vulkan.hpp>
 #include <vector>
 #include <sstream>
 #include <string>

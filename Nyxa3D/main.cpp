@@ -12,11 +12,6 @@ int main()
 {
 	int mySuccess = RunApp();
 
-#ifdef NXDEBUG
-	std::cout << "Press ENTER to close console.";
-	std::cin.get();
-#endif
-
 	return mySuccess;
 }
 
@@ -38,9 +33,6 @@ int RunApp()
 	{
 	#if defined(NXDEBUG) || defined(NXDEEP)
 		std::cerr << e.what() << std::endl;
-
-		std::cout << "Press ENTER to close console.";
-		std::cin.get();
 	#endif
 
 		return EXIT_FAILURE;
