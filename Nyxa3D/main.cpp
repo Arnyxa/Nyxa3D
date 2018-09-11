@@ -31,9 +31,7 @@ int RunApp()
 	}
 	catch (const std::runtime_error& e)
 	{
-	#if defined(NXDEBUG) || defined(NXDEEP)
 		std::cerr << e.what() << std::endl;
-	#endif
 
 		return EXIT_FAILURE;
 	}
