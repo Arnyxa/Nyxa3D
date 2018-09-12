@@ -12,6 +12,11 @@ int main()
 {
 	int mySuccess = RunApp();
 
+#ifdef NXDEBUG
+	std::cout << "Press ENTER to close console.";
+	std::cin.get();
+#endif
+
 	return mySuccess;
 }
 
@@ -31,9 +36,11 @@ int RunApp()
 	}
 	catch (const std::runtime_error& e)
 	{
+	//#if defined(NXDEBUG) || defined(NXDEEP)
 		std::cerr << e.what() << std::endl;
-
-		return EXIT_FAILURE;
+		std::cout << "\nPress ENTER to continue.";
+		std::cin.get();
+	//#endif
 	}
 
 	return EXIT_SUCCESS;

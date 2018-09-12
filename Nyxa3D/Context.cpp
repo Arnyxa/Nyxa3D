@@ -10,7 +10,6 @@
 
 namespace nx
 {
-
 	Context::Context()
 		: mDebugger(mInstance)
 		, mSwapchain(mDevice, mWindow, mInstance, mPhysicalDevice)
