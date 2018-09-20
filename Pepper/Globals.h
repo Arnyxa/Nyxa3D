@@ -4,15 +4,20 @@
 
 #include <algorithm>
 
-namespace nx
+namespace ppr
+{
+
+}
+
+namespace ppr
 {
 	extern constexpr char LNG_STANDARD_VALIDATION_NAME[] = "VK_LAYER_LUNARG_standard_validation";
 }
 
-namespace nx
+namespace ppr
 {
 
-#ifdef NXDEBUG
+#ifdef PPR_DEBUG
 	extern constexpr bool VALIDATION_LAYERS_ENABLED = true;
 #else
 	extern constexpr bool VALIDATION_LAYERS_ENABLED = false;

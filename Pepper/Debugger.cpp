@@ -7,7 +7,7 @@
 
 // leave this largely in C mode cause the C++ pointers to functions are giving me a headache
 
-namespace nx
+namespace ppr
 {
 	Debugger::Debugger(vk::Instance& anInstance)
 		: mInstance(anInstance)
@@ -28,7 +28,7 @@ namespace nx
 		myCreateInfo.pfnUserCallback = Callback;
 
 		if (PrintResult(CreateDebugUtilsMessenger(&myCreateInfo, nullptr, &mDbgMessenger)) != VK_SUCCESS)
-			throw std::runtime_error("Failed to setup Debugger Utilities Messenger.\n");
+			throw Error("Failed to setup Debugger Utilities Messenger.", Error::Code::DEBUG_MSGR_SETUP_FAIL);
 	}
 
 	Debugger::~Debugger()
@@ -81,7 +81,7 @@ namespace nx
 
 	bool Debugger::CheckValidationLayerSupport() const
 	{
-		DeepPrint("Checking for validation layer compatibility...\n");
+		VerbosePrint("Checking for validation layer compatibility...\n");
 
 		std::vector<vk::LayerProperties> myAvailableLayers = vk::enumerateInstanceLayerProperties();
 
@@ -100,14 +100,14 @@ namespace nx
 
 			if (!isFound)
 			{
-				DeepPrint(std::string(iLayerName) + " is not supported.\n");
+				VerbosePrint(std::string(iLayerName) + " is not supported.\n");
 				return false;
 			}
 
-			DeepPrint(std::string(iLayerName) + " is supported.\n");
+			VerbosePrint(std::string(iLayerName) + " is supported.\n");
 		}
 
-		DeepPrint("All validation layers are supported.\n\n");
+		VerbosePrint("All validation layers are supported.\n\n");
 
 		return true;
 	}

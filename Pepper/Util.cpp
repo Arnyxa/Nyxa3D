@@ -4,7 +4,24 @@
 
 #include <iostream>
 
-namespace nx
+namespace ppr
+{
+    Error::Error(const std::string& aMessage, Error::Code anErrorCode)
+        : mError("ERROR - " + aMessage)
+        , mCode(static_cast<int>(anErrorCode))
+    {}
+
+    const std::string& Error::What() const 
+    { return mError; }
+
+    void Error::Print() const 
+    { std::cout << mError << "\n"; }
+
+    int Error::GetCode() const 
+    { return mCode; }
+}
+
+namespace ppr
 {
 	void Print(const std::string& aText)
 	{
@@ -82,7 +99,7 @@ namespace nx
 			break;
 		}
 
-		std::cout << myTextResult << "\n" << std::endl;
+		std::cout << myTextResult << "\n\n";
 
 		return aResult;
 	}

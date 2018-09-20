@@ -7,7 +7,7 @@
 
 #include <vector>
 
-namespace nx
+namespace ppr
 {
 	struct SwapchainDetails
 	{

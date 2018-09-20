@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace nx
+namespace ppr
 {
 	DebugMessenger::DebugMessenger()
 		: mDebugOn(false)
@@ -11,10 +11,10 @@ namespace nx
 
 	void DebugMessenger::Init()
 	{
-	#ifdef NXDEBUG
+	#ifdef PPR_DEBUG
 		mDebugOn = true;
 	#endif
-	#ifdef NXDEEP
+	#ifdef PPR_VERBOSE
 		mDeepOn = true;
 	#endif
 	}

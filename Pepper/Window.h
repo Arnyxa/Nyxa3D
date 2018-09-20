@@ -16,12 +16,12 @@ namespace vk
 
 struct GLFWwindow;
 
-namespace nx
+namespace ppr
 {	
 	class Window
 	{
 	public:
-		Window(size_t aDefaultWidth = 800, size_t aDefaultHeight = 600);
+		Window(const std::string& aTitle, size_t aDefaultWidth = 800, size_t aDefaultHeight = 600);
 		~Window();
 
 		void Destroy();
@@ -51,6 +51,6 @@ namespace nx
 		size_t mDefaultWidth;
 		size_t mDefaultHeight;
 
-		const char* mTitle;
+		std::string mTitle;
 	};
 }

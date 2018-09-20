@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace nx
+namespace ppr
 {
 	enum class DebugLevel
 	{
@@ -27,17 +27,17 @@ namespace nx
 	};
 }
 
-namespace nx
+namespace ppr
 {
 #ifndef Debug
 #define Debug DebugMessenger::GetInstance()
 #endif
 
 #ifndef DbgPrint
-#define DbgPrint(msg) DebugMessenger::GetInstance().Print(msg, nx::DebugLevel::Regular)
+#define DbgPrint(msg) DebugMessenger::GetInstance().Print(msg, ppr::DebugLevel::Regular)
 #endif
 
-#ifndef DeepPrint
-#define DeepPrint(msg) DebugMessenger::GetInstance().Print(msg, nx::DebugLevel::Deep)
+#ifndef VerbosePrint
+#define VerbosePrint(msg) DebugMessenger::GetInstance().Print(msg, ppr::DebugLevel::Deep)
 #endif
 }

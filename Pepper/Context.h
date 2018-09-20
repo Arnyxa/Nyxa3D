@@ -14,12 +14,12 @@
 #include <string>
 #include <iostream>
 
-namespace nx
+namespace ppr
 {
 	class Context
 	{
 	public:
-		Context();
+		Context(const std::string& aTitle = "Pepper Engine");
 		~Context();
 
 		void Run();
@@ -40,17 +40,15 @@ namespace nx
 		void MainLoop();
 
 	private:
+        // Pepper
+        Window mWindow;
+        Debugger mDebugger;
+        Swapchain mSwapchain;
 
 		// Vulkan
 		vk::Instance mInstance;
-
 		vk::Device mDevice;
 		vk::PhysicalDevice mPhysicalDevice;
-
-		// Nyxa3D
-		Debugger mDebugger;
-		Window mWindow;
-		Swapchain mSwapchain;
 
 		const std::vector<const char*> mDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 	};

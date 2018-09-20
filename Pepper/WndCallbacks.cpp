@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-namespace nx
+namespace ppr
 {
 	WindowCallbacks& WindowCallbacks::GetInstance()
 	{
@@ -20,7 +20,10 @@ namespace nx
 
 		if (!mInitialised)
 		{
-			DeepPrint("Initializing window callbacks...\n");
+            if (aWindow == nullptr)
+                throw Error("Provided window was null pointer.", Error::Code::NULL_PTR);
+
+			VerbosePrint("Initializing window callbacks...\n");
 
 			glfwSetWindowSizeCallback(aWindow, OnResize);
 			glfwSetWindowCloseCallback(aWindow, OnClose);
@@ -31,7 +34,7 @@ namespace nx
 
 			mInitialised = true;
 
-			DeepPrint("Window callbacks initialized.\n\n");
+			VerbosePrint("Window callbacks initialized.\n\n");
 		}
 	}
 

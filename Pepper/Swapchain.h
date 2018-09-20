@@ -12,7 +12,7 @@
 #include <vector>
 #include <functional>
 
-namespace nx
+namespace ppr
 {
 	class Swapchain : public CommonChecks
 	{
