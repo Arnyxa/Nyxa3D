@@ -9,13 +9,13 @@
 #include <iostream>
 #include <string>
 
-namespace nx
+namespace ppr
 {
-	Window::Window(size_t aDefaultWidth, size_t aDefaultHeight)
+	Window::Window(const std::string& aTitle, size_t aDefaultWidth, size_t aDefaultHeight)
 		: mWindow(nullptr)
 		, mDefaultWidth(aDefaultWidth)
 		, mDefaultHeight(aDefaultHeight)
-		, mTitle("Nyxa3D")
+		, mTitle(aTitle.c_str())
 	{}
 
 	Window::~Window()
@@ -39,7 +39,7 @@ namespace nx
 
 		DbgPrint("Creating window...\n");
 
-		mWindow = glfwCreateWindow((int)mDefaultWidth, (int)mDefaultHeight, mTitle, nullptr, nullptr);
+		mWindow = glfwCreateWindow((int)mDefaultWidth, (int)mDefaultHeight, mTitle.c_str(), nullptr, nullptr);
 
 		WndCallbacks.Init(mWindow);
 
@@ -100,8 +100,8 @@ namespace nx
 
 	void Window::SetTitle(const std::string& aTitle)
 	{
-		mTitle = aTitle.c_str();
-		glfwSetWindowTitle(mWindow, mTitle);
+		mTitle = aTitle;
+		glfwSetWindowTitle(mWindow, mTitle.c_str());
 	}
 
 	std::string Window::GetTitle() const

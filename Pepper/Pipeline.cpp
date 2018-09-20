@@ -6,7 +6,7 @@
 #include <fstream>
 #include <string>
 
-namespace nx
+namespace ppr
 {
 	Pipeline::Pipeline(const vk::Device& aDevice, const vk::Extent2D& aViewport)
 		: mDevice(aDevice)
@@ -30,7 +30,7 @@ namespace nx
 		if (!mInitialised)
 			DbgPrint("Creating graphics pipeline...\n");
 		else
-			DeepPrint("Creating graphics pipeline...\n");
+			VerbosePrint("Creating graphics pipeline...\n");
 
 		auto myVertShaderCode = ReadShader("shaders/vert.spv");
 		auto myFragShaderCode = ReadShader("shaders/frag.spv");
@@ -38,9 +38,9 @@ namespace nx
 		vk::ShaderModule myVertShaderModule = CreateShaderModule(myVertShaderCode);
 		vk::ShaderModule myFragShaderModule = CreateShaderModule(myFragShaderCode);
 
-		DeepPrint("Shaders loaded.\n");
+		VerbosePrint("Shaders loaded.\n");
 
-		DeepPrint("Initializing shader and pipeline info...\n");
+		VerbosePrint("Initializing shader and pipeline info...\n");
 
 		vk::PipelineShaderStageCreateInfo myVertShaderInfo({}, vk::ShaderStageFlagBits::eVertex, myVertShaderModule, "main");
 		vk::PipelineShaderStageCreateInfo myFragShaderInfo({}, vk::ShaderStageFlagBits::eFragment, myFragShaderModule, "main");
@@ -88,7 +88,7 @@ namespace nx
 		myColorBlendingGlobal.attachmentCount = 1;
 		myColorBlendingGlobal.pAttachments = &myColorBlendAttachment;
 
-		DeepPrint("Creating pipeline layout...\n");
+		VerbosePrint("Creating pipeline layout...\n");
 
 		vk::PipelineLayoutCreateInfo myLayoutInfo;
 
@@ -99,9 +99,9 @@ namespace nx
 										mRenderPass, 0, vk::Pipeline(), -1);
 
 		if (Print(mDevice.createGraphicsPipelines(vk::PipelineCache(), 1, &myPipelineInfo, nullptr, &mPipeline)) != vk::Result::eSuccess)
-			throw std::runtime_error("Failed to create Vulkan Graphics Pipeline.");
+			throw Error("Failed to create Vulkan Graphics Pipeline.", Error::Code::PIPELINE_CREATION_FAIL);
 
-		DeepPrint("Graphics pipeline successfully created.\n");
+		VerbosePrint("Graphics pipeline successfully created.\n");
 
 		mDevice.destroyShaderModule(myVertShaderModule);
 		mDevice.destroyShaderModule(myFragShaderModule);
@@ -112,7 +112,7 @@ namespace nx
 
 	vk::ShaderModule Pipeline::CreateShaderModule(const std::vector<char>& aByteCode)
 	{
-		DeepPrint("Creating shader module...\n");
+		VerbosePrint("Creating shader module...\n");
 
 		vk::ShaderModuleCreateInfo myCreateInfo({}, aByteCode.size(), reinterpret_cast<const uint32_t*>(aByteCode.data()));
 		vk::ShaderModule myShaderModule = mDevice.createShaderModule(myCreateInfo);
@@ -126,12 +126,12 @@ namespace nx
 		std::ifstream myFile(aFileName, std::ios::ate | std::ios::binary);
 
 		if (!myFile.is_open())
-			throw std::runtime_error("Failed to open file \"" + aFileName + "\"");
+			throw Error("Failed to open shader \"" + aFileName + "\"", Error::Code::SHADER_NOT_FOUND);
 
 		// figure out file size based on buffer position
 		size_t myFileSize = (size_t)myFile.tellg();
 
-		DeepPrint(std::string(aFileName) + " size: " + std::to_string(myFileSize) + "\n");
+		VerbosePrint(std::string(aFileName) + " size: " + std::to_string(myFileSize) + "\n");
 
 		std::vector<char> myBuffer(myFileSize);
 

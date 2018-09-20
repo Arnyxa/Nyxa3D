@@ -8,7 +8,7 @@
 
 #include <vector>
 
-namespace nx
+namespace ppr
 {
 	class Pipeline : public CommonChecks
 	{

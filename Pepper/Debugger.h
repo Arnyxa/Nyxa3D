@@ -4,7 +4,7 @@
 
 #include "Globals.h"
 
-namespace nx
+namespace ppr
 {
 	class Debugger
 	{

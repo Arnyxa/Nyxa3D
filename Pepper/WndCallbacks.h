@@ -13,7 +13,7 @@ typedef void(*GLFWwindowrefreshfun) (GLFWwindow*);
 typedef void(*GLFWwindowfocusfun) (GLFWwindow*, int);
 typedef void(*GLFWwindowiconifyfun) (GLFWwindow*, int);
 
-namespace nx
+namespace ppr
 {
 	using CBool = int;
 

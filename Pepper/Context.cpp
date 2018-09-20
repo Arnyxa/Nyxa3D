@@ -8,10 +8,11 @@
 #include <algorithm>
 #include <fstream>
 
-namespace nx
+namespace ppr
 {
-	Context::Context()
-		: mDebugger(mInstance)
+	Context::Context(const std::string& aTitle)
+		: mWindow(aTitle)
+        , mDebugger(mInstance)
 		, mSwapchain(mDevice, mWindow, mInstance, mPhysicalDevice)
 	{}
 
@@ -52,7 +53,7 @@ namespace nx
 
 	void Context::CreateLogicalDevice()
 	{
-		DeepPrint("Creating logical Vulkan Device...\n");
+		VerbosePrint("Creating logical Vulkan Device...\n");
 
 		QueueFamilyIndices myIndices = mSwapchain.FindQueueFamilies(mPhysicalDevice);
 
@@ -90,17 +91,17 @@ namespace nx
 		mSwapchain.GetGraphicsQueue() = mDevice.getQueue(myIndices.Graphics, 0);
 		mSwapchain.GetPresentQueue() = mDevice.getQueue(myIndices.Present, 0);
 
-		DeepPrint("Successfully created logical Vulkan Device.\n\n");
+		VerbosePrint("Successfully created logical Vulkan Device.\n\n");
 	}
 
 	void Context::SelectPhysicalDevice()
 	{
-		DeepPrint("Searching for viable physical device...\n");
+		VerbosePrint("Searching for viable physical device...\n");
 
 		std::vector<vk::PhysicalDevice> myDevices = mInstance.enumeratePhysicalDevices();
 
 		if (myDevices.empty())
-			throw std::runtime_error("Failed to find any GPU with Vulkan support.");
+			throw Error("Failed to find any GPU with Vulkan support.", Error::Code::NO_GPU_SUPPORT);
 
 		for (const auto& iDevice : myDevices)
 		{
@@ -112,14 +113,14 @@ namespace nx
 		}
 
 		if (mPhysicalDevice == vk::PhysicalDevice())
-			throw std::runtime_error("Failed to find a suitable GPU for Vulkan.");
+			throw Error("Available GPU(s) have insufficient compatibility with Pepper Engine features.", Error::Code::NO_PEPPER_SUPPORT);
 
-		DeepPrint("Matching Vulkan-compatible GPU(s) successfully found.\n\n");
+		VerbosePrint("Matching Vulkan-compatible GPU(s) successfully found.\n\n");
 	}
 
 	bool Context::IsDeviceSuitable(vk::PhysicalDevice aDevice)
 	{
-		DeepPrint("Evaluating device suitability...\n");
+		VerbosePrint("Evaluating device suitability...\n");
 
 		QueueFamilyIndices myIndices = mSwapchain.FindQueueFamilies(aDevice);
 
@@ -137,7 +138,7 @@ namespace nx
 
 	std::vector<const char*> Context::GetRequiredExtensions()
 	{
-		DeepPrint("Fetching required extensions...\n");
+		VerbosePrint("Fetching required extensions...\n");
 
 		std::vector<const char*> myExtensions = mWindow.GetRequiredExtensions();
 
@@ -149,7 +150,7 @@ namespace nx
 
 	bool Context::CheckDeviceExtensionSupport(vk::PhysicalDevice aDevice)
 	{
-		DeepPrint("Checking device extension support...\n");
+		VerbosePrint("Checking device extension support...\n");
 
 		std::vector<vk::ExtensionProperties> myAvailableExtensions = aDevice.enumerateDeviceExtensionProperties();
 
@@ -164,9 +165,9 @@ namespace nx
 	void Context::CreateInstance()
 	{
 		if (VALIDATION_LAYERS_ENABLED && !mDebugger.CheckValidationLayerSupport())
-			throw std::runtime_error("Validation layers requested, but not available.");
+			throw Error("Validation layers requested, but not available.", Error::Code::REQ_VAL_LAYER_UNAVAILABLE);
 
-		vk::ApplicationInfo myAppInfo("Binch", VK_MAKE_VERSION(1, 0, 0), "Nyxa3D", VK_MAKE_VERSION(1, 0, 0), VK_API_VERSION_1_1);
+		vk::ApplicationInfo myAppInfo("Pepper", VK_MAKE_VERSION(1, 0, 0), "Pepper Engine", VK_MAKE_VERSION(1, 0, 0), VK_API_VERSION_1_1);
 
 		auto myExtensions = GetRequiredExtensions();
 
@@ -186,14 +187,14 @@ namespace nx
 
 		std::vector<vk::ExtensionProperties> myExtensionProperties = vk::enumerateInstanceExtensionProperties();
 
-		DeepPrint("Available extensions:\n");
+		VerbosePrint("Available extensions:\n");
 		for (const auto& iProperty : myExtensionProperties)
 		{
-			DeepPrint(std::string("\t") + iProperty.extensionName + "\n");
+			VerbosePrint(std::string("\t") + iProperty.extensionName + "\n");
 		}
-		DeepPrint(myExtensionProperties.size() + " extensions found in total.\n\n");
+		VerbosePrint(myExtensionProperties.size() + " extensions found in total.\n\n");
 
-		DeepPrint("Checking for GLFW extension compatibility...\n");
+		VerbosePrint("Checking for GLFW extension compatibility...\n");
 
 		// check whether extensions required by GLFW are in available extension list
 		for (size_t i = 0; i < myExtensions.size(); ++i)
@@ -209,16 +210,16 @@ namespace nx
 			}
 
 			if (!isFound)
-				throw std::runtime_error("Could not find required GLFW extension for Vulkan on this system.");
+				throw Error("Could not find required GLFW extension for Vulkan on this system.", Error::Code::REQ_EXT_UNAVAILABLE);
 
-			DeepPrint(std::string("        ") + myExtensions[i] + " found.\n");
+			VerbosePrint(std::string("        ") + myExtensions[i] + " found.\n");
 		}
 
-		DeepPrint("Extension check successful.\n\n");
+		VerbosePrint("Extension check successful.\n\n");
 
 		mInstance = vk::createInstance(myCreateInfo);
 
-		DeepPrint("Created Vulkan instance.\n\n");
+		VerbosePrint("Created Vulkan instance.\n\n");
 	}
 
 	Context::~Context()

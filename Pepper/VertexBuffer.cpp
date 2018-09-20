@@ -1,7 +1,8 @@
 #include "VertexBuffer.h"
+#include "Util.h"
 
 // Vertex
-namespace nx
+namespace ppr
 {
 	vk::VertexInputBindingDescription Vertex::GetBindingDescript()
 	{
@@ -27,7 +28,7 @@ namespace nx
 }
 
 // VertexBuffer
-namespace nx
+namespace ppr
 {
 	VertexBuffer::VertexBuffer(const vk::Device& aDevice) : mDevice(aDevice)
 	{
@@ -42,13 +43,13 @@ namespace nx
 
 		for (uint32_t i = 0; i < myMemProperties.memoryTypeCount; ++i)
 		{
-			// find index ofsuitable memory type by checking if the corresponding bit is set to 1
+			// find index of suitable memory type by checking if the corresponding bit is set to 1
 			// also need to check if memory is suitable for writing to through property flags
 			if ((aTypeFilter & (1 << i) && (myMemProperties.memoryTypes[i].propertyFlags & aProperties) == aProperties))
 				return i;
 		}
 
-		throw std::runtime_error("Failed to find suitable memory type.");
+		throw Error("Failed to find suitable memory type.", Error::Code::BUFFER_MEMORY_TYPE_UNSUITABLE);
 	}
 
 	vk::Buffer& VertexBuffer::Get()

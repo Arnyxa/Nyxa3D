@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace nx
+namespace ppr
 {
 	class Callbacks
 	{

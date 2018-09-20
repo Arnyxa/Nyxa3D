@@ -4,7 +4,7 @@
 
 typedef unsigned int uint32_t;
 
-namespace nx
+namespace ppr
 {
 	template<typename T>
 	struct Size
@@ -21,7 +21,7 @@ namespace nx
 	};
 }
 
-namespace nx
+namespace ppr
 {
 	struct QueueFamilyIndices
 	{

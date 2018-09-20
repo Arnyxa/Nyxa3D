@@ -7,7 +7,7 @@
 #include <vector>
 #include <array>
 
-namespace nx
+namespace ppr
 {
 	struct Vertex
 	{
