@@ -132,7 +132,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)/Libraries/VulkanSDK/Include;$(SolutionDir)/Libraries/GLM;$(SolutionDir)/Libraries/GLFW/64bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/Libraries/spdlog/include;$(SolutionDir)/Libraries/VulkanSDK/Include;$(SolutionDir)/Libraries/GLM;$(SolutionDir)/Libraries/GLFW/32bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>VULKAN_HPP_TYPESAFE_CONVERSION;PPR_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -150,7 +150,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)/Libraries/VulkanSDK/Include;$(SolutionDir)/Libraries/GLM;$(SolutionDir)/Libraries/GLFW/64bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/Libraries/spdlog/include;$(SolutionDir)/Libraries/VulkanSDK/Include;$(SolutionDir)/Libraries/GLM;$(SolutionDir)/Libraries/GLFW/32bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>VULKAN_HPP_TYPESAFE_CONVERSION;PPR_VERBOSE;PPR_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -168,7 +168,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)/Libraries/VulkanSDK/Include;$(SolutionDir)/Libraries/GLM;$(SolutionDir)/Libraries/GLFW/64bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/Libraries/spdlog/include;$(SolutionDir)/Libraries/VulkanSDK/Include;$(SolutionDir)/Libraries/GLM;$(SolutionDir)/Libraries/GLFW/64bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>VULKAN_HPP_TYPESAFE_CONVERSION;PPR_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -190,7 +190,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)/Libraries/VulkanSDK/Include;$(SolutionDir)/Libraries/GLM;$(SolutionDir)/Libraries/GLFW/64bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/Libraries/spdlog/include;$(SolutionDir)/Libraries/VulkanSDK/Include;$(SolutionDir)/Libraries/GLM;$(SolutionDir)/Libraries/GLFW/64bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>VULKAN_HPP_TYPESAFE_CONVERSION;PPR_VERBOSE;PPR_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -214,7 +214,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)/Libraries/VulkanSDK/Include;$(SolutionDir)/Libraries/GLM;$(SolutionDir)/Libraries/GLFW/64bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/Libraries/spdlog/include;$(SolutionDir)/Libraries/VulkanSDK/Include;$(SolutionDir)/Libraries/GLM;$(SolutionDir)/Libraries/GLFW/32bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>VULKAN_HPP_TYPESAFE_CONVERSION;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -237,7 +237,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)/Libraries/VulkanSDK/Include;$(SolutionDir)/Libraries/GLM;$(SolutionDir)/Libraries/GLFW/64bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/Libraries/spdlog/include;$(SolutionDir)/Libraries/VulkanSDK/Include;$(SolutionDir)/Libraries/GLM;$(SolutionDir)/Libraries/GLFW/64bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>VULKAN_HPP_TYPESAFE_CONVERSION;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -260,6 +260,7 @@
     <ClCompile Include="Context.cpp" />
     <ClCompile Include="DbgMsgr.cpp" />
     <ClCompile Include="Debugger.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pipeline.cpp" />
     <ClCompile Include="Swapchain.cpp" />
@@ -276,6 +277,7 @@
     <ClInclude Include="Debugger.h" />
     <ClInclude Include="DbgMsgr.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="Pipeline.h" />
     <ClInclude Include="Swapchain.h" />
     <ClInclude Include="Util.h" />

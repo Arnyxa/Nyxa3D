@@ -72,6 +72,9 @@
     <ClCompile Include="Debugger.cpp">
       <Filter>Source Files\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Source Files\Debug\Logger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="DbgMsgr.h">
       <Filter>Source Files\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Source Files\Debug\Logger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

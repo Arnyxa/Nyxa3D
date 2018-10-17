@@ -2,13 +2,6 @@
 // Otherwise all caps with underscore for spaces
 #pragma once
 
-#include <algorithm>
-
-namespace ppr
-{
-
-}
-
 namespace ppr
 {
 	extern constexpr char LNG_STANDARD_VALIDATION_NAME[] = "VK_LAYER_LUNARG_standard_validation";

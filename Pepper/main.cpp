@@ -1,10 +1,10 @@
 #include "Context.h"
 #include "DbgMsgr.h"
 
+#include "Globals.h"
+
 #include <iostream>
 #include <stdexcept>
-
-#define SUBSYSC // remove this if you're not on MSVC SUBSYSTEM/CONSOLE
 
 // separate function for running the app to ensure 
 // that the app object is destroyed before we exit
@@ -41,10 +41,6 @@ int RunApp()
         separator.push_back('\n');
 
         std::cerr << separator << myError.What() << separator << "\n";
-
-    #if defined(PPR_DEBUG) && defined(_MSC_VER) && !defined(SUBSYSC)
-		std::cin.get();
-	#endif
 
         // if we're not debugging, we still want to return the relevant error code
         return myError.GetCode();
