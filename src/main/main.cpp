@@ -4,7 +4,22 @@
 #include "Globals.h"
 
 #include <iostream>
-#include <stdexcept>
+
+#include <spdlog/sinks/stdout_color_sinks.h>
+
+namespace krn
+{
+    namespace log = spdlog;
+}
+
+void test()
+{
+    auto console = spdlog::stdout_color_mt("penis");
+
+    console->set_level(krn::log::level::trace);
+    console->info("Penis {} {}", 69, "dicks");
+
+}
 
 // separate function for running the app to ensure 
 // that the app object is destroyed before we exit
@@ -12,6 +27,7 @@ int RunApp();
 
 int main()
 {
+    test();
 	int mySuccess = RunApp();
 
 	return mySuccess;

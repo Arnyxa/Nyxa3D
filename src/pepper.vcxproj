@@ -26,45 +26,12 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\src\context.cpp" />
-    <ClCompile Include="..\src\debugger.cpp" />
-    <ClCompile Include="..\src\logger.cpp" />
-    <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\pipeline.cpp" />
-    <ClCompile Include="..\src\swapchain.cpp" />
-    <ClCompile Include="..\src\util.cpp" />
-    <ClCompile Include="..\src\vertex_buffer.cpp" />
-    <ClCompile Include="..\src\window.cpp" />
-    <ClCompile Include="..\src\window_call.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\src\callback.h" />
-    <ClInclude Include="..\src\callbacks.h" />
-    <ClInclude Include="..\src\context.h" />
-    <ClInclude Include="..\src\debug.h" />
-    <ClInclude Include="..\src\debugger.h" />
-    <ClInclude Include="..\src\globals.h" />
-    <ClInclude Include="..\src\logger.h" />
-    <ClInclude Include="..\src\pipeline.h" />
-    <ClInclude Include="..\src\structs.h" />
-    <ClInclude Include="..\src\swapchain.h" />
-    <ClInclude Include="..\src\util.h" />
-    <ClInclude Include="..\src\vertex_buffer.h" />
-    <ClInclude Include="..\src\vulkan_structs.h" />
-    <ClInclude Include="..\src\window.h" />
-    <ClInclude Include="..\src\window_call.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\src\todo.inl" />
-    <None Include="..\src\window_call.inl" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{9A420788-DA1C-44B8-BE5B-BAFCAB2D0C1B}</ProjectGuid>
     <RootNamespace>Nyxa3D</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
-    <ProjectName>pepper</ProjectName>
+    <ProjectName>Pepper</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -289,6 +256,43 @@
       <Command>$(SolutionDir)Scripts\CopyResourcesToBuildDir.bat "$(SolutionDir)Resources\vk64\ $(OutDir)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Context.cpp" />
+    <ClCompile Include="DbgMsgr.cpp" />
+    <ClCompile Include="Debugger.cpp" />
+    <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pipeline.cpp" />
+    <ClCompile Include="Swapchain.cpp" />
+    <ClCompile Include="Util.cpp" />
+    <ClCompile Include="VertexBuffer.cpp" />
+    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="WndCallbacks.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Callback.h" />
+    <ClInclude Include="Callbacks.h" />
+    <ClInclude Include="Context.h" />
+    <ClInclude Include="Debug.h" />
+    <ClInclude Include="Debugger.h" />
+    <ClInclude Include="DbgMsgr.h" />
+    <ClInclude Include="Globals.h" />
+    <ClInclude Include="Logger.h" />
+    <ClInclude Include="Pipeline.h" />
+    <ClInclude Include="Swapchain.h" />
+    <ClInclude Include="Util.h" />
+    <ClInclude Include="VertexBuffer.h" />
+    <ClInclude Include="VulkanStructs.h" />
+    <ClInclude Include="Structs.h" />
+    <ClInclude Include="Window.h" />
+    <ClInclude Include="WndCallbacks.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WndCallbacks.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Todo.inl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
