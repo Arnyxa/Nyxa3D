@@ -14,17 +14,12 @@ int main()
 {
 	int mySuccess = RunApp();
 
-#if defined(PPR_DEBUG) && defined(_MSC_VER) && !defined(SUBSYSC)
-	std::cout << "Press ENTER to exit.";
-	std::cin.get();
-#endif
-
 	return mySuccess;
 }
 
 int RunApp()
 {
-#if !defined(PPR_VERBOSE)
+#if defined(PPR_DEBUG) && !defined(PPR_VERBOSE)
 	ppr::DbgPrint("---------- DEBUG MODE ----------\n\n");
 #elif defined(PPR_VERBOSE)
 	ppr::VerbosePrint("---------- DEEP DEBUG ----------\n\n");

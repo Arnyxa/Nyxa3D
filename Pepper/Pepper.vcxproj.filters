@@ -37,6 +37,9 @@
     <Filter Include="Source Files\Callback">
       <UniqueIdentifier>{634c900b-d9ad-4c83-8e02-159ad37f1aeb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Debug\Logger">
+      <UniqueIdentifier>{e00a4ed8-f90f-434b-99b9-0bcbf21e61ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
