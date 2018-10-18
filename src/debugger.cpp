@@ -10,6 +10,11 @@ namespace ppr
 		: m_instance(an_instance)
 	{}
 
+    debugger::~debugger()
+    {
+        destroy();
+    }
+
 	void debugger::init()
 	{
 		if (!VALIDATION_LAYERS_ENABLED)
@@ -20,17 +25,16 @@ namespace ppr
 		VkDebugUtilsMessengerCreateInfoEXT createinfo;
 		createinfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 		createinfo.flags = 0;
-		createinfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
-		createinfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+		createinfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT 
+                                   | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT 
+                                   | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+		createinfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT 
+                               | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT 
+                               | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 		createinfo.pfnUserCallback = callback;
 
 		if (print(CreateDebugUtilsMessenger(&createinfo, nullptr, &m_messenger)) != VK_SUCCESS)
 			throw Error("Failed to setup debugger Utilities Messenger.", Error::Code::DEBUG_MSGR_SETUP_FAIL);
-	}
-
-	debugger::~debugger()
-	{
-		destroy();
 	}
 
 	void debugger::destroy()

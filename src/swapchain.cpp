@@ -49,8 +49,10 @@ namespace ppr
 
 	void swapchain::draw()
 	{
-        const vk::ResultValue<uint32_t> result_pair = m_device.acquireNextImageKHR(m_swapchain, UINT64_MAX, m_sema_image_available, nullptr);
-
+        const vk::ResultValue<uint32_t> result_pair = m_device.acquireNextImageKHR(m_swapchain, 
+                                                                                   UINT64_MAX, 
+                                                                                   m_sema_image_available, 
+                                                                                   nullptr);
         const uint32_t image_index = result_pair.value;
 
 		if (print(result_pair.result) == vk::Result::eErrorOutOfDateKHR)
@@ -64,7 +66,12 @@ namespace ppr
 		const vk::Semaphore sema_wait[] = { m_sema_image_available };
 		const vk::Semaphore sema_signal[] = { m_sema_render_finished };
         const vk::PipelineStageFlags wait_stages[] = { vk::PipelineStageFlagBits::eColorAttachmentOutput };
-        const vk::SubmitInfo submit_info(1, sema_wait, wait_stages, 1, &m_commandbuffers[image_index], 1, sema_signal);
+
+        const vk::SubmitInfo submit_info(1, 
+                                         sema_wait, 
+                                         wait_stages, 1, 
+                                        &m_commandbuffers[image_index], 1, 
+                                         sema_signal);
 
 		m_queue_graphics.submit(submit_info, nullptr);
 
@@ -97,14 +104,20 @@ namespace ppr
         const vk::PresentModeKHR present_mode = choose_present_mode(support_details.present_modes);
         const vk::Extent2D extent2D = choose_extent(support_details.capabilities);
 
-		uint32_t image_count = support_details.capabilities.minImageCount + 1;
+		uint32_t image_count = 1 + support_details.capabilities.minImageCount;
+
 		if (support_details.capabilities.maxImageCount > 0 && image_count > support_details.capabilities.maxImageCount)
 			image_count = support_details.capabilities.maxImageCount;
 
-        vk::SwapchainCreateInfoKHR swapchain_createinfo({}, m_surface, image_count, surface_format.format, surface_format.colorSpace, extent2D, 1, vk::ImageUsageFlagBits::eColorAttachment);
-
         const queue_families family_indices = find_queue_families(m_physical_device);
         const uint32_t queue_families[] = { (uint32_t)family_indices.graphics, (uint32_t)family_indices.present };
+
+        vk::SwapchainCreateInfoKHR swapchain_createinfo({}, m_surface, 
+                                                        image_count, 
+                                                        surface_format.format, 
+                                                        surface_format.colorSpace, 
+                                                        extent2D, 1, 
+                                                        vk::ImageUsageFlagBits::eColorAttachment);
 
 		printf("Evaluating image sharing mode...\n");
 		printf("Using ");
@@ -174,12 +187,14 @@ namespace ppr
 
 		for (uint16_t i = 0; i < queue_fam_properties.size(); ++i)
 		{
-			if (queue_fam_properties[i].queueCount > 0 && queue_fam_properties[i].queueFlags & vk::QueueFlagBits::eGraphics)
+			if (queue_fam_properties[i].queueCount > 0 
+             && queue_fam_properties[i].queueFlags & vk::QueueFlagBits::eGraphics)
 				family_indices.graphics = i;
 
 			vk::Bool32 present_support = a_device.getSurfaceSupportKHR(i, m_surface);
 
-			if (queue_fam_properties[i].queueCount > queue_families::MIN_INDEX && present_support)
+			if (queue_fam_properties[i].queueCount > queue_families::MIN_INDEX 
+             && present_support)
 				family_indices.present = i;
 
 			if (family_indices.IsComplete())
@@ -201,7 +216,8 @@ namespace ppr
 
 		for (const auto& i_surface : an_available_formats)
 		{
-			if (i_surface.format == vk::Format::eB8G8R8A8Unorm && i_surface.colorSpace == vk::ColorSpaceKHR::eSrgbNonlinear)
+			if (i_surface.format == vk::Format::eB8G8R8A8Unorm 
+             && i_surface.colorSpace == vk::ColorSpaceKHR::eSrgbNonlinear)
 				return i_surface;
 		}
 
@@ -235,8 +251,10 @@ namespace ppr
 			auto window_size = (size<uint32_t>)m_window.get_size();
             vk::Extent2D actual_extent = { window_size.width, window_size.height };
 
-			actual_extent.width = std::max(a_capabilities.minImageExtent.width, std::min(a_capabilities.maxImageExtent.width, actual_extent.width));
-			actual_extent.height = std::max(a_capabilities.minImageExtent.height, std::min(a_capabilities.maxImageExtent.height, actual_extent.height));
+			actual_extent.width = std::max(a_capabilities.minImageExtent.width, 
+                                      std::min(a_capabilities.maxImageExtent.width, actual_extent.width));
+			actual_extent.height = std::max(a_capabilities.minImageExtent.height, 
+                                       std::min(a_capabilities.maxImageExtent.height, actual_extent.height));
 
 			return actual_extent;
 		}
@@ -247,8 +265,8 @@ namespace ppr
 		printf("Querying swapchain support...\n");
 
 		swapchain_support support_details;
-		support_details.capabilities = a_device.getSurfaceCapabilitiesKHR(m_surface);
-		support_details.formats = a_device.getSurfaceFormatsKHR(m_surface);
+		support_details.capabilities  = a_device.getSurfaceCapabilitiesKHR(m_surface);
+		support_details.formats       = a_device.getSurfaceFormatsKHR(m_surface);
 		support_details.present_modes = a_device.getSurfacePresentModesKHR(m_surface);
 
 		return support_details;
@@ -272,6 +290,7 @@ namespace ppr
 		m_device.freeCommandBuffers(m_commandpool, m_commandbuffers);
 
 		m_pipeline.destroy();
+
 		m_vertex_buffer.destroy();
 
 		for (auto i_view : m_image_views)
@@ -302,7 +321,10 @@ namespace ppr
 		{
             const vk::ImageView attachments[] = { m_image_views[i] };
 
-            const vk::FramebufferCreateInfo framebuffer_info({}, m_pipeline.get_renderpass(), 1, attachments, m_extent2D.width, m_extent2D.height, 1);
+            const vk::FramebufferCreateInfo framebuffer_info({}, m_pipeline.get_renderpass(), 1, 
+                                                             attachments, 
+                                                             m_extent2D.width, 
+                                                             m_extent2D.height, 1);
 
 			m_framebuffers[i] = m_device.createFramebuffer(framebuffer_info);
 		}
@@ -312,7 +334,7 @@ namespace ppr
 
 	void swapchain::recreate()
 	{
-		auto window_size = m_window.get_size();
+		const auto window_size = m_window.get_size();
 
 		if (window_size.width == 0 || window_size.height == 0)
 			return;
@@ -334,7 +356,7 @@ namespace ppr
 
 	void swapchain::create_semaphores()
 	{
-        const vk::SemaphoreCreateInfo semaphore_createinfo = {};
+        const vk::SemaphoreCreateInfo semaphore_createinfo({});
 
 		m_sema_image_available = m_device.createSemaphore(semaphore_createinfo);
 		m_sema_render_finished = m_device.createSemaphore(semaphore_createinfo);
@@ -348,7 +370,10 @@ namespace ppr
 
 		m_commandbuffers.resize(m_framebuffers.size());
 
-        const vk::CommandBufferAllocateInfo cmdbuffer_alloc_info(m_commandpool, vk::CommandBufferLevel::ePrimary, (uint32_t)m_commandbuffers.size());
+        const vk::CommandBufferAllocateInfo cmdbuffer_alloc_info(m_commandpool, 
+                                                             vk::CommandBufferLevel::ePrimary, 
+                                                       (uint32_t)m_commandbuffers.size());
+
 		m_commandbuffers = m_device.allocateCommandBuffers(cmdbuffer_alloc_info);
 
 		for (size_t i = 0; i < m_commandbuffers.size(); ++i)
@@ -359,16 +384,20 @@ namespace ppr
 
             const vk::ClearValue clear_color(vk::ClearColorValue(std::array<float, 4>({ 0.f, 0.f, 0.f, 1.f })));
             const vk::Rect2D draw_rect({ 0, 0 }, m_extent2D);
-            const vk::RenderPassBeginInfo renderpass_info(m_pipeline.get_renderpass(), m_framebuffers[i], draw_rect, 1, &clear_color);
+            const vk::RenderPassBeginInfo renderpass_info(m_pipeline.get_renderpass(), 
+                                                          m_framebuffers[i], 
+                                                          draw_rect, 1, 
+                                                         &clear_color);
 
 			m_commandbuffers[i].beginRenderPass(renderpass_info, vk::SubpassContents::eInline);
 			m_commandbuffers[i].bindPipeline(vk::PipelineBindPoint::eGraphics, m_pipeline.get());
 
-            const vk::Buffer vertex_buffers[] = { m_vertex_buffer.get() };
+            const vk::Buffer     vertex_buffers[] = { m_vertex_buffer.get() };
             const vk::DeviceSize buffer_offsets[] = { 0 };
 			m_commandbuffers[i].bindVertexBuffers(0, 1, vertex_buffers, buffer_offsets);
 
-			m_commandbuffers[i].draw((uint32_t)m_vertex_buffer.get_vertex_array().size(), 1, 0, 0);
+            const uint32_t vertex_array_size = m_vertex_buffer.get_vertex_array().size();
+			m_commandbuffers[i].draw(vertex_array_size, 1, 0, 0);
 			m_commandbuffers[i].endRenderPass();
 			m_commandbuffers[i].end();
 		}
@@ -395,9 +424,12 @@ namespace ppr
 
         const vk::SubpassDescription subpass({}, vk::PipelineBindPoint::eGraphics, 0, nullptr, 1, &color_attach_ref);
 
-        const vk::SubpassDependency subpass_dependency(VK_SUBPASS_EXTERNAL, 0, vk::PipelineStageFlagBits::eColorAttachmentOutput,
-			                                           vk::PipelineStageFlagBits::eColorAttachmentOutput, vk::AccessFlags(),
-			                                           vk::AccessFlagBits::eColorAttachmentRead | vk::AccessFlagBits::eColorAttachmentWrite);
+        const vk::SubpassDependency subpass_dependency(VK_SUBPASS_EXTERNAL, 0, 
+                                                   vk::PipelineStageFlagBits::eColorAttachmentOutput,
+			                                       vk::PipelineStageFlagBits::eColorAttachmentOutput, 
+                                                   vk::AccessFlags(),
+			                                       vk::AccessFlagBits::eColorAttachmentRead 
+                                                 | vk::AccessFlagBits::eColorAttachmentWrite);
 
         const vk::RenderPassCreateInfo renderpass_info({}, 1, &color_attach_descript, 1, &subpass, 1, &subpass_dependency);
 
