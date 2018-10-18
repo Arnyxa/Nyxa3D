@@ -16,40 +16,40 @@
 
 namespace ppr
 {
-	class Context
+	class context
 	{
 	public:
-		Context(const std::string& aTitle = "Pepper");
-		~Context();
+		context(const std::string& a_title = DEFAULT_NAME);
+		~context();
 
-		void Run();
+		void run();
 
 	private:
-		void Init();
+		void init();
 
-		void CreateInstance();
-		void CreateLogicalDevice();
+		void create_instance();
+		void create_device();
 
-		void SelectPhysicalDevice();
-		bool IsDeviceSuitable(vk::PhysicalDevice aDevice);
+		void select_physical_device();
+		bool device_is_suitable(vk::PhysicalDevice a_device);
 
-		bool CheckDeviceExtensionSupport(vk::PhysicalDevice aDevice);
+		bool check_ext_support(vk::PhysicalDevice a_device);
 
-		std::vector<const char*> GetRequiredExtensions();
+		std::vector<const char*> required_extensions();
 
-		void MainLoop();
+		void main_loop();
 
 	private:
         // Pepper
-        Window mWindow;
-        Debugger mDebugger;
-        Swapchain mSwapchain;
+        window m_window;
+        debugger m_debugger;
+        swapchain m_swapchain;
 
 		// Vulkan
-		vk::Instance mInstance;
-		vk::Device mDevice;
-		vk::PhysicalDevice mPhysicalDevice;
+		vk::Instance m_instance;
+		vk::Device m_device;
+		vk::PhysicalDevice m_physical_device;
 
-		const std::vector<const char*> mDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+		const std::vector<const char*> m_device_ext = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 	};
 }

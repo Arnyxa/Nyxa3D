@@ -9,36 +9,36 @@
 
 namespace ppr
 {
-	struct Vertex
+	struct vertex
 	{
 	public:
-		glm::vec2 Pos;
-		glm::vec3 Color;
+		glm::vec2 pos;
+		glm::vec3 color;
 
 	public:
-		static vk::VertexInputBindingDescription GetBindingDescript();
-		static std::array<vk::VertexInputAttributeDescription, 2> GetAttributeDescript();
+		static vk::VertexInputBindingDescription binding_descript();
+		static std::array<vk::VertexInputAttributeDescription, 2> attribute_descript();
 	};
 
-	class VertexBuffer
+	class vertex_buffer
 	{
 	public:
-		explicit VertexBuffer(const vk::Device& aPhysDevice);
+		explicit vertex_buffer(const vk::Device& a_physical_device);
 
-		void Create(const vk::PhysicalDevice& aPhysicalDevice);
-		void Destroy();
+		void create(const vk::PhysicalDevice& a_physical_device);
+		void destroy();
 
-		vk::Buffer& Get();
-		std::vector<Vertex>& GetVertexArray();
+		vk::Buffer& get();
+		std::vector<vertex>& get_vertex_array();
 
-		uint32_t FindMemoryType(uint32_t aTypeFilter, vk::MemoryPropertyFlags aProperties, const vk::PhysicalDevice& aPhysicalDevice);
+		uint32_t find_memory_type(uint32_t a_typefilter, vk::MemoryPropertyFlags a_properties, const vk::PhysicalDevice& a_physical_device);
 
 	private:
-		const vk::Device& mDevice;
+		const vk::Device& m_device;
 
-		vk::Buffer mBuffer;
-		vk::DeviceMemory mBufferMemory;
-		std::vector<Vertex> mVertices;
+		vk::Buffer m_buffer;
+		vk::DeviceMemory m_buffer_memory;
+		std::vector<vertex> m_vertices;
 	};
 
 }

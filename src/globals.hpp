@@ -2,16 +2,17 @@
 
 namespace ppr
 {
-	extern constexpr char LNG_STANDARD_VALIDATION_NAME[] = "VK_LAYER_LUNARG_standard_validation";
+	constexpr const char* LNG_STANDARD_VALIDATION_NAME = "VK_LAYER_LUNARG_standard_validation";
+    constexpr const char* DEFAULT_NAME = "Pepper";
 }
 
 namespace ppr
 {
 
 #ifdef PPR_DEBUG
-	extern constexpr bool VALIDATION_LAYERS_ENABLED = true;
+	constexpr bool VALIDATION_LAYERS_ENABLED = true;
 #else
-	extern constexpr bool VALIDATION_LAYERS_ENABLED = false;
+	constexpr bool VALIDATION_LAYERS_ENABLED = false;
 #endif
 
 }

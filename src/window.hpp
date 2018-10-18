@@ -18,39 +18,39 @@ struct GLFWwindow;
 
 namespace ppr
 {	
-	class Window
+	class window
 	{
 	public:
-		Window(const std::string& aTitle, size_t aDefaultWidth = 800, size_t aDefaultHeight = 600);
-		~Window();
+		window(const std::string& a_title, size_t a_width = 800, size_t a_height = 600);
+		~window();
 
-		void Destroy();
+		void destroy();
 
-		void Init();
+		void init();
 
-		bool ShouldClose() const;
-		void PollEvents();
+		bool should_close() const;
+		void poll_events();
 
-		GLFWwindow* GetGlfwWindowPtr();
-		void* GetWindowUserPtr();
+		GLFWwindow* get_glfw_window();
+		void* get_user_ptr();
 
-		void ResetSize();
-		Size<int> GetSize() const;
-		void SetSize(size_t aWidth, size_t aHeight);
+		void reset_size();
+		size<int> get_size() const;
+		void set_size(size_t a_width, size_t a_height);
 
-		void SetTitle(const std::string& aTitle);
-		std::string GetTitle() const;
+		void set_title(const std::string& a_title);
+		std::string get_title() const;
 
-		vk::SurfaceKHR CreateSurface(const vk::Instance& anInstance) const;
-		std::vector<const char*> GetRequiredExtensions();
+		vk::SurfaceKHR create_surface(const vk::Instance& an_instance) const;
+		std::vector<const char*> required_extensions();
 
 	private:
 		// GLFW
-		GLFWwindow* mWindow;
+		GLFWwindow* m_window;
 
-		size_t mDefaultWidth;
-		size_t mDefaultHeight;
+		size_t m_default_width;
+		size_t m_default_height;
 
-		std::string mTitle;
+		std::string m_title;
 	};
 }

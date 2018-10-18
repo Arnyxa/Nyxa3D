@@ -8,37 +8,37 @@
 
 namespace ppr
 {
-	class Debugger
+	class debugger
 	{
 	public:
-		explicit Debugger(vk::Instance& anInstance);
-		~Debugger();
+		explicit debugger(vk::Instance& an_instance);
+		~debugger();
 
-		void Init();
-		void Destroy();
+		void init();
+		void destroy();
 
-		bool CheckValidationLayerSupport() const;
-		uint32_t GetEnabledLayerCount() const;
-		const char* const* GetEnabledLayerNames() const;
-
-	private:
-		static VKAPI_ATTR VkBool32 VKAPI_CALL Callback(VkDebugUtilsMessageSeverityFlagBitsEXT aSeverity,
-														VkDebugUtilsMessageTypeFlagsEXT aType,
-														const VkDebugUtilsMessengerCallbackDataEXT* aCallbackData,
-														void* aUserData);
-
-		VkResult CreateDebugUtilsMessenger(const VkDebugUtilsMessengerCreateInfoEXT* aCreateInfo,
-											const VkAllocationCallbacks* anAllocator, VkDebugUtilsMessengerEXT* aCallback);
-
-		void DestroyDebugUtilsMessenger(VkDebugUtilsMessengerEXT aCallback, const VkAllocationCallbacks* anAllocator = nullptr);
+		bool supports_validation_layers() const;
+		uint32_t enabled_layer_count() const;
+		const char* const* enabled_layer_names() const;
 
 	private:
-		VkDebugUtilsMessengerEXT mDbgMessenger;
-		vk::Instance& mInstance;
+		static VKAPI_ATTR VkBool32 VKAPI_CALL callback(VkDebugUtilsMessageSeverityFlagBitsEXT a_severity,
+														VkDebugUtilsMessageTypeFlagsEXT a_type,
+														const VkDebugUtilsMessengerCallbackDataEXT* a_callback_data,
+														void* a_user_data);
+
+		VkResult CreateDebugUtilsMessenger(const VkDebugUtilsMessengerCreateInfoEXT* a_createinfo,
+											const VkAllocationCallbacks* an_allocator, VkDebugUtilsMessengerEXT* a_callback);
+
+		void DestroyDebugUtilsMessenger(VkDebugUtilsMessengerEXT a_callback, const VkAllocationCallbacks* an_allocator = nullptr);
+
+	private:
+		VkDebugUtilsMessengerEXT m_messenger;
+		vk::Instance& m_instance;
 
 		static constexpr char CREATE_DBG_MSGR_EXT[]  = "vkCreateDebugUtilsMessengerEXT";
 		static constexpr char DESTROY_DBG_MSGR_EXT[] = "vkDestroyDebugUtilsMessengerEXT";
 
-		const std::vector<const char*> mValidationLayers = { LNG_STANDARD_VALIDATION_NAME };
+		const std::vector<const char*> m_validation_layers = { LNG_STANDARD_VALIDATION_NAME };
 	};
 }

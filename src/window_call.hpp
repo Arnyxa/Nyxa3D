@@ -15,48 +15,48 @@ typedef void(*GLFWwindowiconifyfun) (GLFWwindow*, int);
 
 namespace ppr
 {
-	using CBool = int;
+	using cbool = int;
 
-	enum class CallType
+	enum class call_type
 	{
-		Resize,
-		Close,
-		Focus,
-		Unfocus,
-		Reposition,
-		Refresh,
-		Iconify,
+		RESIZE,
+		CLOSE,
+		FOCUS,
+		UNFOCUS,
+		REPOSITION,
+		REFRESH,
+		ICONIFY,
 	};
 
-	class WindowCallbacks : public CommonChecks
+	class window_callbacks : public common_checks
 	{
 	public:
-		static WindowCallbacks& GetInstance();
+		static window_callbacks& get();
 
 	private:
-		static void OnResize(GLFWwindow* aWindow, int aWidth, int aHeight);
-		static void OnClose(GLFWwindow* aWindow);
-		static void OnFocus(GLFWwindow* aWindow, CBool wasFocusGained);
-		static void OnReposition(GLFWwindow* aWindow, int xPos, int yPos);
-		static void OnRefresh(GLFWwindow* aWindow);
-		static void OnIconify(GLFWwindow* aWindow, CBool wasIconified);
+		static void OnResize(GLFWwindow* a_window, int a_width, int a_height);
+		static void OnClose(GLFWwindow* a_window);
+		static void OnFocus(GLFWwindow* a_window, cbool was_focused);
+		static void OnReposition(GLFWwindow* a_window, int x, int y);
+		static void OnRefresh(GLFWwindow* a_window);
+		static void OnIconify(GLFWwindow* a_window, cbool was_iconified);
 
 	public:
-		void Init(GLFWwindow* aWindow);
+		void init(GLFWwindow* a_window);
 
 		template<typename T>
-		void Add(void (T::*aFunction)(), T* anObjPtr, CallType aType);
+		void add(void (T::*a_function)(), T* obj_ptr, call_type a_type);
 
 	private:
-		WindowCallbacks() {}
+		window_callbacks() {}
 
-		void Execute(CallType aType);
+		void execute(call_type a_type);
 
 	private:
-		std::vector<std::pair<Callbacks::ptr, CallType>> mCallbacks;
+		std::vector<std::pair<callbacks::ptr, call_type>> mCallbacks;
 	};
 
-#define WndCallbacks WindowCallbacks::GetInstance() 
+#define wndcall window_callbacks::get() 
 }
 
 #include "window_call.inl"

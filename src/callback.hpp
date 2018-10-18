@@ -4,27 +4,27 @@
 
 namespace ppr
 {
-	class Callbacks
+	class callbacks
 	{
 	public:
-		typedef std::unique_ptr<Callbacks> ptr;
+        using ptr = std::unique_ptr<callbacks>;
 
-		virtual void Execute() = 0;
+		virtual void execute() = 0;
 	};
 
 	template<typename T>
-	class Call : public Callbacks
+	class call : public callbacks
 	{
 	public:
-		Call(void (T::*aFunction)(), T* anObjPtr)
-			: mFunction(aFunction), mObject(anObjPtr)
+		call(void (T::*a_function)(), T* obj_ptr)
+			: m_function(a_function), m_object(obj_ptr)
 		{}
 
-		void Execute() override
-		{ (mObject->*mFunction)(); }
+		void execute() override
+		{ (m_object->*m_function)(); }
 
 	private:
-		void(T::*mFunction)();
-		T* mObject;
+		void(T::*m_function)();
+		T* m_object;
 	};
 }

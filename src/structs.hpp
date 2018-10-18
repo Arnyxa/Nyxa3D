@@ -7,33 +7,34 @@ typedef unsigned int uint32_t;
 namespace ppr
 {
 	template<typename T>
-	struct Size
+	struct size
 	{
 	public:
-		T Width, Height;
+		T width, height;
 
 	public:
-		// Custom C-style conversion
-		operator Size<uint32_t>() const
-		{ return Size<uint32_t> {(uint32_t)Width, (uint32_t)Height}; }
-		operator Size<int>() const
-		{ return Size<int> {(int)Width, (int)Height}; }
+		// Custom C-style conversions
+		operator size<uint32_t>() const
+		{ return size<uint32_t> {(uint32_t)width, (uint32_t)height}; }
+
+		operator size<int>() const
+		{ return size<int> {(int)width, (int)height}; }
 	};
 }
 
 namespace ppr
 {
-	struct QueueFamilyIndices
+	struct queue_families
 	{
 	public:
-		int Graphics = UNAVAILABLE;
-		int Present = UNAVAILABLE;
+		int graphics = UNAVAILABLE;
+		int present = UNAVAILABLE;
 
 		static constexpr int UNAVAILABLE = -1;
 		static constexpr int MIN_INDEX = 0;
 
 	public:
 		bool IsComplete()
-		{ return Graphics >= MIN_INDEX && Present >= MIN_INDEX; }
+		{ return graphics >= MIN_INDEX && present >= MIN_INDEX; }
 	};
 }

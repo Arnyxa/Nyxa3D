@@ -36,7 +36,7 @@ namespace ppr
 		return aResult;
 	}
 
-	VkResult PrintResult(VkResult aResult)
+	VkResult print_vkresult(VkResult aResult)
 	{
 		std::string myTextResult;
 

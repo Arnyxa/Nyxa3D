@@ -11,24 +11,24 @@
 
 namespace ppr
 {
-	Window::Window(const std::string& aTitle, size_t aDefaultWidth, size_t aDefaultHeight)
-		: mWindow(nullptr)
-		, mDefaultWidth(aDefaultWidth)
-		, mDefaultHeight(aDefaultHeight)
-		, mTitle(aTitle.c_str())
+	window::window(const std::string& a_title, size_t a_width, size_t a_height)
+		: m_window(nullptr)
+		, m_default_width(a_width)
+		, m_default_height(a_height)
+		, m_title(a_title.c_str())
 	{}
 
-	Window::~Window()
+	window::~window()
 	{
-		Destroy();
+		destroy();
 	}
 
-	bool Window::ShouldClose() const
+	bool window::should_close() const
 	{
-		return glfwWindowShouldClose(mWindow);
+		return glfwWindowShouldClose(m_window);
 	}
 
-	void Window::Init()
+	void window::init()
 	{
 		printf("Initializing GLFW...\n");
 
@@ -39,49 +39,49 @@ namespace ppr
 
 		printf("Creating window...\n");
 
-		mWindow = glfwCreateWindow((int)mDefaultWidth, (int)mDefaultHeight, mTitle.c_str(), nullptr, nullptr);
+		m_window = glfwCreateWindow((int)m_default_width, (int)m_default_height, m_title.c_str(), nullptr, nullptr);
 
-		WndCallbacks.Init(mWindow);
+		wndcall.init(m_window);
 
 		printf("GLFW Initialized.\n");
 	}
 
-	void Window::Destroy()
+	void window::destroy()
 	{
-		if (mWindow != nullptr)
+		if (m_window != nullptr)
 		{
-			glfwDestroyWindow(mWindow);
+			glfwDestroyWindow(m_window);
 			glfwTerminate();
 		}
 	}
 
-	void Window::PollEvents()
+	void window::poll_events()
 	{
 		glfwPollEvents();
 	}
 
-	GLFWwindow* Window::GetGlfwWindowPtr()
+	GLFWwindow* window::get_glfw_window()
 	{
-		return mWindow;
+		return m_window;
 	}
 
-	void* Window::GetWindowUserPtr()
+	void* window::get_user_ptr()
 	{
-		return glfwGetWindowUserPointer(mWindow);
+		return glfwGetWindowUserPointer(m_window);
 	}
 
-	vk::SurfaceKHR Window::CreateSurface(const vk::Instance& anInstance) const
+	vk::SurfaceKHR window::create_surface(const vk::Instance& an_instance) const
 	{
 		VkSurfaceKHR myTempSurface;
 
-		if (PrintResult(glfwCreateWindowSurface(anInstance, mWindow, nullptr, &myTempSurface)) != VK_SUCCESS)
+		if (print_vkresult(glfwCreateWindowSurface(an_instance, m_window, nullptr, &myTempSurface)) != VK_SUCCESS)
 			throw std::runtime_error("Failed to create Vulkan surface for GLFW window.");
 
 		return static_cast<vk::SurfaceKHR>(myTempSurface);
 
 	}
 
-	std::vector<const char*> Window::GetRequiredExtensions()
+	std::vector<const char*> window::required_extensions()
 	{
 		uint32_t myCount = 0;
 		const char** myExtensionList = glfwGetRequiredInstanceExtensions(&myCount);
@@ -89,34 +89,34 @@ namespace ppr
 		return std::vector<const char*>(myExtensionList, myExtensionList + myCount);
 	}
 
-	Size<int> Window::GetSize() const
+	size<int> window::get_size() const
 	{
-		Size<int> mySize;
+		size<int> mySize;
 
-		glfwGetWindowSize(mWindow, &mySize.Width, &mySize.Height);
+		glfwGetWindowSize(m_window, &mySize.width, &mySize.height);
 
 		return mySize;
 	}
 
-	void Window::SetTitle(const std::string& aTitle)
+	void window::set_title(const std::string& a_title)
 	{
-		mTitle = aTitle;
-		glfwSetWindowTitle(mWindow, mTitle.c_str());
+		m_title = a_title;
+		glfwSetWindowTitle(m_window, m_title.c_str());
 	}
 
-	std::string Window::GetTitle() const
+	std::string window::get_title() const
 	{
-		return std::string(mTitle);
+		return std::string(m_title);
 	}
 
-	void Window::SetSize(size_t aWidth, size_t aHeight)
+	void window::set_size(size_t a_width, size_t a_height)
 	{
-		glfwSetWindowSize(mWindow, (int)aWidth, (int)aHeight);
+		glfwSetWindowSize(m_window, (int)a_width, (int)a_height);
 	}
 
 	// Sets window size back to initially specified default size
-	void Window::ResetSize()
+	void window::reset_size()
 	{
-		glfwSetWindowSize(mWindow, (int)mDefaultWidth, (int)mDefaultHeight);
+		glfwSetWindowSize(m_window, (int)m_default_width, (int)m_default_height);
 	}
 }

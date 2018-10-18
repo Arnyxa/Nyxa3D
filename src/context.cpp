@@ -10,228 +10,228 @@
 
 namespace ppr
 {
-	Context::Context(const std::string& aTitle)
-		: mWindow(aTitle)
-        , mDebugger(mInstance)
-		, mSwapchain(mDevice, mWindow, mInstance, mPhysicalDevice)
+	context::context(const std::string& a_title)
+		: m_window(a_title)
+        , m_debugger(m_instance)
+		, m_swapchain(m_device, m_window, m_instance, m_physical_device)
 	{}
 
-	void Context::Run()
+	void context::run()
 	{
-		Init();
-		MainLoop();
+		init();
+		main_loop();
 	}
 
-	void Context::MainLoop()
+	void context::main_loop()
 	{
-		while (!mWindow.ShouldClose())
+		while (!m_window.should_close())
 		{
-			mWindow.PollEvents();
-			mSwapchain.Draw();
+			m_window.poll_events();
+			m_swapchain.draw();
 		}
 
-		mDevice.waitIdle();
+		m_device.waitIdle();
 	}
 
-	void Context::Init()
+	void context::init()
 	{
-		printf("Initializing Window...\n");
+		printf("Initializing window...\n");
 
-		mWindow.Init();
+		m_window.init();
 
-		printf("Window initialized.\n\nInitializing Vulkan...\n");
+		printf("window initialized.\n\nInitializing Vulkan...\n");
 
-		CreateInstance();
-		mDebugger.Init();
-		mSwapchain.CreateWindowSurface();
-		SelectPhysicalDevice();
-		CreateLogicalDevice();
-		mSwapchain.Init();
+		create_instance();
+		m_debugger.init();
+		m_swapchain.create_window_surface();
+		select_physical_device();
+		create_device();
+		m_swapchain.init();
 
 		printf("Vulkan initialized.\n\n");
 	}
 
-	void Context::CreateLogicalDevice()
+	void context::create_device()
 	{
 		printf("Creating logical Vulkan Device...\n");
 
-		QueueFamilyIndices myIndices = mSwapchain.FindQueueFamilies(mPhysicalDevice);
+		queue_families family_indices = m_swapchain.find_queue_families(m_physical_device);
 
-		std::vector<vk::DeviceQueueCreateInfo> myQueueCreateInfos;
-		std::set<int> myUniqueQueueFamilies = { myIndices.Graphics, myIndices.Present };
+		std::vector<vk::DeviceQueueCreateInfo> queue_create_infos;
+		std::set<int> unique_families = { family_indices.graphics, family_indices.present };
 
-		float myQueuePriority = 1.f;
-		for (auto& iQueueFamily : myUniqueQueueFamilies)
+		const float queue_priority = 1.f;
+		for (auto& i_family : unique_families)
 		{
-			vk::DeviceQueueCreateInfo myQueueCreateInfo({}, iQueueFamily, 1, &myQueuePriority);
+			vk::DeviceQueueCreateInfo queue_createinfo({}, i_family, 1, &queue_priority);
 
-			myQueueCreateInfos.push_back(myQueueCreateInfo);
+			queue_create_infos.push_back(queue_createinfo);
 		}
 
-		vk::PhysicalDeviceFeatures myDeviceFeatures = {};
+		vk::PhysicalDeviceFeatures device_features = {};
 
-		vk::DeviceCreateInfo myDeviceCreateInfo;
-		myDeviceCreateInfo.queueCreateInfoCount = static_cast<uint32_t>(myQueueCreateInfos.size());
-		myDeviceCreateInfo.pQueueCreateInfos = myQueueCreateInfos.data();
-		myDeviceCreateInfo.pEnabledFeatures = &myDeviceFeatures;
+		vk::DeviceCreateInfo device_createinfo;
+		device_createinfo.queueCreateInfoCount = static_cast<uint32_t>(queue_create_infos.size());
+		device_createinfo.pQueueCreateInfos = queue_create_infos.data();
+		device_createinfo.pEnabledFeatures = &device_features;
 
-		myDeviceCreateInfo.enabledExtensionCount = static_cast<uint32_t>(mDeviceExtensions.size());
-		myDeviceCreateInfo.ppEnabledExtensionNames = mDeviceExtensions.data();
+		device_createinfo.enabledExtensionCount = static_cast<uint32_t>(m_device_ext.size());
+		device_createinfo.ppEnabledExtensionNames = m_device_ext.data();
 
 		if (VALIDATION_LAYERS_ENABLED)
 		{
-			myDeviceCreateInfo.enabledLayerCount = mDebugger.GetEnabledLayerCount();
-			myDeviceCreateInfo.ppEnabledLayerNames = mDebugger.GetEnabledLayerNames();
+			device_createinfo.enabledLayerCount = m_debugger.enabled_layer_count();
+			device_createinfo.ppEnabledLayerNames = m_debugger.enabled_layer_names();
 		}
 		else
-			myDeviceCreateInfo.enabledLayerCount = 0;
+			device_createinfo.enabledLayerCount = 0;
 
-		mDevice = mPhysicalDevice.createDevice(myDeviceCreateInfo);
+		m_device = m_physical_device.createDevice(device_createinfo);
 
-		mSwapchain.GetGraphicsQueue() = mDevice.getQueue(myIndices.Graphics, 0);
-		mSwapchain.GetPresentQueue() = mDevice.getQueue(myIndices.Present, 0);
+		m_swapchain.graphics_queue() = m_device.getQueue(family_indices.graphics, 0);
+		m_swapchain.present_queue() = m_device.getQueue(family_indices.present, 0);
 
 		printf("Successfully created logical Vulkan Device.\n\n");
 	}
 
-	void Context::SelectPhysicalDevice()
+	void context::select_physical_device()
 	{
 		printf("Searching for viable physical device...\n");
 
-		std::vector<vk::PhysicalDevice> myDevices = mInstance.enumeratePhysicalDevices();
+		std::vector<vk::PhysicalDevice> devices = m_instance.enumeratePhysicalDevices();
 
-		if (myDevices.empty())
+		if (devices.empty())
 			throw Error("Failed to find any GPU with Vulkan support.", Error::Code::NO_GPU_SUPPORT);
 
-		for (const auto& iDevice : myDevices)
+		for (const auto& i_device : devices)
 		{
-			if (IsDeviceSuitable(iDevice))
+			if (device_is_suitable(i_device))
 			{
-				mPhysicalDevice = iDevice;
+				m_physical_device = i_device;
 				break;
 			}
 		}
 
-		if (mPhysicalDevice == vk::PhysicalDevice())
+		if (m_physical_device == vk::PhysicalDevice())
 			throw Error("Available GPU(s) have insufficient compatibility with Pepper Engine features.", Error::Code::NO_PEPPER_SUPPORT);
 
 		printf("Matching Vulkan-compatible GPU(s) successfully found.\n\n");
 	}
 
-	bool Context::IsDeviceSuitable(vk::PhysicalDevice aDevice)
+	bool context::device_is_suitable(vk::PhysicalDevice a_device)
 	{
 		printf("Evaluating device suitability...\n");
 
-		QueueFamilyIndices myIndices = mSwapchain.FindQueueFamilies(aDevice);
+		queue_families family_indices = m_swapchain.find_queue_families(a_device);
 
-		bool isExtensionsSupported = CheckDeviceExtensionSupport(aDevice);
-		bool isSwapchainAdequate = false;
+		bool is_ext_supported = check_ext_support(a_device);
+		bool is_swapchain_adequate = false;
 
-		if (isExtensionsSupported)
+		if (is_ext_supported)
 		{
-			SwapchainDetails mySwapchainSupport = mSwapchain.QuerySupport(aDevice);
-			isSwapchainAdequate = !mySwapchainSupport.Formats.empty() && !mySwapchainSupport.PresentModes.empty();
+			swapchain_support mySwapchainSupport = m_swapchain.query_support(a_device);
+			is_swapchain_adequate = !mySwapchainSupport.formats.empty() && !mySwapchainSupport.present_modes.empty();
 		}
 
-		return myIndices.IsComplete() && isExtensionsSupported && isSwapchainAdequate;
+		return family_indices.IsComplete() && is_ext_supported && is_swapchain_adequate;
 	}
 
-	std::vector<const char*> Context::GetRequiredExtensions()
+	std::vector<const char*> context::required_extensions()
 	{
 		printf("Fetching required extensions...\n");
 
-		std::vector<const char*> myExtensions = mWindow.GetRequiredExtensions();
+		std::vector<const char*> extensions = m_window.required_extensions();
 
 		if (VALIDATION_LAYERS_ENABLED)
-			myExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+			extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 
-		return myExtensions;
+		return extensions;
 	}
 
-	bool Context::CheckDeviceExtensionSupport(vk::PhysicalDevice aDevice)
+	bool context::check_ext_support(vk::PhysicalDevice a_device)
 	{
 		printf("Checking device extension support...\n");
 
-		std::vector<vk::ExtensionProperties> myAvailableExtensions = aDevice.enumerateDeviceExtensionProperties();
+		std::vector<vk::ExtensionProperties> available_extensions = a_device.enumerateDeviceExtensionProperties();
 
-		std::set<std::string> myRequiredExtensions(mDeviceExtensions.begin(), mDeviceExtensions.end());
+		std::set<std::string> required_extensions(m_device_ext.begin(), m_device_ext.end());
 
-		for (const auto& iExtension : myAvailableExtensions)
-			myRequiredExtensions.erase(iExtension.extensionName);
+		for (const auto& i_extension : available_extensions)
+			required_extensions.erase(i_extension.extensionName);
 
-		return myRequiredExtensions.empty();
+		return required_extensions.empty();
 	}
 
-	void Context::CreateInstance()
+	void context::create_instance()
 	{
-		if (VALIDATION_LAYERS_ENABLED && !mDebugger.CheckValidationLayerSupport())
+		if (VALIDATION_LAYERS_ENABLED && !m_debugger.supports_validation_layers())
 			throw Error("Validation layers requested, but not available.", Error::Code::REQ_VAL_LAYER_UNAVAILABLE);
 
-		vk::ApplicationInfo myAppInfo("Pepper", VK_MAKE_VERSION(1, 0, 0), "Pepper Engine", VK_MAKE_VERSION(1, 0, 0), VK_API_VERSION_1_1);
+		vk::ApplicationInfo app_info("Pepper", VK_MAKE_VERSION(1, 0, 0), "Pepper Engine", VK_MAKE_VERSION(1, 0, 0), VK_API_VERSION_1_1);
 
-		auto myExtensions = GetRequiredExtensions();
+		auto extensions = required_extensions();
 
-		vk::InstanceCreateInfo myCreateInfo({}, &myAppInfo);
-		myCreateInfo.pApplicationInfo = &myAppInfo;
+		vk::InstanceCreateInfo createinfo({}, &app_info);
+		createinfo.pApplicationInfo = &app_info;
 
-		myCreateInfo.enabledExtensionCount = static_cast<uint32_t>(myExtensions.size());
-		myCreateInfo.ppEnabledExtensionNames = myExtensions.data();
+		createinfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+		createinfo.ppEnabledExtensionNames = extensions.data();
 
 		if (VALIDATION_LAYERS_ENABLED)
 		{
-			myCreateInfo.enabledLayerCount = mDebugger.GetEnabledLayerCount();
-			myCreateInfo.ppEnabledLayerNames = mDebugger.GetEnabledLayerNames();
+			createinfo.enabledLayerCount = m_debugger.enabled_layer_count();
+			createinfo.ppEnabledLayerNames = m_debugger.enabled_layer_names();
 		}
 		else
-			myCreateInfo.enabledLayerCount = 0;
+			createinfo.enabledLayerCount = 0;
 
-		std::vector<vk::ExtensionProperties> myExtensionProperties = vk::enumerateInstanceExtensionProperties();
+		std::vector<vk::ExtensionProperties> extension_properties = vk::enumerateInstanceExtensionProperties();
 
 		printf("Available extensions:\n");
-		for (const auto& iProperty : myExtensionProperties)
+		for (const auto& i_property : extension_properties)
 		{
-			printf(std::string(std::string("\t") + iProperty.extensionName + "\n").c_str());
+			printf(std::string(std::string("\t") + i_property.extensionName + "\n").c_str());
 		}
-		printf(myExtensionProperties.size() + " extensions found in total.\n\n");
+		printf(extension_properties.size() + " extensions found in total.\n\n");
 
 		printf("Checking for GLFW extension compatibility...\n");
 
 		// check whether extensions required by GLFW are in available extension list
-		for (size_t i = 0; i < myExtensions.size(); ++i)
+		for (size_t i = 0; i < extensions.size(); ++i)
 		{
-			bool isFound = false;
-			for (const auto& iProperty : myExtensionProperties)
+			bool was_found = false;
+			for (const auto& i_property : extension_properties)
 			{
-				if (std::strcmp(myExtensions[i], iProperty.extensionName) == 0)
+				if (std::strcmp(extensions[i], i_property.extensionName) == 0)
 				{
-					isFound = true;
+					was_found = true;
 					break;
 				}
 			}
 
-			if (!isFound)
+			if (!was_found)
 				throw Error("Could not find required GLFW extension for Vulkan on this system.", Error::Code::REQ_EXT_UNAVAILABLE);
 
-			printf(std::string(std::string("        ") + myExtensions[i] + " found.\n").c_str());
+			printf(std::string(std::string("        ") + extensions[i] + " found.\n").c_str());
 		}
 
 		printf("Extension check successful.\n\n");
 
-		mInstance = vk::createInstance(myCreateInfo);
+		m_instance = vk::createInstance(createinfo);
 
 		printf("Created Vulkan instance.\n\n");
 	}
 
-	Context::~Context()
+	context::~context()
 	{
-		printf("Destroying Context objects...\n");
+		printf("Destroying context objects...\n");
 
-		mSwapchain.Destroy();
-		mDevice.destroy();
-		mDebugger.Destroy();
-		mInstance.destroy();
+		m_swapchain.destroy();
+		m_device.destroy();
+		m_debugger.destroy();
+		m_instance.destroy();
 
-		printf("Context successfully destroyed.\n\n");
+		printf("context successfully destroyed.\n\n");
 	}
 
 }

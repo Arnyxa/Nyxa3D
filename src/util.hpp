@@ -11,7 +11,7 @@ namespace vk
 
 namespace ppr
 {
-	VkResult PrintResult(VkResult aResult);
+	VkResult print_vkresult(VkResult aResult);
 
 	void Print(const std::string& aText);
 	vk::Result Print(vk::Result aResult);
@@ -19,25 +19,26 @@ namespace ppr
 
 namespace ppr
 {
-	class CommonChecks
+	class common_checks
 	{
 	public:
-		CommonChecks() 
-			: mDestroyed(false)
-			, mInitialised(false) 
+		common_checks() 
+			: m_destroyed(false)
+			, m_initialized(false) 
 		{}
 
-		bool IsInitialized() const
-		{ return mInitialised; }
+		bool is_initialized() const
+		{ return m_initialized; }
 
 	protected:
-		bool mDestroyed;
-		bool mInitialised;
+		bool m_destroyed;
+		bool m_initialized;
 	};
 }
 
 namespace ppr
 {
+    // leaving casing here because this class is going to be deleted
     class Error
     {
     public:

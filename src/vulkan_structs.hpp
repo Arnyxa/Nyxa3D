@@ -9,10 +9,10 @@
 
 namespace ppr
 {
-	struct SwapchainDetails
+	struct swapchain_support
 	{
-		vk::SurfaceCapabilitiesKHR Capabilities;
-		std::vector<vk::SurfaceFormatKHR> Formats;
-		std::vector<vk::PresentModeKHR> PresentModes;
+		vk::SurfaceCapabilitiesKHR capabilities;
+		std::vector<vk::SurfaceFormatKHR> formats;
+		std::vector<vk::PresentModeKHR> present_modes;
 	};
 }

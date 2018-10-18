@@ -14,73 +14,71 @@
 
 namespace ppr
 {
-	class Swapchain : public CommonChecks
+	class swapchain : public common_checks
 	{
 	public:
-		Swapchain(const vk::Device& aDevice, 
-				const Window& aWindow,
-				const vk::Instance& anInstance,
-				const vk::PhysicalDevice& aPhysicalDevice);
-		~Swapchain();
+		swapchain(const vk::Device& a_device, 
+				const window& a_window,
+				const vk::Instance& an_instance,
+				const vk::PhysicalDevice& a_physical_device);
+		~swapchain();
 
-		void Draw();
-		void Init();
+		void draw();
+		void init();
 
-		void Create();
-		void Recreate();
+		void create();
+		void recreate();
 
-		void Cleanup();
-		void Destroy();
+		void cleanup();
+		void destroy();
 
-		void CreateWindowSurface();
-		void OnWindowResize();
+		void create_window_surface();
+		void on_window_resize();
 
-		SwapchainDetails QuerySupport(vk::PhysicalDevice aDevice);
-		QueueFamilyIndices FindQueueFamilies(vk::PhysicalDevice aDevice);
+		swapchain_support query_support(vk::PhysicalDevice a_device);
+		queue_families find_queue_families(vk::PhysicalDevice a_device);
 
-		vk::Queue& GetGraphicsQueue();
-		vk::Queue& GetPresentQueue();
-
-	private:
-		void DestroyWindowSurface();
-		void CreateImageViews();
-		void CreateFrameBuffers();
-		void CreateCommandPool();
-		void CreateCommandBuffers();
-		void CreateRenderPass();
-		void CreateSemaphores();
-
-		vk::Extent2D ChooseExtent(const vk::SurfaceCapabilitiesKHR& aCapabilities);
-		vk::PresentModeKHR ChoosePresentMode(const std::vector<vk::PresentModeKHR> anAvailablePresentModes);
-		vk::SurfaceFormatKHR ChooseSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& anAvailableFormats);
+		vk::Queue& graphics_queue();
+		vk::Queue& present_queue();
 
 	private:
-		const Window& mWindow;
-		const vk::Device& mDevice;
-		const vk::Instance& mInstance;
-		const vk::PhysicalDevice& mPhysicalDevice;
+		void destroy_window_surface();
+		void create_imageviews();
+		void create_framebuffers();
+		void create_commandpool();
+		void create_commandbuffers();
+		void create_renderpass();
+		void create_semaphores();
 
-		Pipeline mPipeline;
-		VertexBuffer mVertexBuffer;
+		vk::Extent2D choose_extent(const vk::SurfaceCapabilitiesKHR& a_capabilities);
+		vk::PresentModeKHR choose_present_mode(const std::vector<vk::PresentModeKHR> an_available_modes);
+		vk::SurfaceFormatKHR choose_surface_format(const std::vector<vk::SurfaceFormatKHR>& an_available_formats);
 
-		vk::SurfaceKHR mSurface;
-		vk::SwapchainKHR mSwapchain;
+	private:
+		const window& m_window;
+		const vk::Device& m_device;
+		const vk::Instance& m_instance;
+		const vk::PhysicalDevice& m_physical_device;
 
-		vk::Format mImageFormat;
-		vk::Extent2D mExtent2D;
+		pipeline m_pipeline;
+		vertex_buffer m_vertex_buffer;
 
-		vk::Queue mPresentQueue;
-		vk::Queue mGraphicsQueue;
+		vk::SurfaceKHR m_surface;
+		vk::SwapchainKHR m_swapchain;
 
-		vk::CommandPool mCommandPool;
-		vk::Semaphore mImageAvailableSema;
-		vk::Semaphore mRenderFinishedSema;
+		vk::Format m_image_format;
+		vk::Extent2D m_extent2D;
 
-		std::vector<vk::Image> mSwapchainImages;
-		std::vector<vk::ImageView> mImageViews;
-		std::vector<vk::Framebuffer> mFramebuffers;
-		std::vector<vk::CommandBuffer> mCommandBuffers;
+		vk::Queue m_queue_present;
+		vk::Queue m_queue_graphics;
 
-		std::function<void(GLFWwindow*, int, int)> mResizeCallbackFn;
+		vk::CommandPool m_commandpool;
+		vk::Semaphore m_sema_image_available;
+		vk::Semaphore m_sema_render_finished;
+
+		std::vector<vk::Image> m_images;
+		std::vector<vk::ImageView> m_image_views;
+		std::vector<vk::Framebuffer> m_framebuffers;
+		std::vector<vk::CommandBuffer> m_commandbuffers;
 	};
 }

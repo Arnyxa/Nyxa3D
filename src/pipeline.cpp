@@ -8,35 +8,35 @@
 
 namespace ppr
 {
-	Pipeline::Pipeline(const vk::Device& aDevice, const vk::Extent2D& aViewport)
-		: mDevice(aDevice)
-		, mViewport(aViewport)
-		, mCleaned(false)
+	pipeline::pipeline(const vk::Device& a_device, const vk::Extent2D& aViewport)
+		: m_device(a_device)
+		, m_viewport(aViewport)
+		, m_cleaned(false)
 	{}
 
-	Pipeline::~Pipeline()
+	pipeline::~pipeline()
 	{}
 
-	void Pipeline::Destroy()
+	void pipeline::destroy()
 	{
-		mDevice.destroyPipeline(mPipeline);
-		mDevice.destroyPipelineLayout(mPipelineLayout);
-		mDevice.destroyRenderPass(mRenderPass);
+		m_device.destroyPipeline(m_pipeline);
+		m_device.destroyPipelineLayout(m_pipe_layout);
+		m_device.destroyRenderPass(m_renderpass);
 	}
 
 
-	void Pipeline::Create()
+	void pipeline::create()
 	{
-		if (!mInitialised)
+		if (!m_initialized)
 			printf("Creating graphics pipeline...\n");
 		else
 			printf("Creating graphics pipeline...\n");
 
-		auto myVertShaderCode = ReadShader("shaders/vert.spv");
-		auto myFragShaderCode = ReadShader("shaders/frag.spv");
+		auto myVertShaderCode = read_shader("shaders/vert.spv");
+		auto myFragShaderCode = read_shader("shaders/frag.spv");
 
-		vk::ShaderModule myVertShaderModule = CreateShaderModule(myVertShaderCode);
-		vk::ShaderModule myFragShaderModule = CreateShaderModule(myFragShaderCode);
+		vk::ShaderModule myVertShaderModule = create_shader_module(myVertShaderCode);
+		vk::ShaderModule myFragShaderModule = create_shader_module(myFragShaderCode);
 
 		printf("Shaders loaded.\n");
 
@@ -47,8 +47,8 @@ namespace ppr
 
 		vk::PipelineShaderStageCreateInfo myShaderStages[] = { myVertShaderInfo, myFragShaderInfo };
 
-		auto myBinding = Vertex::GetBindingDescript();
-		auto myAttributes = Vertex::GetAttributeDescript();
+		auto myBinding = vertex::binding_descript();
+		auto myAttributes = vertex::attribute_descript();
 
 		vk::PipelineVertexInputStateCreateInfo myVertexInputInfo({}, 1, &myBinding, (uint32_t)myAttributes.size(), myAttributes.data());
 
@@ -57,14 +57,14 @@ namespace ppr
 		vk::Viewport myViewport = {};
 		myViewport.x = 0.0f;
 		myViewport.y = 0.0f;
-		myViewport.width = (float)mViewport.width;
-		myViewport.height = (float)mViewport.height;
+		myViewport.width = (float)m_viewport.width;
+		myViewport.height = (float)m_viewport.height;
 		myViewport.minDepth = 0.0f;
 		myViewport.maxDepth = 1.0f;
 
 		vk::Rect2D myScissor = {};
 		myScissor.offset = { 0, 0 };
-		myScissor.extent = mViewport;
+		myScissor.extent = m_viewport;
 
 		vk::PipelineViewportStateCreateInfo myViewportState({}, 1, &myViewport, 1, &myScissor);
 
@@ -92,46 +92,46 @@ namespace ppr
 
 		vk::PipelineLayoutCreateInfo myLayoutInfo;
 
-		mPipelineLayout = mDevice.createPipelineLayout(myLayoutInfo);
+		m_pipe_layout = m_device.createPipelineLayout(myLayoutInfo);
 
 		vk::GraphicsPipelineCreateInfo myPipelineInfo({}, 2, myShaderStages, &myVertexInputInfo, &myInputAssembly, nullptr, &myViewportState, 
-										&myRasterizer, &myMultiSampling, nullptr, &myColorBlendingGlobal, nullptr, mPipelineLayout, 
-										mRenderPass, 0, vk::Pipeline(), -1);
+										&myRasterizer, &myMultiSampling, nullptr, &myColorBlendingGlobal, nullptr, m_pipe_layout, 
+										m_renderpass, 0, vk::Pipeline(), -1);
 
-		if (Print(mDevice.createGraphicsPipelines(vk::PipelineCache(), 1, &myPipelineInfo, nullptr, &mPipeline)) != vk::Result::eSuccess)
-			throw Error("Failed to create Vulkan Graphics Pipeline.", Error::Code::PIPELINE_CREATION_FAIL);
+		if (Print(m_device.createGraphicsPipelines(vk::PipelineCache(), 1, &myPipelineInfo, nullptr, &m_pipeline)) != vk::Result::eSuccess)
+			throw Error("Failed to create Vulkan graphics pipeline.", Error::Code::PIPELINE_CREATION_FAIL);
 
-		printf("Graphics pipeline successfully created.\n");
+		printf("graphics pipeline successfully created.\n");
 
-		mDevice.destroyShaderModule(myVertShaderModule);
-		mDevice.destroyShaderModule(myFragShaderModule);
+		m_device.destroyShaderModule(myVertShaderModule);
+		m_device.destroyShaderModule(myFragShaderModule);
 
-		if (!mInitialised)
-			mInitialised = true;
+		if (!m_initialized)
+			m_initialized = true;
 	}
 
-	vk::ShaderModule Pipeline::CreateShaderModule(const std::vector<char>& aByteCode)
+	vk::ShaderModule pipeline::create_shader_module(const std::vector<char>& a_bytecode)
 	{
 		printf("Creating shader module...\n");
 
-		vk::ShaderModuleCreateInfo myCreateInfo({}, aByteCode.size(), reinterpret_cast<const uint32_t*>(aByteCode.data()));
-		vk::ShaderModule myShaderModule = mDevice.createShaderModule(myCreateInfo);
+		vk::ShaderModuleCreateInfo createinfo({}, a_bytecode.size(), reinterpret_cast<const uint32_t*>(a_bytecode.data()));
+		vk::ShaderModule myShaderModule = m_device.createShaderModule(createinfo);
 
 		return myShaderModule;
 	}
 
-	std::vector<char> Pipeline::ReadShader(const std::string& aFileName)
+	std::vector<char> pipeline::read_shader(const std::string& a_filename)
 	{
 		// open file at its end to know the filesize
-		std::ifstream myFile(aFileName, std::ios::ate | std::ios::binary);
+		std::ifstream myFile(a_filename, std::ios::ate | std::ios::binary);
 
 		if (!myFile.is_open())
-			throw Error("Failed to open shader \"" + aFileName + "\"", Error::Code::SHADER_NOT_FOUND);
+			throw Error("Failed to open shader \"" + a_filename + "\"", Error::Code::SHADER_NOT_FOUND);
 
 		// figure out file size based on buffer position
 		size_t myFileSize = (size_t)myFile.tellg();
 
-		printf(std::string(std::string(aFileName) + " size: " + std::to_string(myFileSize) + "\n").c_str());
+		printf(std::string(std::string(a_filename) + " size: " + std::to_string(myFileSize) + "\n").c_str());
 
 		std::vector<char> myBuffer(myFileSize);
 
@@ -144,18 +144,18 @@ namespace ppr
 		return myBuffer;
 	}
 
-	vk::Pipeline& Pipeline::GetRef()
+	vk::Pipeline& pipeline::get()
 	{
-		return mPipeline;
+		return m_pipeline;
 	}
 
-	vk::PipelineLayout& Pipeline::GetLayout()
+	vk::PipelineLayout& pipeline::get_layout()
 	{
-		return mPipelineLayout;
+		return m_pipe_layout;
 	}
 
-	vk::RenderPass& Pipeline::GetRenderPass()
+	vk::RenderPass& pipeline::get_renderpass()
 	{
-		return mRenderPass;
+		return m_renderpass;
 	}
 }

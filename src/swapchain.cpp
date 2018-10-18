@@ -7,110 +7,110 @@
 
 namespace ppr
 {
-	Swapchain::Swapchain(const vk::Device& aDevice, 
-						const Window& aWindow, 
-						const vk::Instance& anInstance, 
-						const vk::PhysicalDevice& aPhysicalDevice)
-		: mDevice(aDevice)
-		, mPipeline(aDevice, mExtent2D)
-		, mVertexBuffer(aDevice)
-		, mWindow(aWindow)
-		, mInstance(anInstance)
-		, mPhysicalDevice(aPhysicalDevice)
+	swapchain::swapchain(const vk::Device& a_device, 
+						const window& a_window, 
+						const vk::Instance& an_instance, 
+						const vk::PhysicalDevice& a_physical_device)
+		: m_device(a_device)
+		, m_pipeline(a_device, m_extent2D)
+		, m_vertex_buffer(a_device)
+		, m_window(a_window)
+		, m_instance(an_instance)
+		, m_physical_device(a_physical_device)
 	{}
 
-	Swapchain::~Swapchain()
+	swapchain::~swapchain()
 	{
-		if (!mDestroyed)
-			Destroy();
+		if (!m_destroyed)
+			destroy();
 	}
 
-	void Swapchain::Init()
+	void swapchain::init()
 	{
-		WndCallbacks.Add(&Swapchain::OnWindowResize, this, CallType::Resize);
-		Create();
-		CreateImageViews();
-		CreateRenderPass();
-		mPipeline.Create();
-		CreateFrameBuffers();
-		CreateCommandPool();
-		mVertexBuffer.Create(mPhysicalDevice);
-		CreateCommandBuffers();
-		CreateSemaphores();
+		wndcall.add(&swapchain::on_window_resize, this, call_type::RESIZE);
+		create();
+		create_imageviews();
+		create_renderpass();
+		m_pipeline.create();
+		create_framebuffers();
+		create_commandpool();
+		m_vertex_buffer.create(m_physical_device);
+		create_commandbuffers();
+		create_semaphores();
 
-		mInitialised = true;
+		m_initialized = true;
 	}
 
-	void Swapchain::OnWindowResize()
+	void swapchain::on_window_resize()
 	{
-		this->Recreate();
-		this->Draw();
+		this->recreate();
+		this->draw();
 	}
 
-	void Swapchain::Draw()
+	void swapchain::draw()
 	{
-		vk::ResultValue<uint32_t> myResultPair = mDevice.acquireNextImageKHR(mSwapchain, UINT64_MAX, mImageAvailableSema, nullptr);
+		vk::ResultValue<uint32_t> myResultPair = m_device.acquireNextImageKHR(m_swapchain, UINT64_MAX, m_sema_image_available, nullptr);
 
 		uint32_t myImageIndex = myResultPair.value;
 		vk::Result myResult = myResultPair.result;
 
 		if (Print(myResult) == vk::Result::eErrorOutOfDateKHR)
 		{
-			this->Recreate();
+			this->recreate();
 			return;
 		}
 
 		else if (myResult != vk::Result::eSuccess && myResult != vk::Result::eSuboptimalKHR)
 			throw Error("Failed to acquire swapchain image.", Error::Code::SWAPCHAIN_IMAGE_NOT_ACQUIRED);
 
-		vk::Semaphore myWaitSemaphores[] = { mImageAvailableSema };
-		vk::Semaphore mySignalSemaphores[] = { mRenderFinishedSema };
+		vk::Semaphore myWaitSemaphores[] = { m_sema_image_available };
+		vk::Semaphore mySignalSemaphores[] = { m_sema_render_finished };
 		vk::PipelineStageFlags myWaitStages[] = { vk::PipelineStageFlagBits::eColorAttachmentOutput };
-		vk::SubmitInfo mySubmitInfo(1, myWaitSemaphores, myWaitStages, 1, &mCommandBuffers[myImageIndex], 1, mySignalSemaphores);
+		vk::SubmitInfo mySubmitInfo(1, myWaitSemaphores, myWaitStages, 1, &m_commandbuffers[myImageIndex], 1, mySignalSemaphores);
 
-		mGraphicsQueue.submit(mySubmitInfo, nullptr);
+		m_queue_graphics.submit(mySubmitInfo, nullptr);
 
-		vk::SwapchainKHR mySwapchains[] = { mSwapchain };
+		vk::SwapchainKHR mySwapchains[] = { m_swapchain };
 		vk::PresentInfoKHR myPresentInfo(1, mySignalSemaphores, 1, mySwapchains, &myImageIndex);
 
-		myResult = mPresentQueue.presentKHR(myPresentInfo);
+		myResult = m_queue_present.presentKHR(myPresentInfo);
 
 		if (Print(myResult) == vk::Result::eErrorOutOfDateKHR || myResult == vk::Result::eSuboptimalKHR)
 		{
-			this->Recreate();
+			this->recreate();
 			return;
 		}
 		else if (myResult != vk::Result::eSuccess)
 			throw Error("Failed to present swapchain image.", Error::Code::SWAPCHAIN_IMAGE_PRESENT_ERROR);
 
-		mPresentQueue.waitIdle();
+		m_queue_present.waitIdle();
 	}
 
-	void Swapchain::Create()
+	void swapchain::create()
 	{
-		if (!mInitialised)
-			printf("Creating Swapchain...\n");
+		if (!m_initialized)
+			printf("Creating swapchain...\n");
 		else
-			printf("Creating Swapchain...\n");
+			printf("Creating swapchain...\n");
 
-		SwapchainDetails mySwapchainSupport = QuerySupport(mPhysicalDevice);
+		swapchain_support mySwapchainSupport = query_support(m_physical_device);
 
-		vk::SurfaceFormatKHR mySurfaceFormat = ChooseSurfaceFormat(mySwapchainSupport.Formats);
-		vk::PresentModeKHR myPresentMode = ChoosePresentMode(mySwapchainSupport.PresentModes);
-		vk::Extent2D myExtent2D = ChooseExtent(mySwapchainSupport.Capabilities);
+		vk::SurfaceFormatKHR mySurfaceFormat = choose_surface_format(mySwapchainSupport.formats);
+		vk::PresentModeKHR myPresentMode = choose_present_mode(mySwapchainSupport.present_modes);
+		vk::Extent2D myExtent2D = choose_extent(mySwapchainSupport.capabilities);
 
-		uint32_t myImageCount = mySwapchainSupport.Capabilities.minImageCount + 1;
-		if (mySwapchainSupport.Capabilities.maxImageCount > 0 && myImageCount > mySwapchainSupport.Capabilities.maxImageCount)
-			myImageCount = mySwapchainSupport.Capabilities.maxImageCount;
+		uint32_t myImageCount = mySwapchainSupport.capabilities.minImageCount + 1;
+		if (mySwapchainSupport.capabilities.maxImageCount > 0 && myImageCount > mySwapchainSupport.capabilities.maxImageCount)
+			myImageCount = mySwapchainSupport.capabilities.maxImageCount;
 
-		vk::SwapchainCreateInfoKHR mySwapCreateInfo({}, mSurface, myImageCount, mySurfaceFormat.format, mySurfaceFormat.colorSpace, myExtent2D, 1, vk::ImageUsageFlagBits::eColorAttachment);
+		vk::SwapchainCreateInfoKHR mySwapCreateInfo({}, m_surface, myImageCount, mySurfaceFormat.format, mySurfaceFormat.colorSpace, myExtent2D, 1, vk::ImageUsageFlagBits::eColorAttachment);
 
-		QueueFamilyIndices myIndices = FindQueueFamilies(mPhysicalDevice);
-		uint32_t myQueueFamilies[] = { (uint32_t)myIndices.Graphics, (uint32_t)myIndices.Present };
+		queue_families family_indices = find_queue_families(m_physical_device);
+		uint32_t myQueueFamilies[] = { (uint32_t)family_indices.graphics, (uint32_t)family_indices.present };
 
 		printf("Evaluating image sharing mode...\n");
 		printf("Using ");
-		if (myIndices.Graphics != myIndices.Present)
+		if (family_indices.graphics != family_indices.present)
 		{
 			printf("Concurrent ");
 			mySwapCreateInfo.imageSharingMode = vk::SharingMode::eConcurrent;
@@ -126,96 +126,96 @@ namespace ppr
 		}
 		printf("sharing mode.\n");
 
-		mySwapCreateInfo.preTransform = mySwapchainSupport.Capabilities.currentTransform;
+		mySwapCreateInfo.preTransform = mySwapchainSupport.capabilities.currentTransform;
 		mySwapCreateInfo.compositeAlpha = vk::CompositeAlphaFlagBitsKHR::eOpaque;
 		mySwapCreateInfo.presentMode = myPresentMode;
 		mySwapCreateInfo.clipped = true;
 		mySwapCreateInfo.oldSwapchain = nullptr;
 
 
-		mSwapchain = mDevice.createSwapchainKHR(mySwapCreateInfo);
-		mSwapchainImages = mDevice.getSwapchainImagesKHR(mSwapchain);
+		m_swapchain = m_device.createSwapchainKHR(mySwapCreateInfo);
+		m_images = m_device.getSwapchainImagesKHR(m_swapchain);
 
-		mImageFormat = mySurfaceFormat.format;
-		mExtent2D = myExtent2D;
+		m_image_format = mySurfaceFormat.format;
+		m_extent2D = myExtent2D;
 
-		printf("Successfully created Swapchain.\n");
+		printf("Successfully created swapchain.\n");
 	}
 
-	void Swapchain::CreateImageViews()
+	void swapchain::create_imageviews()
 	{
-		mImageViews.resize(mSwapchainImages.size());
+		m_image_views.resize(m_images.size());
 
-		for (size_t i = 0; i < mSwapchainImages.size(); ++i)
+		for (size_t i = 0; i < m_images.size(); ++i)
 		{
-			printf("Creating Swapchain image view...\n");
+			printf("Creating swapchain image view...\n");
 
 			vk::ImageSubresourceRange mySubRange(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
-			vk::ImageViewCreateInfo myCreateInfo({}, mSwapchainImages[i], vk::ImageViewType::e2D, mImageFormat, vk::ComponentMapping(), mySubRange);
+			vk::ImageViewCreateInfo createinfo({}, m_images[i], vk::ImageViewType::e2D, m_image_format, vk::ComponentMapping(), mySubRange);
 
-			mImageViews[i] = mDevice.createImageView(myCreateInfo);
+			m_image_views[i] = m_device.createImageView(createinfo);
 		}
 
 		printf("Image views created.\n\n");
 	}
 
-	void Swapchain::CreateWindowSurface()
+	void swapchain::create_window_surface()
 	{
 		printf("Creating Vulkan surface...\n");
 
-		mSurface = mWindow.CreateSurface(mInstance);
+		m_surface = m_window.create_surface(m_instance);
 	}
 
-	QueueFamilyIndices Swapchain::FindQueueFamilies(vk::PhysicalDevice aDevice)
+	queue_families swapchain::find_queue_families(vk::PhysicalDevice a_device)
 	{
 		printf("Searching for available queue families...\n");
 
-		QueueFamilyIndices myIndices;
+		queue_families family_indices;
 
-		std::vector<vk::QueueFamilyProperties> myQFamilies = aDevice.getQueueFamilyProperties();;
+		std::vector<vk::QueueFamilyProperties> myQFamilies = a_device.getQueueFamilyProperties();;
 
 		for (uint16_t i = 0; i < myQFamilies.size(); ++i)
 		{
 			if (myQFamilies[i].queueCount > 0 && myQFamilies[i].queueFlags & vk::QueueFlagBits::eGraphics)
-				myIndices.Graphics = i;
+				family_indices.graphics = i;
 
-			vk::Bool32 myPresentSupport = aDevice.getSurfaceSupportKHR(i, mSurface);
+			vk::Bool32 myPresentSupport = a_device.getSurfaceSupportKHR(i, m_surface);
 
-			if (myQFamilies[i].queueCount > QueueFamilyIndices::MIN_INDEX && myPresentSupport)
-				myIndices.Present = i;
+			if (myQFamilies[i].queueCount > queue_families::MIN_INDEX && myPresentSupport)
+				family_indices.present = i;
 
-			if (myIndices.IsComplete())
+			if (family_indices.IsComplete())
 				break;
 		}
-		return myIndices;
+		return family_indices;
 	}
 
-	void Swapchain::DestroyWindowSurface()
+	void swapchain::destroy_window_surface()
 	{
-		mInstance.destroySurfaceKHR(mSurface);
+		m_instance.destroySurfaceKHR(m_surface);
 	}
 
-	vk::SurfaceFormatKHR Swapchain::ChooseSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& anAvailableFormats)
+	vk::SurfaceFormatKHR swapchain::choose_surface_format(const std::vector<vk::SurfaceFormatKHR>& an_available_formats)
 	{
-		printf("Checking available Swapchain Surface Format...\n");
-		if (anAvailableFormats.size() == 1 && anAvailableFormats[0].format == vk::Format::eUndefined)
+		printf("Checking available swapchain Surface Format...\n");
+		if (an_available_formats.size() == 1 && an_available_formats[0].format == vk::Format::eUndefined)
 			return { vk::Format::eB8G8R8A8Unorm, vk::ColorSpaceKHR::eSrgbNonlinear };
 
-		for (const auto& iAvailableFormat : anAvailableFormats)
+		for (const auto& iAvailableFormat : an_available_formats)
 		{
 			if (iAvailableFormat.format == vk::Format::eB8G8R8A8Unorm && iAvailableFormat.colorSpace == vk::ColorSpaceKHR::eSrgbNonlinear)
 				return iAvailableFormat;
 		}
 
-		return anAvailableFormats[0];
+		return an_available_formats[0];
 	}
 
-	vk::PresentModeKHR Swapchain::ChoosePresentMode(const std::vector<vk::PresentModeKHR> anAvailablePresentModes)
+	vk::PresentModeKHR swapchain::choose_present_mode(const std::vector<vk::PresentModeKHR> an_available_modes)
 	{
-		printf("Determining optimal Swapchain Present mode...\n");
+		printf("Determining optimal swapchain present mode...\n");
 		vk::PresentModeKHR myBestMode = vk::PresentModeKHR::eFifo;
 
-		for (const auto& iAvailableMode : anAvailablePresentModes)
+		for (const auto& iAvailableMode : an_available_modes)
 		{
 			if (iAvailableMode == vk::PresentModeKHR::eMailbox)
 				return iAvailableMode;
@@ -226,171 +226,171 @@ namespace ppr
 		return myBestMode;
 	}
 
-	vk::Extent2D Swapchain::ChooseExtent(const vk::SurfaceCapabilitiesKHR& aCapabilities)
+	vk::Extent2D swapchain::choose_extent(const vk::SurfaceCapabilitiesKHR& a_capabilities)
 	{
-		printf("Choosing Swapchain Extent...\n");
+		printf("Choosing swapchain Extent...\n");
 
-		if (aCapabilities.currentExtent.width != std::numeric_limits<uint32_t>::max())
-			return aCapabilities.currentExtent;
+		if (a_capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max())
+			return a_capabilities.currentExtent;
 		else
 		{
-			auto mySize = (Size<uint32_t>)mWindow.GetSize();
+			auto mySize = (size<uint32_t>)m_window.get_size();
 
-			vk::Extent2D myActualExtent = { mySize.Width, mySize.Height };
+			vk::Extent2D myActualExtent = { mySize.width, mySize.height };
 
-			myActualExtent.width = std::max(aCapabilities.minImageExtent.width, std::min(aCapabilities.maxImageExtent.width, myActualExtent.width));
-			myActualExtent.height = std::max(aCapabilities.minImageExtent.height, std::min(aCapabilities.maxImageExtent.height, myActualExtent.height));
+			myActualExtent.width = std::max(a_capabilities.minImageExtent.width, std::min(a_capabilities.maxImageExtent.width, myActualExtent.width));
+			myActualExtent.height = std::max(a_capabilities.minImageExtent.height, std::min(a_capabilities.maxImageExtent.height, myActualExtent.height));
 
 			return myActualExtent;
 		}
 	}
 
-	SwapchainDetails Swapchain::QuerySupport(vk::PhysicalDevice aDevice)
+	swapchain_support swapchain::query_support(vk::PhysicalDevice a_device)
 	{
-		printf("Querying Swapchain support...\n");
+		printf("Querying swapchain support...\n");
 
-		SwapchainDetails myDetails;
-		myDetails.Capabilities = aDevice.getSurfaceCapabilitiesKHR(mSurface);
-		myDetails.Formats = aDevice.getSurfaceFormatsKHR(mSurface);
-		myDetails.PresentModes = aDevice.getSurfacePresentModesKHR(mSurface);
+		swapchain_support myDetails;
+		myDetails.capabilities = a_device.getSurfaceCapabilitiesKHR(m_surface);
+		myDetails.formats = a_device.getSurfaceFormatsKHR(m_surface);
+		myDetails.present_modes = a_device.getSurfacePresentModesKHR(m_surface);
 
 		return myDetails;
 	}
 
-	vk::Queue& Swapchain::GetGraphicsQueue()
+	vk::Queue& swapchain::graphics_queue()
 	{
-		return mGraphicsQueue;
+		return m_queue_graphics;
 	}
 
-	vk::Queue& Swapchain::GetPresentQueue()
+	vk::Queue& swapchain::present_queue()
 	{
-		return mPresentQueue;
+		return m_queue_present;
 	}
 
-	void Swapchain::Cleanup()
+	void swapchain::cleanup()
 	{
-		for (auto iBuffer : mFramebuffers)
-			mDevice.destroyFramebuffer(iBuffer);
+		for (auto iBuffer : m_framebuffers)
+			m_device.destroyFramebuffer(iBuffer);
 
-		mDevice.freeCommandBuffers(mCommandPool, mCommandBuffers);
+		m_device.freeCommandBuffers(m_commandpool, m_commandbuffers);
 
-		mPipeline.Destroy();
-		mVertexBuffer.Destroy();
+		m_pipeline.destroy();
+		m_vertex_buffer.destroy();
 
-		for (auto iView : mImageViews)
-			mDevice.destroyImageView(iView);
+		for (auto iView : m_image_views)
+			m_device.destroyImageView(iView);
 
-		mDevice.destroySwapchainKHR(mSwapchain);
+		m_device.destroySwapchainKHR(m_swapchain);
 
-		mDestroyed = true;
+		m_destroyed = true;
 	}
 
-	void Swapchain::Destroy()
+	void swapchain::destroy()
 	{
-		if (!mDestroyed)
-			Cleanup();
+		if (!m_destroyed)
+			cleanup();
 
-		mDevice.destroySemaphore(mRenderFinishedSema);
-		mDevice.destroySemaphore(mImageAvailableSema);
-		mDevice.destroyCommandPool(mCommandPool);
+		m_device.destroySemaphore(m_sema_render_finished);
+		m_device.destroySemaphore(m_sema_image_available);
+		m_device.destroyCommandPool(m_commandpool);
 	}
 
-	void Swapchain::CreateFrameBuffers()
+	void swapchain::create_framebuffers()
 	{
 		printf("Creating framebuffers...\n");
 
-		mFramebuffers.resize(mImageViews.size());
+		m_framebuffers.resize(m_image_views.size());
 
-		for (size_t i = 0; i < mImageViews.size(); ++i)
+		for (size_t i = 0; i < m_image_views.size(); ++i)
 		{
-			vk::ImageView myAttachments[] = { mImageViews[i] };
+			vk::ImageView myAttachments[] = { m_image_views[i] };
 
-			vk::FramebufferCreateInfo myFramebufferInfo({}, mPipeline.GetRenderPass(), 1, myAttachments, mExtent2D.width, mExtent2D.height, 1);
+			vk::FramebufferCreateInfo myFramebufferInfo({}, m_pipeline.get_renderpass(), 1, myAttachments, m_extent2D.width, m_extent2D.height, 1);
 
-			mFramebuffers[i] = mDevice.createFramebuffer(myFramebufferInfo);
+			m_framebuffers[i] = m_device.createFramebuffer(myFramebufferInfo);
 		}
 
 		printf("Finished creating framebuffers.\n");
 	}
 
-	void Swapchain::Recreate()
+	void swapchain::recreate()
 	{
-		auto mySize = mWindow.GetSize();
+		auto mySize = m_window.get_size();
 
-		if (mySize.Width == 0 || mySize.Height == 0)
+		if (mySize.width == 0 || mySize.height == 0)
 			return;
 
-		mDevice.waitIdle();
+		m_device.waitIdle();
 
-		Cleanup();
+		cleanup();
 
-		Create();
-		CreateImageViews();
-		CreateRenderPass();
-		mPipeline.Create();
-		CreateFrameBuffers();
-		mVertexBuffer.Create(mPhysicalDevice);
-		CreateCommandBuffers();
+		create();
+		create_imageviews();
+		create_renderpass();
+		m_pipeline.create();
+		create_framebuffers();
+		m_vertex_buffer.create(m_physical_device);
+		create_commandbuffers();
 
-		mDestroyed = false;
+		m_destroyed = false;
 	}
 
-	void Swapchain::CreateSemaphores()
+	void swapchain::create_semaphores()
 	{
 		vk::SemaphoreCreateInfo mySemaInfo = {};
 
-		mImageAvailableSema = mDevice.createSemaphore(mySemaInfo);
-		mRenderFinishedSema = mDevice.createSemaphore(mySemaInfo);
+		m_sema_image_available = m_device.createSemaphore(mySemaInfo);
+		m_sema_render_finished = m_device.createSemaphore(mySemaInfo);
 
 		// No error checking?
 	}
 
-	void Swapchain::CreateCommandBuffers()
+	void swapchain::create_commandbuffers()
 	{
 		printf("Creating Command Buffers...\n");
 
-		mCommandBuffers.resize(mFramebuffers.size());
+		m_commandbuffers.resize(m_framebuffers.size());
 
-		vk::CommandBufferAllocateInfo myAllocInfo(mCommandPool, vk::CommandBufferLevel::ePrimary, (uint32_t)mCommandBuffers.size());
-		mCommandBuffers = mDevice.allocateCommandBuffers(myAllocInfo);
+		vk::CommandBufferAllocateInfo myAllocInfo(m_commandpool, vk::CommandBufferLevel::ePrimary, (uint32_t)m_commandbuffers.size());
+		m_commandbuffers = m_device.allocateCommandBuffers(myAllocInfo);
 
-		for (size_t i = 0; i < mCommandBuffers.size(); ++i)
+		for (size_t i = 0; i < m_commandbuffers.size(); ++i)
 		{
 			vk::CommandBufferBeginInfo myBeginInfo(vk::CommandBufferUsageFlagBits::eSimultaneousUse);
 
-			mCommandBuffers[i].begin(myBeginInfo);
+			m_commandbuffers[i].begin(myBeginInfo);
 
 			vk::ClearValue myClearColor(vk::ClearColorValue(std::array<float, 4>({ 0.f, 0.f, 0.f, 1.f })));
-			vk::Rect2D myRect({ 0, 0 }, mExtent2D);
-			vk::RenderPassBeginInfo myRenderPassInfo(mPipeline.GetRenderPass(), mFramebuffers[i], myRect, 1, &myClearColor);
+			vk::Rect2D myRect({ 0, 0 }, m_extent2D);
+			vk::RenderPassBeginInfo myRenderPassInfo(m_pipeline.get_renderpass(), m_framebuffers[i], myRect, 1, &myClearColor);
 
-			mCommandBuffers[i].beginRenderPass(myRenderPassInfo, vk::SubpassContents::eInline);
-			mCommandBuffers[i].bindPipeline(vk::PipelineBindPoint::eGraphics, mPipeline.GetRef());
+			m_commandbuffers[i].beginRenderPass(myRenderPassInfo, vk::SubpassContents::eInline);
+			m_commandbuffers[i].bindPipeline(vk::PipelineBindPoint::eGraphics, m_pipeline.get());
 
-			vk::Buffer myVertexBuffers[] = { mVertexBuffer.Get() };
+			vk::Buffer myVertexBuffers[] = { m_vertex_buffer.get() };
 			vk::DeviceSize myOffsets[] = { 0 };
-			mCommandBuffers[i].bindVertexBuffers(0, 1, myVertexBuffers, myOffsets);
+			m_commandbuffers[i].bindVertexBuffers(0, 1, myVertexBuffers, myOffsets);
 
 			// OWO WHAT'S THIS
-			mCommandBuffers[i].draw((uint32_t)mVertexBuffer.GetVertexArray().size(), 1, 0, 0);
-			mCommandBuffers[i].endRenderPass();
-			mCommandBuffers[i].end();
+			m_commandbuffers[i].draw((uint32_t)m_vertex_buffer.get_vertex_array().size(), 1, 0, 0);
+			m_commandbuffers[i].endRenderPass();
+			m_commandbuffers[i].end();
 		}
 	}
 
-	void Swapchain::CreateCommandPool()
+	void swapchain::create_commandpool()
 	{
 		printf("Creating Command Pool...\n");
 
-		QueueFamilyIndices myQueueFamilyIndices = FindQueueFamilies(mPhysicalDevice);
+		queue_families myQueueFamilyIndices = find_queue_families(m_physical_device);
 
-		vk::CommandPoolCreateInfo myPoolInfo({}, myQueueFamilyIndices.Graphics);
-		mCommandPool = mDevice.createCommandPool(myPoolInfo);
+		vk::CommandPoolCreateInfo myPoolInfo({}, myQueueFamilyIndices.graphics);
+		m_commandpool = m_device.createCommandPool(myPoolInfo);
 	}
 
-	void Swapchain::CreateRenderPass()
+	void swapchain::create_renderpass()
 	{
-		vk::AttachmentDescription myColorAttachment({}, mImageFormat, vk::SampleCountFlagBits::e1,
+		vk::AttachmentDescription myColorAttachment({}, m_image_format, vk::SampleCountFlagBits::e1,
 			vk::AttachmentLoadOp::eClear, vk::AttachmentStoreOp::eStore,
 			vk::AttachmentLoadOp::eDontCare, vk::AttachmentStoreOp::eDontCare,
 			vk::ImageLayout::eUndefined, vk::ImageLayout::ePresentSrcKHR);
@@ -405,6 +405,6 @@ namespace ppr
 
 		vk::RenderPassCreateInfo myRenderPassInfo({}, 1, &myColorAttachment, 1, &mySubpass, 1, &myDependency);
 
-		mPipeline.GetRenderPass() = mDevice.createRenderPass(myRenderPassInfo);
+		m_pipeline.get_renderpass() = m_device.createRenderPass(myRenderPassInfo);
 	}
 }

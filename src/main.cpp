@@ -20,8 +20,8 @@ int main()
 {
     test();
     {
-        ppr::Context myContext;
-        myContext.Run();
+        ppr::context context;
+        context.run();
     }
 
     return EXIT_SUCCESS;

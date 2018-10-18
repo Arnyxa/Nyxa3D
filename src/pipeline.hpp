@@ -10,30 +10,30 @@
 
 namespace ppr
 {
-	class Pipeline : public CommonChecks
+	class pipeline : public common_checks
 	{
 	public:
-		Pipeline(const vk::Device& aDevice, const vk::Extent2D& aViewportSize);
-		~Pipeline();
+		pipeline(const vk::Device& a_device, const vk::Extent2D& a_viewport_size);
+		~pipeline();
 
-		void Create();
-		void Destroy();
+		void create();
+		void destroy();
 
-		vk::Pipeline& GetRef();
-		vk::RenderPass& GetRenderPass();
-		vk::PipelineLayout& GetLayout();
+		vk::Pipeline& get();
+		vk::RenderPass& get_renderpass();
+		vk::PipelineLayout& get_layout();
 
-		vk::ShaderModule CreateShaderModule(const std::vector<char>& aByteCode);
-		static std::vector<char> ReadShader(const std::string& aFileName);
+		vk::ShaderModule create_shader_module(const std::vector<char>& a_bytecode);
+		static std::vector<char> read_shader(const std::string& a_filename);
 
 	private:
-		const vk::Device& mDevice;
-		const vk::Extent2D& mViewport;
+		const vk::Device& m_device;
+		const vk::Extent2D& m_viewport;
 
-		vk::Pipeline mPipeline;
-		vk::RenderPass mRenderPass;
-		vk::PipelineLayout mPipelineLayout;
+		vk::Pipeline m_pipeline;
+		vk::RenderPass m_renderpass;
+		vk::PipelineLayout m_pipe_layout;
 
-		bool mCleaned;
+		bool m_cleaned;
 	};
 }
