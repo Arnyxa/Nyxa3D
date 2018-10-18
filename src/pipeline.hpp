@@ -1,6 +1,6 @@
 #pragma once
-#include "VertexBuffer.h"
-#include "Util.h"
+#include "vertex_buffer.hpp"
+#include "util.hpp"
 
 #include <vulkan/vulkan.hpp>
 #include <glm/vec2.hpp>

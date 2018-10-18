@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Structs.h"
-#include "Util.h"
+#include "structs.hpp"
+#include "util.hpp"
 
 #include <string>
 #include <vector>

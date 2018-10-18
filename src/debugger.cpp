@@ -1,9 +1,6 @@
-#include "Globals.h"
-#include "Util.h"
-#include "Debug.h"
-
-
-#include <iostream>
+#include "globals.hpp"
+#include "util.hpp"
+#include "debugger.hpp"
 
 // leave this largely in C mode cause the C++ pointers to functions are giving me a headache
 
@@ -18,7 +15,7 @@ namespace ppr
 		if (!VALIDATION_LAYERS_ENABLED)
 			return;
 
-		DbgPrint("Initializing Debugger Callback...\n");
+		printf("Initializing Debugger Callback...\n");
 
 		VkDebugUtilsMessengerCreateInfoEXT myCreateInfo;
 		myCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -81,7 +78,7 @@ namespace ppr
 
 	bool Debugger::CheckValidationLayerSupport() const
 	{
-		VerbosePrint("Checking for validation layer compatibility...\n");
+		printf("Checking for validation layer compatibility...\n");
 
 		std::vector<vk::LayerProperties> myAvailableLayers = vk::enumerateInstanceLayerProperties();
 
@@ -100,14 +97,14 @@ namespace ppr
 
 			if (!isFound)
 			{
-				VerbosePrint(std::string(iLayerName) + " is not supported.\n");
+				printf(std::string(std::string(iLayerName) + " is not supported.\n").c_str());
 				return false;
 			}
 
-			VerbosePrint(std::string(iLayerName) + " is supported.\n");
+			printf(std::string(std::string(iLayerName) + " is supported.\n").c_str());
 		}
 
-		VerbosePrint("All validation layers are supported.\n\n");
+		printf("All validation layers are supported.\n\n");
 
 		return true;
 	}

@@ -1,6 +1,6 @@
-#include "Context.h"
-#include "Callbacks.h"
-#include "Util.h"
+#include "context.hpp"
+#include "callbacks.hpp"
+#include "util.hpp"
 
 #include <glfw/glfw3.h>
 
@@ -35,11 +35,11 @@ namespace ppr
 
 	void Context::Init()
 	{
-		DbgPrint("Initializing Window...\n");
+		printf("Initializing Window...\n");
 
 		mWindow.Init();
 
-		DbgPrint("Window initialized.\n\nInitializing Vulkan...\n");
+		printf("Window initialized.\n\nInitializing Vulkan...\n");
 
 		CreateInstance();
 		mDebugger.Init();
@@ -48,12 +48,12 @@ namespace ppr
 		CreateLogicalDevice();
 		mSwapchain.Init();
 
-		DbgPrint("Vulkan initialized.\n\n");
+		printf("Vulkan initialized.\n\n");
 	}
 
 	void Context::CreateLogicalDevice()
 	{
-		VerbosePrint("Creating logical Vulkan Device...\n");
+		printf("Creating logical Vulkan Device...\n");
 
 		QueueFamilyIndices myIndices = mSwapchain.FindQueueFamilies(mPhysicalDevice);
 
@@ -91,12 +91,12 @@ namespace ppr
 		mSwapchain.GetGraphicsQueue() = mDevice.getQueue(myIndices.Graphics, 0);
 		mSwapchain.GetPresentQueue() = mDevice.getQueue(myIndices.Present, 0);
 
-		VerbosePrint("Successfully created logical Vulkan Device.\n\n");
+		printf("Successfully created logical Vulkan Device.\n\n");
 	}
 
 	void Context::SelectPhysicalDevice()
 	{
-		VerbosePrint("Searching for viable physical device...\n");
+		printf("Searching for viable physical device...\n");
 
 		std::vector<vk::PhysicalDevice> myDevices = mInstance.enumeratePhysicalDevices();
 
@@ -115,12 +115,12 @@ namespace ppr
 		if (mPhysicalDevice == vk::PhysicalDevice())
 			throw Error("Available GPU(s) have insufficient compatibility with Pepper Engine features.", Error::Code::NO_PEPPER_SUPPORT);
 
-		VerbosePrint("Matching Vulkan-compatible GPU(s) successfully found.\n\n");
+		printf("Matching Vulkan-compatible GPU(s) successfully found.\n\n");
 	}
 
 	bool Context::IsDeviceSuitable(vk::PhysicalDevice aDevice)
 	{
-		VerbosePrint("Evaluating device suitability...\n");
+		printf("Evaluating device suitability...\n");
 
 		QueueFamilyIndices myIndices = mSwapchain.FindQueueFamilies(aDevice);
 
@@ -138,7 +138,7 @@ namespace ppr
 
 	std::vector<const char*> Context::GetRequiredExtensions()
 	{
-		VerbosePrint("Fetching required extensions...\n");
+		printf("Fetching required extensions...\n");
 
 		std::vector<const char*> myExtensions = mWindow.GetRequiredExtensions();
 
@@ -150,7 +150,7 @@ namespace ppr
 
 	bool Context::CheckDeviceExtensionSupport(vk::PhysicalDevice aDevice)
 	{
-		VerbosePrint("Checking device extension support...\n");
+		printf("Checking device extension support...\n");
 
 		std::vector<vk::ExtensionProperties> myAvailableExtensions = aDevice.enumerateDeviceExtensionProperties();
 
@@ -187,14 +187,14 @@ namespace ppr
 
 		std::vector<vk::ExtensionProperties> myExtensionProperties = vk::enumerateInstanceExtensionProperties();
 
-		VerbosePrint("Available extensions:\n");
+		printf("Available extensions:\n");
 		for (const auto& iProperty : myExtensionProperties)
 		{
-			VerbosePrint(std::string("\t") + iProperty.extensionName + "\n");
+			printf(std::string(std::string("\t") + iProperty.extensionName + "\n").c_str());
 		}
-		VerbosePrint(myExtensionProperties.size() + " extensions found in total.\n\n");
+		printf(myExtensionProperties.size() + " extensions found in total.\n\n");
 
-		VerbosePrint("Checking for GLFW extension compatibility...\n");
+		printf("Checking for GLFW extension compatibility...\n");
 
 		// check whether extensions required by GLFW are in available extension list
 		for (size_t i = 0; i < myExtensions.size(); ++i)
@@ -212,26 +212,26 @@ namespace ppr
 			if (!isFound)
 				throw Error("Could not find required GLFW extension for Vulkan on this system.", Error::Code::REQ_EXT_UNAVAILABLE);
 
-			VerbosePrint(std::string("        ") + myExtensions[i] + " found.\n");
+			printf(std::string(std::string("        ") + myExtensions[i] + " found.\n").c_str());
 		}
 
-		VerbosePrint("Extension check successful.\n\n");
+		printf("Extension check successful.\n\n");
 
 		mInstance = vk::createInstance(myCreateInfo);
 
-		VerbosePrint("Created Vulkan instance.\n\n");
+		printf("Created Vulkan instance.\n\n");
 	}
 
 	Context::~Context()
 	{
-		DbgPrint("Destroying Context objects...\n");
+		printf("Destroying Context objects...\n");
 
 		mSwapchain.Destroy();
 		mDevice.destroy();
 		mDebugger.Destroy();
 		mInstance.destroy();
 
-		DbgPrint("Context successfully destroyed.\n\n");
+		printf("Context successfully destroyed.\n\n");
 	}
 
 }

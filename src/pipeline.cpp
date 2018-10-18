@@ -1,6 +1,6 @@
-#include "Pipeline.h"
-#include "Util.h"
-#include "DbgMsgr.h"
+#include "pipeline.hpp"
+#include "util.hpp"
+
 
 #include <iostream>
 #include <fstream>
@@ -28,9 +28,9 @@ namespace ppr
 	void Pipeline::Create()
 	{
 		if (!mInitialised)
-			DbgPrint("Creating graphics pipeline...\n");
+			printf("Creating graphics pipeline...\n");
 		else
-			VerbosePrint("Creating graphics pipeline...\n");
+			printf("Creating graphics pipeline...\n");
 
 		auto myVertShaderCode = ReadShader("shaders/vert.spv");
 		auto myFragShaderCode = ReadShader("shaders/frag.spv");
@@ -38,9 +38,9 @@ namespace ppr
 		vk::ShaderModule myVertShaderModule = CreateShaderModule(myVertShaderCode);
 		vk::ShaderModule myFragShaderModule = CreateShaderModule(myFragShaderCode);
 
-		VerbosePrint("Shaders loaded.\n");
+		printf("Shaders loaded.\n");
 
-		VerbosePrint("Initializing shader and pipeline info...\n");
+		printf("Initializing shader and pipeline info...\n");
 
 		vk::PipelineShaderStageCreateInfo myVertShaderInfo({}, vk::ShaderStageFlagBits::eVertex, myVertShaderModule, "main");
 		vk::PipelineShaderStageCreateInfo myFragShaderInfo({}, vk::ShaderStageFlagBits::eFragment, myFragShaderModule, "main");
@@ -88,7 +88,7 @@ namespace ppr
 		myColorBlendingGlobal.attachmentCount = 1;
 		myColorBlendingGlobal.pAttachments = &myColorBlendAttachment;
 
-		VerbosePrint("Creating pipeline layout...\n");
+		printf("Creating pipeline layout...\n");
 
 		vk::PipelineLayoutCreateInfo myLayoutInfo;
 
@@ -101,7 +101,7 @@ namespace ppr
 		if (Print(mDevice.createGraphicsPipelines(vk::PipelineCache(), 1, &myPipelineInfo, nullptr, &mPipeline)) != vk::Result::eSuccess)
 			throw Error("Failed to create Vulkan Graphics Pipeline.", Error::Code::PIPELINE_CREATION_FAIL);
 
-		VerbosePrint("Graphics pipeline successfully created.\n");
+		printf("Graphics pipeline successfully created.\n");
 
 		mDevice.destroyShaderModule(myVertShaderModule);
 		mDevice.destroyShaderModule(myFragShaderModule);
@@ -112,7 +112,7 @@ namespace ppr
 
 	vk::ShaderModule Pipeline::CreateShaderModule(const std::vector<char>& aByteCode)
 	{
-		VerbosePrint("Creating shader module...\n");
+		printf("Creating shader module...\n");
 
 		vk::ShaderModuleCreateInfo myCreateInfo({}, aByteCode.size(), reinterpret_cast<const uint32_t*>(aByteCode.data()));
 		vk::ShaderModule myShaderModule = mDevice.createShaderModule(myCreateInfo);
@@ -131,7 +131,7 @@ namespace ppr
 		// figure out file size based on buffer position
 		size_t myFileSize = (size_t)myFile.tellg();
 
-		VerbosePrint(std::string(aFileName) + " size: " + std::to_string(myFileSize) + "\n");
+		printf(std::string(std::string(aFileName) + " size: " + std::to_string(myFileSize) + "\n").c_str());
 
 		std::vector<char> myBuffer(myFileSize);
 

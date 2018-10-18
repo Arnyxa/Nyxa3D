@@ -1,5 +1,5 @@
 // For reusable structs which require including vulkan.hpp
-// Separate from Structs.h to reduce compile times
+// Separate from structs.hpp to reduce compile times
 
 #pragma once
 

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Globals.h"
-#include "VulkanStructs.h"
-#include "Structs.h"
-#include "Window.h"
-#include "Debug.h"
-#include "Pipeline.h"
-#include "VertexBuffer.h"
-#include "Swapchain.h"
+#include "globals.hpp"
+#include "vulkan_structs.hpp"
+#include "structs.hpp"
+#include "window.hpp"
+#include "debug.hpp"
+#include "pipeline.hpp"
+#include "vertex_buffer.hpp"
+#include "swapchain.hpp"
 
 #include <vector>
 #include <sstream>
@@ -19,7 +19,7 @@ namespace ppr
 	class Context
 	{
 	public:
-		Context(const std::string& aTitle = "Pepper Engine");
+		Context(const std::string& aTitle = "Pepper");
 		~Context();
 
 		void Run();

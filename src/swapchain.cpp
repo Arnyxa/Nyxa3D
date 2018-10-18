@@ -1,7 +1,7 @@
-#include "Swapchain.h"
-#include "Context.h"
-#include "Callbacks.h"
-#include "DbgMsgr.h"
+#include "swapchain.hpp"
+#include "context.hpp"
+#include "callbacks.hpp"
+
 
 #include <iostream>
 
@@ -89,9 +89,9 @@ namespace ppr
 	void Swapchain::Create()
 	{
 		if (!mInitialised)
-			DbgPrint("Creating Swapchain...\n");
+			printf("Creating Swapchain...\n");
 		else
-			VerbosePrint("Creating Swapchain...\n");
+			printf("Creating Swapchain...\n");
 
 		SwapchainDetails mySwapchainSupport = QuerySupport(mPhysicalDevice);
 
@@ -108,23 +108,23 @@ namespace ppr
 		QueueFamilyIndices myIndices = FindQueueFamilies(mPhysicalDevice);
 		uint32_t myQueueFamilies[] = { (uint32_t)myIndices.Graphics, (uint32_t)myIndices.Present };
 
-		VerbosePrint("Evaluating image sharing mode...\n");
-		VerbosePrint("Using ");
+		printf("Evaluating image sharing mode...\n");
+		printf("Using ");
 		if (myIndices.Graphics != myIndices.Present)
 		{
-			VerbosePrint("Concurrent ");
+			printf("Concurrent ");
 			mySwapCreateInfo.imageSharingMode = vk::SharingMode::eConcurrent;
 			mySwapCreateInfo.queueFamilyIndexCount = 2;
 			mySwapCreateInfo.pQueueFamilyIndices = myQueueFamilies;
 		}
 		else
 		{
-			VerbosePrint("Exclusive ");
+			printf("Exclusive ");
 			mySwapCreateInfo.imageSharingMode = vk::SharingMode::eExclusive;
 			mySwapCreateInfo.queueFamilyIndexCount = NULL; // optional
 			mySwapCreateInfo.pQueueFamilyIndices = nullptr; // optional
 		}
-		VerbosePrint("sharing mode.\n");
+		printf("sharing mode.\n");
 
 		mySwapCreateInfo.preTransform = mySwapchainSupport.Capabilities.currentTransform;
 		mySwapCreateInfo.compositeAlpha = vk::CompositeAlphaFlagBitsKHR::eOpaque;
@@ -139,7 +139,7 @@ namespace ppr
 		mImageFormat = mySurfaceFormat.format;
 		mExtent2D = myExtent2D;
 
-		VerbosePrint("Successfully created Swapchain.\n");
+		printf("Successfully created Swapchain.\n");
 	}
 
 	void Swapchain::CreateImageViews()
@@ -148,7 +148,7 @@ namespace ppr
 
 		for (size_t i = 0; i < mSwapchainImages.size(); ++i)
 		{
-			VerbosePrint("Creating Swapchain image view...\n");
+			printf("Creating Swapchain image view...\n");
 
 			vk::ImageSubresourceRange mySubRange(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
 			vk::ImageViewCreateInfo myCreateInfo({}, mSwapchainImages[i], vk::ImageViewType::e2D, mImageFormat, vk::ComponentMapping(), mySubRange);
@@ -156,19 +156,19 @@ namespace ppr
 			mImageViews[i] = mDevice.createImageView(myCreateInfo);
 		}
 
-		VerbosePrint("Image views created.\n\n");
+		printf("Image views created.\n\n");
 	}
 
 	void Swapchain::CreateWindowSurface()
 	{
-		VerbosePrint("Creating Vulkan surface...\n");
+		printf("Creating Vulkan surface...\n");
 
 		mSurface = mWindow.CreateSurface(mInstance);
 	}
 
 	QueueFamilyIndices Swapchain::FindQueueFamilies(vk::PhysicalDevice aDevice)
 	{
-		VerbosePrint("Searching for available queue families...\n");
+		printf("Searching for available queue families...\n");
 
 		QueueFamilyIndices myIndices;
 
@@ -197,7 +197,7 @@ namespace ppr
 
 	vk::SurfaceFormatKHR Swapchain::ChooseSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& anAvailableFormats)
 	{
-		VerbosePrint("Checking available Swapchain Surface Format...\n");
+		printf("Checking available Swapchain Surface Format...\n");
 		if (anAvailableFormats.size() == 1 && anAvailableFormats[0].format == vk::Format::eUndefined)
 			return { vk::Format::eB8G8R8A8Unorm, vk::ColorSpaceKHR::eSrgbNonlinear };
 
@@ -212,7 +212,7 @@ namespace ppr
 
 	vk::PresentModeKHR Swapchain::ChoosePresentMode(const std::vector<vk::PresentModeKHR> anAvailablePresentModes)
 	{
-		VerbosePrint("Determining optimal Swapchain Present mode...\n");
+		printf("Determining optimal Swapchain Present mode...\n");
 		vk::PresentModeKHR myBestMode = vk::PresentModeKHR::eFifo;
 
 		for (const auto& iAvailableMode : anAvailablePresentModes)
@@ -228,7 +228,7 @@ namespace ppr
 
 	vk::Extent2D Swapchain::ChooseExtent(const vk::SurfaceCapabilitiesKHR& aCapabilities)
 	{
-		VerbosePrint("Choosing Swapchain Extent...\n");
+		printf("Choosing Swapchain Extent...\n");
 
 		if (aCapabilities.currentExtent.width != std::numeric_limits<uint32_t>::max())
 			return aCapabilities.currentExtent;
@@ -247,7 +247,7 @@ namespace ppr
 
 	SwapchainDetails Swapchain::QuerySupport(vk::PhysicalDevice aDevice)
 	{
-		VerbosePrint("Querying Swapchain support...\n");
+		printf("Querying Swapchain support...\n");
 
 		SwapchainDetails myDetails;
 		myDetails.Capabilities = aDevice.getSurfaceCapabilitiesKHR(mSurface);
@@ -297,7 +297,7 @@ namespace ppr
 
 	void Swapchain::CreateFrameBuffers()
 	{
-		VerbosePrint("Creating framebuffers...\n");
+		printf("Creating framebuffers...\n");
 
 		mFramebuffers.resize(mImageViews.size());
 
@@ -310,7 +310,7 @@ namespace ppr
 			mFramebuffers[i] = mDevice.createFramebuffer(myFramebufferInfo);
 		}
 
-		VerbosePrint("Finished creating framebuffers.\n");
+		printf("Finished creating framebuffers.\n");
 	}
 
 	void Swapchain::Recreate()
@@ -347,7 +347,7 @@ namespace ppr
 
 	void Swapchain::CreateCommandBuffers()
 	{
-		VerbosePrint("Creating Command Buffers...\n");
+		printf("Creating Command Buffers...\n");
 
 		mCommandBuffers.resize(mFramebuffers.size());
 
@@ -380,7 +380,7 @@ namespace ppr
 
 	void Swapchain::CreateCommandPool()
 	{
-		VerbosePrint("Creating Command Pool...\n");
+		printf("Creating Command Pool...\n");
 
 		QueueFamilyIndices myQueueFamilyIndices = FindQueueFamilies(mPhysicalDevice);
 

@@ -1,5 +1,3 @@
-// If identifier name already exists, suffix an underscore
-// Otherwise all caps with underscore for spaces
 #pragma once
 
 namespace ppr

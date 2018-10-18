@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Callback.h"
-#include "Util.h"
+#include "callback.hpp"
+#include "util.hpp"
 
 #include <vector>
 
@@ -59,4 +59,4 @@ namespace ppr
 #define WndCallbacks WindowCallbacks::GetInstance() 
 }
 
-#include "WndCallbacks.inl"
+#include "window_call.inl"

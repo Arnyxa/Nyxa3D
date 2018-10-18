@@ -1,7 +1,7 @@
-#include "Window.h"
-#include "Callbacks.h"
-#include "Util.h"
-#include "DbgMsgr.h"
+#include "window.hpp"
+#include "callbacks.hpp"
+#include "util.hpp"
+
 
 #include <vulkan/vulkan.hpp>
 #include <glfw/glfw3.h>
@@ -30,20 +30,20 @@ namespace ppr
 
 	void Window::Init()
 	{
-		DbgPrint("Initializing GLFW...\n");
+		printf("Initializing GLFW...\n");
 
 		glfwInit();
 
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-		DbgPrint("Creating window...\n");
+		printf("Creating window...\n");
 
 		mWindow = glfwCreateWindow((int)mDefaultWidth, (int)mDefaultHeight, mTitle.c_str(), nullptr, nullptr);
 
 		WndCallbacks.Init(mWindow);
 
-		DbgPrint("GLFW Initialized.\n");
+		printf("GLFW Initialized.\n");
 	}
 
 	void Window::Destroy()

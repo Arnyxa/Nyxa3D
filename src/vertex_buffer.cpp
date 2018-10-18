@@ -1,5 +1,5 @@
-#include "VertexBuffer.h"
-#include "Util.h"
+#include "vertex_buffer.hpp"
+#include "util.hpp"
 
 // Vertex
 namespace ppr

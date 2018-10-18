@@ -1,11 +1,11 @@
 #pragma once
 
-#include "VulkanStructs.h"
-#include "Structs.h"
-#include "Util.h"
-#include "Window.h"
-#include "Pipeline.h"
-#include "VertexBuffer.h"
+#include "vulkan_structs.hpp"
+#include "structs.hpp"
+#include "util.hpp"
+#include "window.hpp"
+#include "pipeline.hpp"
+#include "vertex_buffer.hpp"
 
 #include <vulkan/vulkan.hpp>
 

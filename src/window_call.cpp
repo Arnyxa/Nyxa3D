@@ -1,5 +1,4 @@
-#include "WndCallbacks.h"
-#include "DbgMsgr.h"
+#include "window_call.hpp"
 
 #include <glfw/glfw3.h>
 
@@ -23,7 +22,7 @@ namespace ppr
             if (aWindow == nullptr)
                 throw Error("Provided window was null pointer.", Error::Code::NULL_PTR);
 
-			VerbosePrint("Initializing window callbacks...\n");
+			printf("Initializing window callbacks...\n");
 
 			glfwSetWindowSizeCallback(aWindow, OnResize);
 			glfwSetWindowCloseCallback(aWindow, OnClose);
@@ -34,7 +33,7 @@ namespace ppr
 
 			mInitialised = true;
 
-			VerbosePrint("Window callbacks initialized.\n\n");
+			printf("Window callbacks initialized.\n\n");
 		}
 	}
 
@@ -51,8 +50,8 @@ namespace ppr
 	void WindowCallbacks::OnFocus(GLFWwindow* aWindow, CBool wasFocusGained)
 	{
 		if (wasFocusGained != GLFW_TRUE && wasFocusGained != GLFW_FALSE)
-			DbgPrint(std::string("\nWarning: 'wasFocusGained' in 'WindowCallbacks::OnFocus(GLFWwindow* aWindow, CBool wasFocusGained)'") 
-								+ "\nValue evaluated to: " + std::to_string(wasFocusGained) + " (non-bool).\n\n");
+			printf(std::string(std::string("\nWarning: 'wasFocusGained' in 'WindowCallbacks::OnFocus(GLFWwindow* aWindow, CBool wasFocusGained)'") 
+								+ "\nValue evaluated to: " + std::to_string(wasFocusGained) + " (non-bool).\n\n").c_str());
 
 		if (wasFocusGained)
 			GetInstance().Execute(CallType::Focus);
