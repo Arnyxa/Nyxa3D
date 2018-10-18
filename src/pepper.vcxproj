@@ -38,6 +38,7 @@
     <ClInclude Include="structs.hpp" />
     <ClInclude Include="swapchain.hpp" />
     <ClInclude Include="util.hpp" />
+    <ClInclude Include="vertex.hpp" />
     <ClInclude Include="vertex_buffer.hpp" />
     <ClInclude Include="vulkan_structs.hpp" />
     <ClInclude Include="window.hpp" />
@@ -55,6 +56,7 @@
     <ClCompile Include="pipeline.cpp" />
     <ClCompile Include="swapchain.cpp" />
     <ClCompile Include="util.cpp" />
+    <ClCompile Include="vertex.cpp" />
     <ClCompile Include="vertex_buffer.cpp" />
     <ClCompile Include="window.cpp" />
     <ClCompile Include="window_call.cpp" />
