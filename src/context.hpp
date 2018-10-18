@@ -31,9 +31,9 @@ namespace ppr
 		void create_device();
 
 		void select_physical_device();
-		bool device_is_suitable(vk::PhysicalDevice a_device);
+		bool device_is_suitable(const vk::PhysicalDevice& a_device);
 
-		bool check_ext_support(vk::PhysicalDevice a_device);
+		bool check_ext_support(const vk::PhysicalDevice& a_device);
 
 		std::vector<const char*> required_extensions();
 

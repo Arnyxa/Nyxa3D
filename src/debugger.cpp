@@ -6,7 +6,7 @@
 
 namespace ppr
 {
-	debugger::debugger(vk::Instance& an_instance)
+	debugger::debugger(const vk::Instance& an_instance)
 		: m_instance(an_instance)
 	{}
 

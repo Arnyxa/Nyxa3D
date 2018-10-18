@@ -11,7 +11,7 @@ namespace ppr
 	class debugger
 	{
 	public:
-		explicit debugger(vk::Instance& an_instance);
+		explicit debugger(const vk::Instance& an_instance);
 		~debugger();
 
 		void init();
@@ -34,7 +34,7 @@ namespace ppr
 
 	private:
 		VkDebugUtilsMessengerEXT m_messenger;
-		vk::Instance& m_instance;
+		const vk::Instance& m_instance;
 
 		static constexpr char CREATE_DBG_MSGR_EXT[]  = "vkCreateDebugUtilsMessengerEXT";
 		static constexpr char DESTROY_DBG_MSGR_EXT[] = "vkDestroyDebugUtilsMessengerEXT";

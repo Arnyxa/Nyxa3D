@@ -35,14 +35,14 @@ namespace ppr
 		void create_window_surface();
 		void on_window_resize();
 
-		swapchain_support query_support(vk::PhysicalDevice a_device);
-		queue_families find_queue_families(vk::PhysicalDevice a_device);
+		swapchain_support query_support(const vk::PhysicalDevice& a_device) const;
+		queue_families find_queue_families(const vk::PhysicalDevice& a_device) const;
 
-		vk::Queue& graphics_queue();
-		vk::Queue& present_queue();
+        vk::Queue& graphics_queue();
+        vk::Queue& present_queue();
 
 	private:
-		void destroy_window_surface();
+		void destroy_window_surface() const;
 		void create_imageviews();
 		void create_framebuffers();
 		void create_commandpool();
@@ -50,9 +50,9 @@ namespace ppr
 		void create_renderpass();
 		void create_semaphores();
 
-		vk::Extent2D choose_extent(const vk::SurfaceCapabilitiesKHR& a_capabilities);
-		vk::PresentModeKHR choose_present_mode(const std::vector<vk::PresentModeKHR> an_available_modes);
-		vk::SurfaceFormatKHR choose_surface_format(const std::vector<vk::SurfaceFormatKHR>& an_available_formats);
+		vk::Extent2D choose_extent(const vk::SurfaceCapabilitiesKHR& a_capabilities) const;
+		vk::PresentModeKHR choose_present_mode(const std::vector<vk::PresentModeKHR>& an_available_modes) const;
+		vk::SurfaceFormatKHR choose_surface_format(const std::vector<vk::SurfaceFormatKHR>& an_available_formats) const;
 
 	private:
 		const window& m_window;

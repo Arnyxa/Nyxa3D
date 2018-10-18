@@ -118,7 +118,7 @@ namespace ppr
 		printf("Matching Vulkan-compatible GPU(s) successfully found.\n\n");
 	}
 
-	bool context::device_is_suitable(vk::PhysicalDevice a_device)
+	bool context::device_is_suitable(const vk::PhysicalDevice& a_device)
 	{
 		printf("Evaluating device suitability...\n");
 
@@ -148,7 +148,7 @@ namespace ppr
 		return extensions;
 	}
 
-	bool context::check_ext_support(vk::PhysicalDevice a_device)
+	bool context::check_ext_support(const vk::PhysicalDevice& a_device)
 	{
 		printf("Checking device extension support...\n");
 
