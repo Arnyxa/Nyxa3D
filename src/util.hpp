@@ -11,10 +11,10 @@ namespace vk
 
 namespace ppr
 {
-	VkResult print_vkresult(VkResult aResult);
+	VkResult print(VkResult aResult);
 
-	void Print(const std::string& aText);
-	vk::Result Print(vk::Result aResult);
+	void print(const std::string& aText);
+	vk::Result print(vk::Result aResult);
 }
 
 namespace ppr
@@ -62,7 +62,7 @@ namespace ppr
         Error(const std::string& aMessage, Code anErrorCode);
 
         const std::string& What() const;
-        void Print() const;
+        void print() const;
         int GetCode() const;
 
     private:

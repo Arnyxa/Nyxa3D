@@ -8,49 +8,49 @@ namespace ppr
 {
 	window_callbacks& window_callbacks::get()
 	{
-		static window_callbacks myInstance;
+		static window_callbacks instance;
 
-		return myInstance;
+		return instance;
 	}
 
 	void window_callbacks::init(GLFWwindow* a_window)
 	{
-		static bool m_initialized = false;
+		static bool initialized = false;
 
-		if (!m_initialized)
+		if (!initialized)
 		{
             if (a_window == nullptr)
                 throw Error("Provided window was null pointer.", Error::Code::NULL_PTR);
 
 			printf("Initializing window callbacks...\n");
 
-			glfwSetWindowSizeCallback(a_window, OnResize);
-			glfwSetWindowCloseCallback(a_window, OnClose);
-			glfwSetWindowFocusCallback(a_window, OnFocus);
-			glfwSetWindowPosCallback(a_window, OnReposition);
-			glfwSetWindowRefreshCallback(a_window, OnRefresh);
-			glfwSetWindowIconifyCallback(a_window, OnIconify);
+			glfwSetWindowSizeCallback(a_window, on_resize);
+			glfwSetWindowCloseCallback(a_window, on_close);
+			glfwSetWindowFocusCallback(a_window, on_focus);
+			glfwSetWindowPosCallback(a_window, on_reposition);
+			glfwSetWindowRefreshCallback(a_window, on_refresh);
+			glfwSetWindowIconifyCallback(a_window, on_iconify);
 
-			m_initialized = true;
+			initialized = true;
 
 			printf("window callbacks initialized.\n\n");
 		}
 	}
 
-	void window_callbacks::OnResize(GLFWwindow* a_window, int a_width, int a_height)
+	void window_callbacks::on_resize(GLFWwindow* a_window, int a_width, int a_height)
 	{
 		get().execute(call_type::RESIZE);
 	}
 
-	void window_callbacks::OnClose(GLFWwindow* a_window)
+	void window_callbacks::on_close(GLFWwindow* a_window)
 	{
 		get().execute(call_type::CLOSE);
 	}
 
-	void window_callbacks::OnFocus(GLFWwindow* a_window, cbool was_focused)
+	void window_callbacks::on_focus(GLFWwindow* a_window, cbool was_focused)
 	{
 		if (was_focused != GLFW_TRUE && was_focused != GLFW_FALSE)
-			printf(std::string(std::string("\nWarning: 'was_focused' in 'window_callbacks::OnFocus(GLFWwindow* a_window, cbool was_focused)'") 
+			printf(std::string(std::string("\nWarning: 'was_focused' in 'window_callbacks::on_focus(GLFWwindow* a_window, cbool was_focused)'") 
 								+ "\nValue evaluated to: " + std::to_string(was_focused) + " (non-bool).\n\n").c_str());
 
 		if (was_focused)
@@ -59,27 +59,27 @@ namespace ppr
 			get().execute(call_type::UNFOCUS);
 	}
 
-	void window_callbacks::OnReposition(GLFWwindow* a_window, int x, int y)
+	void window_callbacks::on_reposition(GLFWwindow* a_window, int x, int y)
 	{
 		get().execute(call_type::REPOSITION);
 	}
 
-	void window_callbacks::OnRefresh(GLFWwindow* a_window)
+	void window_callbacks::on_refresh(GLFWwindow* a_window)
 	{
 		get().execute(call_type::REFRESH);
 	}
 
-	void window_callbacks::OnIconify(GLFWwindow* a_window, cbool was_iconified)
+	void window_callbacks::on_iconify(GLFWwindow* a_window, cbool was_iconified)
 	{
 		get().execute(call_type::ICONIFY);
 	}
 
 	void window_callbacks::execute(call_type a_type)
 	{
-		for (auto& iCallback : mCallbacks)
+		for (auto& i_callback : m_callbacks)
 		{
-			if (iCallback.second == a_type)
-				iCallback.first->execute();
+			if (i_callback.second == a_type)
+				i_callback.first->execute();
 		}
 	}
 }

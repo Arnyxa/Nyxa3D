@@ -28,18 +28,18 @@ namespace ppr
 		ICONIFY,
 	};
 
-	class window_callbacks : public common_checks
+	class window_callbacks
 	{
 	public:
 		static window_callbacks& get();
 
 	private:
-		static void OnResize(GLFWwindow* a_window, int a_width, int a_height);
-		static void OnClose(GLFWwindow* a_window);
-		static void OnFocus(GLFWwindow* a_window, cbool was_focused);
-		static void OnReposition(GLFWwindow* a_window, int x, int y);
-		static void OnRefresh(GLFWwindow* a_window);
-		static void OnIconify(GLFWwindow* a_window, cbool was_iconified);
+		static void on_resize(GLFWwindow* a_window, int a_width, int a_height);
+		static void on_close(GLFWwindow* a_window);
+		static void on_focus(GLFWwindow* a_window, cbool was_focused);
+		static void on_reposition(GLFWwindow* a_window, int x, int y);
+		static void on_refresh(GLFWwindow* a_window);
+		static void on_iconify(GLFWwindow* a_window, cbool was_iconified);
 
 	public:
 		void init(GLFWwindow* a_window);
@@ -53,7 +53,7 @@ namespace ppr
 		void execute(call_type a_type);
 
 	private:
-		std::vector<std::pair<callbacks::ptr, call_type>> mCallbacks;
+		std::vector<std::pair<callbacks::ptr, call_type>> m_callbacks;
 	};
 
 #define wndcall window_callbacks::get() 

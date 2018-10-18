@@ -129,8 +129,8 @@ namespace ppr
 
 		if (is_ext_supported)
 		{
-			swapchain_support mySwapchainSupport = m_swapchain.query_support(a_device);
-			is_swapchain_adequate = !mySwapchainSupport.formats.empty() && !mySwapchainSupport.present_modes.empty();
+			swapchain_support support_details = m_swapchain.query_support(a_device);
+			is_swapchain_adequate = !support_details.formats.empty() && !support_details.present_modes.empty();
 		}
 
 		return family_indices.IsComplete() && is_ext_supported && is_swapchain_adequate;

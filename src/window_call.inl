@@ -10,6 +10,6 @@ namespace ppr
 
 		callbacks::ptr myCallback(new call<T>(a_function, obj_ptr));
 
-		mCallbacks.push_back(std::make_pair(std::move(myCallback), a_type));
+		m_callbacks.push_back(std::make_pair(std::move(myCallback), a_type));
 	}
 }

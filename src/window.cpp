@@ -72,30 +72,30 @@ namespace ppr
 
 	vk::SurfaceKHR window::create_surface(const vk::Instance& an_instance) const
 	{
-		VkSurfaceKHR myTempSurface;
+		VkSurfaceKHR temp_surface;
 
-		if (print_vkresult(glfwCreateWindowSurface(an_instance, m_window, nullptr, &myTempSurface)) != VK_SUCCESS)
+		if (print(glfwCreateWindowSurface(an_instance, m_window, nullptr, &temp_surface)) != VK_SUCCESS)
 			throw std::runtime_error("Failed to create Vulkan surface for GLFW window.");
 
-		return static_cast<vk::SurfaceKHR>(myTempSurface);
+		return static_cast<vk::SurfaceKHR>(temp_surface);
 
 	}
 
 	std::vector<const char*> window::required_extensions()
 	{
-		uint32_t myCount = 0;
-		const char** myExtensionList = glfwGetRequiredInstanceExtensions(&myCount);
+		uint32_t ext_count = 0;
+		const char** instance_ext_list = glfwGetRequiredInstanceExtensions(&ext_count);
 
-		return std::vector<const char*>(myExtensionList, myExtensionList + myCount);
+		return std::vector<const char*>(instance_ext_list, instance_ext_list + ext_count);
 	}
 
 	size<int> window::get_size() const
 	{
-		size<int> mySize;
+		size<int> window_size;
 
-		glfwGetWindowSize(m_window, &mySize.width, &mySize.height);
+		glfwGetWindowSize(m_window, &window_size.width, &window_size.height);
 
-		return mySize;
+		return window_size;
 	}
 
 	void window::set_title(const std::string& a_title)

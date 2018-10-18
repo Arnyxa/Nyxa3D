@@ -11,19 +11,19 @@ namespace ppr
 
 	std::array<vk::VertexInputAttributeDescription, 2> vertex::attribute_descript()
 	{
-		std::array<vk::VertexInputAttributeDescription, 2> myAttributes;
+		std::array<vk::VertexInputAttributeDescription, 2> attributes;
 
-		myAttributes[0].binding = 0;
-		myAttributes[0].location = 0;
-		myAttributes[0].format = vk::Format::eR32G32Sfloat;
-		myAttributes[0].offset = offsetof(vertex, pos);
+		attributes[0].binding = 0;
+		attributes[0].location = 0;
+		attributes[0].format = vk::Format::eR32G32Sfloat;
+		attributes[0].offset = offsetof(vertex, pos);
 
-		myAttributes[1].binding = 0;
-		myAttributes[1].location = 1;
-		myAttributes[1].format = vk::Format::eR32G32B32Sfloat;
-		myAttributes[1].offset = offsetof(vertex, color);
+		attributes[1].binding = 0;
+		attributes[1].location = 1;
+		attributes[1].format = vk::Format::eR32G32B32Sfloat;
+		attributes[1].offset = offsetof(vertex, color);
 
-		return myAttributes;
+		return attributes;
 	}
 }
 
@@ -32,20 +32,20 @@ namespace ppr
 {
 	vertex_buffer::vertex_buffer(const vk::Device& a_device) : m_device(a_device)
 	{
-		m_vertices.push_back(vertex({ { 0.0f, -0.5f }, { 0.4f, 0.7f, 0.3f } }));
-		m_vertices.push_back(vertex({ { 0.5f, 0.5f }, { 0.4f, 0.3f, 0.1f } }));
-		m_vertices.push_back(vertex({ { -0.5f, 0.5f }, { 0.1f, 0.2f, 0.8f } }));
+		m_vertices.emplace_back(vertex({ { 0.0f, -0.5f }, { 0.4f, 0.7f, 0.3f } }));
+		m_vertices.emplace_back(vertex({ { 0.5f,  0.5f }, { 0.4f, 0.3f, 0.1f } }));
+		m_vertices.emplace_back(vertex({ {-0.5f,  0.5f }, { 0.1f, 0.2f, 0.8f } }));
 	}
 
 	uint32_t vertex_buffer::find_memory_type(uint32_t a_typefilter, vk::MemoryPropertyFlags a_properties, const vk::PhysicalDevice& a_physical_device)
 	{
-		vk::PhysicalDeviceMemoryProperties myMemProperties = a_physical_device.getMemoryProperties();
+		vk::PhysicalDeviceMemoryProperties memory_properties = a_physical_device.getMemoryProperties();
 
-		for (uint32_t i = 0; i < myMemProperties.memoryTypeCount; ++i)
+		for (uint32_t i = 0; i < memory_properties.memoryTypeCount; ++i)
 		{
 			// find index of suitable memory type by checking if the corresponding bit is set to 1
 			// also need to check if memory is suitable for writing to through property flags
-			if ((a_typefilter & (1 << i) && (myMemProperties.memoryTypes[i].propertyFlags & a_properties) == a_properties))
+			if ((a_typefilter & (1 << i) && (memory_properties.memoryTypes[i].propertyFlags & a_properties) == a_properties))
 				return i;
 		}
 
@@ -64,17 +64,20 @@ namespace ppr
 
 	void vertex_buffer::create(const vk::PhysicalDevice& a_physical_device)
 	{
-		vk::BufferCreateInfo myBufferInfo({}, sizeof(m_vertices[0]) * m_vertices.size(), vk::BufferUsageFlagBits::eVertexBuffer, vk::SharingMode::eExclusive);
-		m_buffer = m_device.createBuffer(myBufferInfo);
+		vk::BufferCreateInfo buffer_info({}, sizeof(m_vertices[0]) * m_vertices.size(), vk::BufferUsageFlagBits::eVertexBuffer, vk::SharingMode::eExclusive);
+		m_buffer = m_device.createBuffer(buffer_info);
 
-		vk::MemoryRequirements myMemReqs = m_device.getBufferMemoryRequirements(m_buffer);
-		vk::MemoryAllocateInfo myAllocInfo(myMemReqs.size, find_memory_type(myMemReqs.memoryTypeBits, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, a_physical_device));
+		vk::MemoryRequirements memory_reqs = m_device.getBufferMemoryRequirements(m_buffer);
+		vk::MemoryAllocateInfo memory_alloc_info(memory_reqs.size, find_memory_type(memory_reqs.memoryTypeBits 
+                                                                                  , vk::MemoryPropertyFlagBits::eHostVisible 
+                                                                                  | vk::MemoryPropertyFlagBits::eHostCoherent
+                                                                                  , a_physical_device));
 
-		m_buffer_memory = m_device.allocateMemory(myAllocInfo, nullptr);
+		m_buffer_memory = m_device.allocateMemory(memory_alloc_info, nullptr);
 		m_device.bindBufferMemory(m_buffer, m_buffer_memory, 0);
 
-		void* myData = m_device.mapMemory(m_buffer_memory, 0, myBufferInfo.size);
-		memcpy(myData, m_vertices.data(), (size_t)myBufferInfo.size);
+		void* memory_map = m_device.mapMemory(m_buffer_memory, 0, buffer_info.size);
+		memcpy(memory_map, m_vertices.data(), (size_t)buffer_info.size);
 		m_device.unmapMemory(m_buffer_memory);
 	}
 
