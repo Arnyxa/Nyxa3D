@@ -55,17 +55,17 @@ namespace ppr
 		}
 	}
 
-	void window::poll_events()
+	void window::poll_events() const
 	{
 		glfwPollEvents();
 	}
 
-	GLFWwindow* window::get_glfw_window()
+	GLFWwindow* window::get_glfw_window() const
 	{
 		return m_window;
 	}
 
-	void* window::get_user_ptr()
+	void* window::get_user_ptr() const
 	{
 		return glfwGetWindowUserPointer(m_window);
 	}

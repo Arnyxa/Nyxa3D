@@ -21,7 +21,7 @@ namespace ppr
 	class window
 	{
 	public:
-		window(const std::string& a_title, size_t a_width = 800, size_t a_height = 600);
+		window(const std::string& a_title, size_t a_default_width = 800, size_t a_default_height = 600);
 		~window();
 
 		void destroy();
@@ -29,10 +29,10 @@ namespace ppr
 		void init();
 
 		bool should_close() const;
-		void poll_events();
+		void poll_events() const;
 
-		GLFWwindow* get_glfw_window();
-		void* get_user_ptr();
+		GLFWwindow* get_glfw_window() const;
+		void* get_user_ptr() const;
 
 		void reset_size();
 		size<int> get_size() const;

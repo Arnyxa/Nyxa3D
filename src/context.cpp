@@ -223,7 +223,7 @@ namespace ppr
 	{
 		printf("Checking device extension support...\n");
 
-		std::vector<vk::ExtensionProperties> available_extensions = a_device.enumerateDeviceExtensionProperties();
+        const std::vector<vk::ExtensionProperties> available_extensions = a_device.enumerateDeviceExtensionProperties();
 
 		std::set<std::string> required_extensions(m_device_ext.begin(), m_device_ext.end());
 
