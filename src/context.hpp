@@ -4,7 +4,7 @@
 #include "vulkan_structs.hpp"
 #include "structs.hpp"
 #include "window.hpp"
-#include "debug.hpp"
+#include "debugger.hpp"
 #include "pipeline.hpp"
 #include "vertex_buffer.hpp"
 #include "swapchain.hpp"

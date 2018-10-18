@@ -7,9 +7,6 @@
     <Filter Include="resources">
       <UniqueIdentifier>{a863c5d1-f1ec-4642-972f-abc098243014}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\main">
-      <UniqueIdentifier>{9d908a17-0009-4707-af94-468ebc6abec9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\util">
       <UniqueIdentifier>{d6a31dfe-377f-4d90-baf7-3105d710a57f}</UniqueIdentifier>
     </Filter>
@@ -25,6 +22,15 @@
     <Filter Include="src\render\vertex">
       <UniqueIdentifier>{0315aaee-2a62-4d6c-9226-fe591c2feb56}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\render\pipeline">
+      <UniqueIdentifier>{d155d36a-c275-4cd7-a672-c1f85ce5c804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\render\swapchain">
+      <UniqueIdentifier>{e4080816-6340-4ba8-b3e4-be4d12a65ec4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\render\context">
+      <UniqueIdentifier>{54c0cecf-db23-44ea-b5dd-1464d2363a9b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="callback.hpp">
@@ -38,21 +44,6 @@
     </ClInclude>
     <ClInclude Include="window.hpp">
       <Filter>src\window</Filter>
-    </ClInclude>
-    <ClInclude Include="swapchain.hpp">
-      <Filter>src\render</Filter>
-    </ClInclude>
-    <ClInclude Include="pipeline.hpp">
-      <Filter>src\render</Filter>
-    </ClInclude>
-    <ClInclude Include="context.hpp">
-      <Filter>src\render</Filter>
-    </ClInclude>
-    <ClInclude Include="debug.hpp">
-      <Filter>src\debug</Filter>
-    </ClInclude>
-    <ClInclude Include="debugger.hpp">
-      <Filter>src\debug</Filter>
     </ClInclude>
     <ClInclude Include="logger.hpp">
       <Filter>src\debug</Filter>
@@ -75,36 +66,33 @@
     <ClInclude Include="vertex.hpp">
       <Filter>src\render\vertex</Filter>
     </ClInclude>
+    <ClInclude Include="context.hpp">
+      <Filter>src\render\context</Filter>
+    </ClInclude>
+    <ClInclude Include="pipeline.hpp">
+      <Filter>src\render\pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="swapchain.hpp">
+      <Filter>src\render\swapchain</Filter>
+    </ClInclude>
+    <ClInclude Include="debugger.hpp">
+      <Filter>src\debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="window_call.inl">
       <Filter>src\window</Filter>
     </None>
     <None Include="todo.inl">
-      <Filter>src\util</Filter>
+      <Filter>src</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>src\main</Filter>
-    </ClCompile>
     <ClCompile Include="window_call.cpp">
       <Filter>src\window</Filter>
     </ClCompile>
     <ClCompile Include="window.cpp">
       <Filter>src\window</Filter>
-    </ClCompile>
-    <ClCompile Include="swapchain.cpp">
-      <Filter>src\render</Filter>
-    </ClCompile>
-    <ClCompile Include="pipeline.cpp">
-      <Filter>src\render</Filter>
-    </ClCompile>
-    <ClCompile Include="context.cpp">
-      <Filter>src\render</Filter>
-    </ClCompile>
-    <ClCompile Include="debugger.cpp">
-      <Filter>src\debug</Filter>
     </ClCompile>
     <ClCompile Include="logger.cpp">
       <Filter>src\debug</Filter>
@@ -117,6 +105,21 @@
     </ClCompile>
     <ClCompile Include="vertex.cpp">
       <Filter>src\render\vertex</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="context.cpp">
+      <Filter>src\render\context</Filter>
+    </ClCompile>
+    <ClCompile Include="pipeline.cpp">
+      <Filter>src\render\pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="swapchain.cpp">
+      <Filter>src\render\swapchain</Filter>
+    </ClCompile>
+    <ClCompile Include="debugger.cpp">
+      <Filter>src\debug</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

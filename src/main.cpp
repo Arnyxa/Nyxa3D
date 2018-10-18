@@ -14,6 +14,11 @@ void test()
 
     console->set_level(krn::log::level::trace);
     console->info("Penis {} {}", 69, "dicks");
+    console->trace("Sex {} {}", "butt", 420);
+    console->critical("oh no it's a big oopsie");
+    console->debug("Just testing stuff");
+    console->error("fucksy wucksy");
+    console->warn("u better watch out");
 }
 
 int main()
