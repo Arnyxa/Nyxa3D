@@ -356,7 +356,7 @@ namespace ppr
 
 	void swapchain::create_semaphores()
 	{
-        const vk::SemaphoreCreateInfo semaphore_createinfo({});
+        const vk::SemaphoreCreateInfo semaphore_createinfo = {};
 
 		m_sema_image_available = m_device.createSemaphore(semaphore_createinfo);
 		m_sema_render_finished = m_device.createSemaphore(semaphore_createinfo);
