@@ -2,7 +2,7 @@
 #include "util.hpp"
 #include "debugger.hpp"
 
-// leave this largely in C mode cause the C++ pointers to functions are giving me a headache
+// leave this largely in C mode Vulkan-hpp does not work very well when it comes to the debugging features
 
 namespace ppr
 {
@@ -49,9 +49,9 @@ namespace ppr
 		return VK_FALSE;
 	}
 
-	VkResult debugger::CreateDebugUtilsMessenger(const VkDebugUtilsMessengerCreateInfoEXT* a_createinfo, const VkAllocationCallbacks* an_allocator, VkDebugUtilsMessengerEXT* a_messenger)
+	VkResult debugger::CreateDebugUtilsMessenger(const VkDebugUtilsMessengerCreateInfoEXT* a_createinfo, const VkAllocationCallbacks* an_allocator, VkDebugUtilsMessengerEXT* a_messenger) const
 	{
-		auto function = (PFN_vkCreateDebugUtilsMessengerEXT)m_instance.getProcAddr(CREATE_DBG_MSGR_EXT);
+		const auto function = (PFN_vkCreateDebugUtilsMessengerEXT)m_instance.getProcAddr(CREATE_DBG_MSGR_EXT);
 
 		if (function != nullptr)
 			return function(m_instance, a_createinfo, an_allocator, a_messenger);
@@ -59,9 +59,9 @@ namespace ppr
 			return VK_ERROR_EXTENSION_NOT_PRESENT;
 	}
 
-	void debugger::DestroyDebugUtilsMessenger(VkDebugUtilsMessengerEXT a_messenger, const VkAllocationCallbacks* an_allocator)
+	void debugger::DestroyDebugUtilsMessenger(VkDebugUtilsMessengerEXT a_messenger, const VkAllocationCallbacks* an_allocator) const
 	{
-		auto function = (PFN_vkDestroyDebugUtilsMessengerEXT)m_instance.getProcAddr(DESTROY_DBG_MSGR_EXT);
+        const auto function = (PFN_vkDestroyDebugUtilsMessengerEXT)m_instance.getProcAddr(DESTROY_DBG_MSGR_EXT);
 		if (function != nullptr)
 			function(m_instance, a_messenger, an_allocator);
 	}
@@ -80,7 +80,7 @@ namespace ppr
 	{
 		printf("Checking for validation layer compatibility...\n");
 
-		std::vector<vk::LayerProperties> available_layers = vk::enumerateInstanceLayerProperties();
+        const std::vector<vk::LayerProperties> available_layers = vk::enumerateInstanceLayerProperties();
 
 		for (const char* i_layer : m_validation_layers)
 		{

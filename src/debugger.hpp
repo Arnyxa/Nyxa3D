@@ -28,9 +28,9 @@ namespace ppr
 														void* a_user_data);
 
 		VkResult CreateDebugUtilsMessenger(const VkDebugUtilsMessengerCreateInfoEXT* a_createinfo,
-											const VkAllocationCallbacks* an_allocator, VkDebugUtilsMessengerEXT* a_callback);
+											const VkAllocationCallbacks* an_allocator, VkDebugUtilsMessengerEXT* a_callback) const;
 
-		void DestroyDebugUtilsMessenger(VkDebugUtilsMessengerEXT a_callback, const VkAllocationCallbacks* an_allocator = nullptr);
+		void DestroyDebugUtilsMessenger(VkDebugUtilsMessengerEXT a_callback, const VkAllocationCallbacks* an_allocator = nullptr) const;
 
 	private:
 		VkDebugUtilsMessengerEXT m_messenger;
