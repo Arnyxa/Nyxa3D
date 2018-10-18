@@ -1,4 +1,4 @@
-#include "Util.h"
+#include "util.hpp"
 
 #include <vulkan\vulkan.hpp>
 
@@ -14,7 +14,7 @@ namespace ppr
     const std::string& Error::What() const 
     { return mError; }
 
-    void Error::Print() const 
+    void Error::print() const 
     { std::cout << mError << "\n"; }
 
     int Error::GetCode() const 
@@ -23,22 +23,33 @@ namespace ppr
 
 namespace ppr
 {
-	void Print(const std::string& aText)
+	void print(const std::string& aText)
 	{
 		std::cout << aText << "\n";
 	}
 
-	vk::Result Print(vk::Result aResult)
+	vk::Result print(vk::Result aResult)
 	{
 		if (aResult != vk::Result::eSuccess)
-			Print(vk::to_string(aResult));
+			print(vk::to_string(aResult));
 
 		return aResult;
 	}
 
-	VkResult PrintResult(VkResult aResult)
+    VkResult print(VkResult aResult)
+    {
+        if (aResult != VK_SUCCESS)
+            print(vk::to_string(static_cast<vk::Result>(aResult)));
+
+        return aResult;
+    }
+
+    // work towards deleting
+	VkResult print_vkresult_depr(VkResult aResult)
 	{
 		std::string myTextResult;
+
+        print(vk::to_string(static_cast<vk::Result>(aResult)));
 
 		switch (aResult)
 		{
