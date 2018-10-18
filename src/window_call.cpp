@@ -13,7 +13,7 @@ namespace ppr
 		return instance;
 	}
 
-	void window_callbacks::init(GLFWwindow* a_window)
+	void window_callbacks::init(GLFWwindow* a_window) const
 	{
 		static bool initialized = false;
 

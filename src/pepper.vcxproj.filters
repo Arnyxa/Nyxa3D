@@ -22,6 +22,9 @@
     <Filter Include="src\debug">
       <UniqueIdentifier>{0ab40c84-859d-4fa0-8ae1-3dd58f835b84}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\render\vertex">
+      <UniqueIdentifier>{0315aaee-2a62-4d6c-9226-fe591c2feb56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="callback.hpp">
@@ -35,9 +38,6 @@
     </ClInclude>
     <ClInclude Include="window.hpp">
       <Filter>src\window</Filter>
-    </ClInclude>
-    <ClInclude Include="vertex_buffer.hpp">
-      <Filter>src\render</Filter>
     </ClInclude>
     <ClInclude Include="swapchain.hpp">
       <Filter>src\render</Filter>
@@ -69,6 +69,12 @@
     <ClInclude Include="vulkan_structs.hpp">
       <Filter>src\util</Filter>
     </ClInclude>
+    <ClInclude Include="vertex_buffer.hpp">
+      <Filter>src\render\vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="vertex.hpp">
+      <Filter>src\render\vertex</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="window_call.inl">
@@ -88,9 +94,6 @@
     <ClCompile Include="window.cpp">
       <Filter>src\window</Filter>
     </ClCompile>
-    <ClCompile Include="vertex_buffer.cpp">
-      <Filter>src\render</Filter>
-    </ClCompile>
     <ClCompile Include="swapchain.cpp">
       <Filter>src\render</Filter>
     </ClCompile>
@@ -108,6 +111,12 @@
     </ClCompile>
     <ClCompile Include="util.cpp">
       <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="vertex_buffer.cpp">
+      <Filter>src\render\vertex</Filter>
+    </ClCompile>
+    <ClCompile Include="vertex.cpp">
+      <Filter>src\render\vertex</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

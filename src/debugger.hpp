@@ -11,7 +11,7 @@ namespace ppr
 	class debugger
 	{
 	public:
-		explicit debugger(vk::Instance& an_instance);
+		explicit debugger(const vk::Instance& an_instance);
 		~debugger();
 
 		void init();
@@ -28,13 +28,13 @@ namespace ppr
 														void* a_user_data);
 
 		VkResult CreateDebugUtilsMessenger(const VkDebugUtilsMessengerCreateInfoEXT* a_createinfo,
-											const VkAllocationCallbacks* an_allocator, VkDebugUtilsMessengerEXT* a_callback);
+											const VkAllocationCallbacks* an_allocator, VkDebugUtilsMessengerEXT* a_callback) const;
 
-		void DestroyDebugUtilsMessenger(VkDebugUtilsMessengerEXT a_callback, const VkAllocationCallbacks* an_allocator = nullptr);
+		void DestroyDebugUtilsMessenger(VkDebugUtilsMessengerEXT a_callback, const VkAllocationCallbacks* an_allocator = nullptr) const;
 
 	private:
 		VkDebugUtilsMessengerEXT m_messenger;
-		vk::Instance& m_instance;
+		const vk::Instance& m_instance;
 
 		static constexpr char CREATE_DBG_MSGR_EXT[]  = "vkCreateDebugUtilsMessengerEXT";
 		static constexpr char DESTROY_DBG_MSGR_EXT[] = "vkDestroyDebugUtilsMessengerEXT";
