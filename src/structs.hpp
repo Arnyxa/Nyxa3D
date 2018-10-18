@@ -34,7 +34,7 @@ namespace ppr
 		static constexpr int MIN_INDEX = 0;
 
 	public:
-		bool IsComplete()
+		bool IsComplete() const
 		{ return graphics >= MIN_INDEX && present >= MIN_INDEX; }
 	};
 }

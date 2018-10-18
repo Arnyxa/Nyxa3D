@@ -26,18 +26,17 @@ namespace ppr
 
 	private:
 		void init();
+        void main_loop();
 
 		void create_instance();
 		void create_device();
 
 		void select_physical_device();
-		bool device_is_suitable(const vk::PhysicalDevice& a_device);
+		bool device_is_suitable(const vk::PhysicalDevice& a_device) const;
 
-		bool check_ext_support(const vk::PhysicalDevice& a_device);
+		bool check_ext_support(const vk::PhysicalDevice& a_device) const;
 
-		std::vector<const char*> required_extensions();
-
-		void main_loop();
+		std::vector<const char*> required_extensions() const;
 
 	private:
         // Pepper

@@ -81,7 +81,7 @@ namespace ppr
 
 	}
 
-	std::vector<const char*> window::required_extensions()
+	std::vector<const char*> window::required_extensions() const
 	{
 		uint32_t ext_count = 0;
 		const char** instance_ext_list = glfwGetRequiredInstanceExtensions(&ext_count);

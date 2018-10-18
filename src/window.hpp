@@ -42,7 +42,7 @@ namespace ppr
 		std::string get_title() const;
 
 		vk::SurfaceKHR create_surface(const vk::Instance& an_instance) const;
-		std::vector<const char*> required_extensions();
+		std::vector<const char*> required_extensions() const;
 
 	private:
 		// GLFW
