@@ -12,12 +12,17 @@ namespace ppr
 	struct vertex
 	{
 	public:
-		glm::vec2 pos;
-		glm::vec3 color;
+        vertex(glm::vec2 a_position, 
+               glm::vec3 a_color)
+            : position(a_position)
+            , color(a_color)
+        {}
+		const glm::vec2 position;
+        const glm::vec3 color;
 
 	public:
-		static vk::VertexInputBindingDescription binding_descript();
-		static std::array<vk::VertexInputAttributeDescription, 2> attribute_descript();
+		static const vk::VertexInputBindingDescription binding_descript();
+		static const std::array<vk::VertexInputAttributeDescription, 2> attribute_descript();
 	};
 
 	class vertex_buffer
@@ -26,12 +31,14 @@ namespace ppr
 		explicit vertex_buffer(const vk::Device& a_physical_device);
 
 		void create(const vk::PhysicalDevice& a_physical_device);
-		void destroy();
+		void destroy() const;
 
-		vk::Buffer& get();
-		std::vector<vertex>& get_vertex_array();
+		uint32_t find_memory_type(uint32_t a_typefilter, 
+                              vk::MemoryPropertyFlags a_properties, 
+                        const vk::PhysicalDevice& a_physical_device) const;
 
-		uint32_t find_memory_type(uint32_t a_typefilter, vk::MemoryPropertyFlags a_properties, const vk::PhysicalDevice& a_physical_device);
+        vk::Buffer& get();
+        std::vector<vertex>& get_vertex_array();
 
 	private:
 		const vk::Device& m_device;

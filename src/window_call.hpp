@@ -42,7 +42,7 @@ namespace ppr
 		static void on_iconify(GLFWwindow* a_window, cbool was_iconified);
 
 	public:
-		void init(GLFWwindow* a_window);
+		void init(GLFWwindow* a_window) const;
 
 		template<typename T>
 		void add(void (T::*a_function)(), T* obj_ptr, call_type a_type);

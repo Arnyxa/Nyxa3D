@@ -11,9 +11,8 @@ namespace vk
 
 namespace ppr
 {
-	VkResult print(VkResult aResult);
-
-	void print(const std::string& aText);
+    void       print(const std::string& aText);
+	VkResult   print(VkResult aResult);
 	vk::Result print(vk::Result aResult);
 }
 
@@ -31,8 +30,8 @@ namespace ppr
 		{ return m_initialized; }
 
 	protected:
-		bool m_destroyed;
-		bool m_initialized;
+		mutable bool m_destroyed;
+		mutable bool m_initialized;
 	};
 }
 
