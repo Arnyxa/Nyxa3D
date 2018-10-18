@@ -17,13 +17,13 @@ namespace ppr
 		~pipeline();
 
 		void create();
-		void destroy();
+		void destroy() const;
 
 		vk::Pipeline& get();
 		vk::RenderPass& get_renderpass();
 		vk::PipelineLayout& get_layout();
 
-		vk::ShaderModule create_shader_module(const std::vector<char>& a_bytecode);
+		vk::ShaderModule create_shader_module(const std::vector<char>& a_bytecode) const;
 		static std::vector<char> read_shader(const std::string& a_filename);
 
 	private:

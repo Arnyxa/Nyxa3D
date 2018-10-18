@@ -15,7 +15,7 @@ namespace ppr
 		void create(const vk::PhysicalDevice& a_physical_device);
 		void destroy() const;
 
-		uint32_t find_memory_type(uint32_t a_typefilter, 
+		const uint32_t find_memory_type(uint32_t a_typefilter, 
                               vk::MemoryPropertyFlags a_properties, 
                         const vk::PhysicalDevice& a_physical_device) const;
 

@@ -37,7 +37,7 @@ namespace ppr
         m_device.freeMemory(m_buffer_memory);
     }
 
-    uint32_t vertex_buffer::find_memory_type(uint32_t a_typefilter, 
+    const uint32_t vertex_buffer::find_memory_type(uint32_t a_typefilter, 
                                              vk::MemoryPropertyFlags a_properties,
                                        const vk::PhysicalDevice& a_physical_device) const
     {

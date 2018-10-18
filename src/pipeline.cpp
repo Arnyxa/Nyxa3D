@@ -17,13 +17,12 @@ namespace ppr
 	pipeline::~pipeline()
 	{}
 
-	void pipeline::destroy()
+	void pipeline::destroy() const
 	{
 		m_device.destroyPipeline(m_pipeline);
 		m_device.destroyPipelineLayout(m_pipe_layout);
 		m_device.destroyRenderPass(m_renderpass);
 	}
-
 
 	void pipeline::create()
 	{
@@ -32,27 +31,27 @@ namespace ppr
 		else
 			printf("Creating graphics pipeline...\n");
 
-		auto vert_shader_code = read_shader("shaders/vert.spv");
-		auto frag_shader_code = read_shader("shaders/frag.spv");
+		const auto vert_shader_code = read_shader("shaders/vert.spv");
+        const auto frag_shader_code = read_shader("shaders/frag.spv");
 
-		vk::ShaderModule vert_shader_module = create_shader_module(vert_shader_code);
-		vk::ShaderModule frag_shader_module = create_shader_module(frag_shader_code);
+        const vk::ShaderModule vert_shader_module = create_shader_module(vert_shader_code);
+        const vk::ShaderModule frag_shader_module = create_shader_module(frag_shader_code);
 
 		printf("Shaders loaded.\n");
 
 		printf("Initializing shader and pipeline info...\n");
 
-		vk::PipelineShaderStageCreateInfo vert_shader_info({}, vk::ShaderStageFlagBits::eVertex, vert_shader_module, "main");
-		vk::PipelineShaderStageCreateInfo frag_shader_info({}, vk::ShaderStageFlagBits::eFragment, frag_shader_module, "main");
+        const vk::PipelineShaderStageCreateInfo vert_shader_info({}, vk::ShaderStageFlagBits::eVertex, vert_shader_module, "main");
+        const vk::PipelineShaderStageCreateInfo frag_shader_info({}, vk::ShaderStageFlagBits::eFragment, frag_shader_module, "main");
 
-		vk::PipelineShaderStageCreateInfo shader_stages[] = { vert_shader_info, frag_shader_info };
+        const vk::PipelineShaderStageCreateInfo shader_stages[] = { vert_shader_info, frag_shader_info };
 
-		auto binding = vertex::binding_descript();
-		auto attributes = vertex::attribute_descript();
+        const auto binding = vertex::binding_descript();
+        const auto attributes = vertex::attribute_descript();
 
-		vk::PipelineVertexInputStateCreateInfo vertex_inputinfo({}, 1, &binding, (uint32_t)attributes.size(), attributes.data());
+        const vk::PipelineVertexInputStateCreateInfo vertex_inputinfo({}, 1, &binding, (uint32_t)attributes.size(), attributes.data());
 
-		vk::PipelineInputAssemblyStateCreateInfo input_assembly({}, vk::PrimitiveTopology::eTriangleList);
+        const vk::PipelineInputAssemblyStateCreateInfo input_assembly({}, vk::PrimitiveTopology::eTriangleList);
 
 		vk::Viewport viewport = {};
 		viewport.x = 0.0f;
@@ -66,15 +65,26 @@ namespace ppr
 		scissor.offset = { 0, 0 };
 		scissor.extent = m_viewport;
 
-		vk::PipelineViewportStateCreateInfo viewport_state({}, 1, &viewport, 1, &scissor);
+        const vk::PipelineViewportStateCreateInfo viewport_state({}, 1, &viewport, 1, &scissor);
 
-		vk::PipelineRasterizationStateCreateInfo rasterizer({}, false, false, vk::PolygonMode::eFill, vk::CullModeFlagBits::eBack, vk::FrontFace::eClockwise);
-		rasterizer.lineWidth = 1.0f;
+        const vk::PipelineRasterizationStateCreateInfo rasterizer({}, 
+                                                                  false, false, 
+                                                                  vk::PolygonMode::eFill, 
+                                                                  vk::CullModeFlagBits::eBack, 
+                                                                  vk::FrontFace::eClockwise, 
+                                                                  0, 0.f, 0.f, 0.f, 
+                                                                  1.f);
 
-		vk::PipelineMultisampleStateCreateInfo multisampling({}, vk::SampleCountFlagBits::e1, false, 1.0f);
+        const vk::PipelineMultisampleStateCreateInfo multisampling({}, 
+                                                                   vk::SampleCountFlagBits::e1, 
+                                                                   false, 
+                                                                   1.0f);
 
 		vk::PipelineColorBlendAttachmentState color_blend_attachment = {};
-		color_blend_attachment.colorWriteMask = vk::ColorComponentFlagBits::eR | vk::ColorComponentFlagBits::eG |vk::ColorComponentFlagBits::eB |vk::ColorComponentFlagBits::eA;
+		color_blend_attachment.colorWriteMask = vk::ColorComponentFlagBits::eR 
+                                              | vk::ColorComponentFlagBits::eG 
+                                              | vk::ColorComponentFlagBits::eB 
+                                              | vk::ColorComponentFlagBits::eA;
 		color_blend_attachment.blendEnable = false;
 		color_blend_attachment.srcColorBlendFactor = vk::BlendFactor::eOne;
 		color_blend_attachment.dstColorBlendFactor = vk::BlendFactor::eZero;
@@ -90,13 +100,15 @@ namespace ppr
 
 		printf("Creating pipeline layout...\n");
 
-		vk::PipelineLayoutCreateInfo layout_info;
+        const vk::PipelineLayoutCreateInfo layout_info;
 
 		m_pipe_layout = m_device.createPipelineLayout(layout_info);
 
-		vk::GraphicsPipelineCreateInfo pipeline_info({}, 2, shader_stages, &vertex_inputinfo, &input_assembly, nullptr, &viewport_state, 
-										&rasterizer, &multisampling, nullptr, &color_blend_global, nullptr, m_pipe_layout, 
-										m_renderpass, 0, vk::Pipeline(), -1);
+        const vk::GraphicsPipelineCreateInfo pipeline_info({}, 2, shader_stages, &vertex_inputinfo, &input_assembly, 
+                                                           nullptr, &viewport_state, &rasterizer, &multisampling, 
+                                                           nullptr, &color_blend_global, 
+                                                           nullptr, m_pipe_layout, m_renderpass, 
+                                                           0, vk::Pipeline(), -1);
 
 		if (print(m_device.createGraphicsPipelines(vk::PipelineCache(), 1, &pipeline_info, nullptr, &m_pipeline)) != vk::Result::eSuccess)
 			throw Error("Failed to create Vulkan graphics pipeline.", Error::Code::PIPELINE_CREATION_FAIL);
@@ -110,26 +122,34 @@ namespace ppr
 			m_initialized = true;
 	}
 
-	vk::ShaderModule pipeline::create_shader_module(const std::vector<char>& a_bytecode)
+	vk::ShaderModule pipeline::create_shader_module(const std::vector<char>& a_bytecode) const
 	{
 		printf("Creating shader module...\n");
 
-		vk::ShaderModuleCreateInfo createinfo({}, a_bytecode.size(), reinterpret_cast<const uint32_t*>(a_bytecode.data()));
+        const vk::ShaderModuleCreateInfo createinfo({}, 
+                                                    a_bytecode.size(), 
+                                                    reinterpret_cast<const uint32_t*>(a_bytecode.data()));
         return m_device.createShaderModule(createinfo);
 	}
 
 	std::vector<char> pipeline::read_shader(const std::string& a_filename)
 	{
 		// open file at its end to know the filesize
-		std::ifstream shader(a_filename, std::ios::ate | std::ios::binary);
+		std::ifstream shader(a_filename, std::ios::ate 
+                                       | std::ios::binary);
 
 		if (!shader.is_open())
-			throw Error("Failed to open shader \"" + a_filename + "\"", Error::Code::SHADER_NOT_FOUND);
+			throw Error("Failed to open shader \"" 
+                        + a_filename + "\"", 
+                        Error::Code::SHADER_NOT_FOUND);
 
 		// figure out file size based on buffer position
-		size_t file_size = (size_t)shader.tellg();
+        const size_t file_size = (size_t)shader.tellg();
 
-		printf(std::string(std::string(a_filename) + " size: " + std::to_string(file_size) + "\n").c_str());
+		printf(std::string(std::string(a_filename) 
+                                     + " size: " 
+                                     + std::to_string(file_size) 
+                                     + "\n").c_str());
 
 		std::vector<char> buffer(file_size);
 
