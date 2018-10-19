@@ -5,12 +5,12 @@
       <Configuration>debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="verbose|Win32">
-      <Configuration>verbose</Configuration>
+    <ProjectConfiguration Include="trace|Win32">
+      <Configuration>trace</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="verbose|x64">
-      <Configuration>verbose</Configuration>
+    <ProjectConfiguration Include="trace|x64">
+      <Configuration>trace</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="release|Win32">
@@ -74,7 +74,7 @@
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='verbose|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='trace|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
@@ -93,7 +93,7 @@
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='verbose|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='trace|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
@@ -114,7 +114,7 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='verbose|Win32'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='trace|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
@@ -123,7 +123,7 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='verbose|x64'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='trace|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='release|x64'">
@@ -135,7 +135,7 @@
     <IntDir>$(SolutionDir)build\intrmdt\$(Configuration)\$(Platform)\</IntDir>
     <TargetName>Pepper-$(Configuration)</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='verbose|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='trace|Win32'">
     <OutDir>$(SolutionDir)build\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)build\intrmdt\$(Configuration)\$(Platform)\</IntDir>
     <TargetName>Pepper-$(Configuration)</TargetName>
@@ -155,7 +155,7 @@
     <IntDir>$(SolutionDir)build\intrmdt\$(Configuration)\$(Platform)\</IntDir>
     <TargetName>Pepper-$(Configuration)</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='verbose|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='trace|x64'">
     <OutDir>$(SolutionDir)build\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)build\intrmdt\$(Configuration)\$(Platform)\</IntDir>
     <TargetName>Pepper-$(Configuration)</TargetName>
@@ -179,14 +179,14 @@
       <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk32\ $(OutDir)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='verbose|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='trace|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)/Libraries/spdlog/include;$(SolutionDir)/Libraries/VulkanSDK/Include;$(SolutionDir)/Libraries/GLM;$(SolutionDir)/Libraries/GLFW/32bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VULKAN_HPP_TYPESAFE_CONVERSION;PPR_VERBOSE;PPR_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VULKAN_HPP_TYPESAFE_CONVERSION;PPR_TRACE;PPR_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4267</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -221,14 +221,14 @@
       <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk64\ $(OutDir)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='verbose|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='trace|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)/Libraries/spdlog/include;$(SolutionDir)/Libraries/VulkanSDK/Include;$(SolutionDir)/Libraries/GLM;$(SolutionDir)/Libraries/GLFW/64bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VULKAN_HPP_TYPESAFE_CONVERSION;PPR_VERBOSE;PPR_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VULKAN_HPP_TYPESAFE_CONVERSION;PPR_TRACE;PPR_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4267</DisableSpecificWarnings>
     </ClCompile>
     <Link>

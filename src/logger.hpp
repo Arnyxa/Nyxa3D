@@ -17,7 +17,7 @@ namespace ppr
         OFF
     };
 
-#if defined(PPR_VERBOSE)
+#if defined(PPR_TRACE)
     constexpr log_level DEFAULT_LOG_LVL = log_level::TRACE;
 #elif defined(PPR_DEBUG)
     constexpr log_level DEFAULT_LOG_LVL = log_level::DEBUG;
