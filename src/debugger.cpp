@@ -45,11 +45,11 @@ namespace ppr
 	}
 
 	VKAPI_ATTR VkBool32 VKAPI_CALL debugger::callback(VkDebugUtilsMessageSeverityFlagBitsEXT a_severity,
-		VkDebugUtilsMessageTypeFlagsEXT a_type,
-		const VkDebugUtilsMessengerCallbackDataEXT* a_callback_data,
-		void* a_user_data)
+		                                              VkDebugUtilsMessageTypeFlagsEXT a_type,
+		                                        const VkDebugUtilsMessengerCallbackDataEXT* a_callback_data,
+		                                              void* a_user_data)
 	{
-        log->info("Validation layer: {}", a_callback_data->pMessage);
+        log->warn("Validation layer: {}", a_callback_data->pMessage);
 
 		return VK_FALSE;
 	}

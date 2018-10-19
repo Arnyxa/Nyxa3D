@@ -4,8 +4,6 @@
 
 #include <vulkan/vulkan.hpp>
 
-
-
 namespace ppr
 {
 	class debugger

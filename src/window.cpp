@@ -16,7 +16,23 @@ namespace ppr
 		, m_default_width(a_width)
 		, m_default_height(a_height)
 		, m_title(a_title.c_str())
-	{}
+	{
+        log->info("Setting up window...");
+
+        if (!glfwInit())
+            log->critical("GLFW failed to initialize.");
+
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+        log->debug("GLFW Initialized.");
+
+        log->trace("Creating window...");
+        m_window = glfwCreateWindow(m_default_width, m_default_height, m_title.c_str(), nullptr, nullptr);
+
+        wndcall.init(m_window);
+
+        log->info("Window successfully created.\n");
+    }
 
 	window::~window()
 	{
@@ -30,19 +46,7 @@ namespace ppr
 
 	void window::init()
 	{
-		log->trace("Initializing GLFW...");
-        if (!glfwInit())
-            log->critical("GLFW failed to initialize.");
 
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-        log->trace("GLFW Initialized.");
-
-        log->trace("Creating window...");
-		m_window = glfwCreateWindow(m_default_width, m_default_height, m_title.c_str(), nullptr, nullptr);
-
-		wndcall.init(m_window);
-        log->trace("Window successfully created.");
 	}
 
 	void window::destroy()
@@ -121,4 +125,28 @@ namespace ppr
 		glfwSetWindowSize(m_window, (int)m_default_width, (int)m_default_height);
         log->trace("Window size reset to: {}x{}", m_default_width, m_default_height);
 	}
+
+    void window::check_extension_compatibility(const std::vector<const char*>& a_extensions, const std::vector<vk::ExtensionProperties>& a_properties) const
+    {
+        log->trace("Checking for GLFW extension compatibility...");
+
+        // check whether extensions required by GLFW are in available extension list
+        for (size_t i = 0; i < a_extensions.size(); ++i)
+        {
+            bool was_found = false;
+            for (const auto& i_property : a_properties)
+            {
+                if (std::strcmp(a_extensions[i], i_property.extensionName) == 0)
+                {
+                    was_found = true;
+                    break;
+                }
+            }
+
+            if (!was_found)
+                log->critical("Could not find required GLFW extension for Vulkan on this system.");
+
+            log->trace("        {} found.", a_extensions[i]);
+        }
+    }
 }

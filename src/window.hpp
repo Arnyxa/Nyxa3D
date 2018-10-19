@@ -6,12 +6,13 @@
 #include <string>
 #include <vector>
 #include <functional>
-#include <memory>
 
 namespace vk
 {
 	class SurfaceKHR;
 	class Instance;
+
+    struct ExtensionProperties;
 }
 
 struct GLFWwindow;
@@ -43,6 +44,8 @@ namespace ppr
 
 		vk::SurfaceKHR create_surface(const vk::Instance& an_instance) const;
 		std::vector<const char*> required_extensions() const;
+        void check_extension_compatibility(const std::vector<const char*>& a_extensions, 
+                                           const std::vector<vk::ExtensionProperties>& a_properties) const;
 
 	private:
 		// GLFW

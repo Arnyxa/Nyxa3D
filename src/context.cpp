@@ -15,7 +15,16 @@ namespace ppr
 		: m_window(a_title)
         , m_debugger(m_instance)
 		, m_swapchain(m_device, m_window, m_instance, m_physical_device)
-	{}
+	{
+        log->info("Initializing Vulkan...");
+        create_instance();
+        m_debugger.init();
+        m_swapchain.create_window_surface();
+        select_physical_device();
+        create_device();
+        m_swapchain.init();
+        log->info("Vulkan initialized.\n");
+    }
 
     context::~context()
     {
@@ -26,29 +35,16 @@ namespace ppr
         m_debugger.destroy();
         m_instance.destroy();
 
-        log->trace("Context successfully destroyed.");
+        log->info("Context successfully destroyed.");
     }
 
 	void context::run()
 	{
-		init();
 		main_loop();
 	}
 
     void context::init()
     {
-        m_window.init();
-
-        log->trace("Initializing Vulkan...");
-
-        create_instance();
-        m_debugger.init();
-        m_swapchain.create_window_surface();
-        select_physical_device();
-        create_device();
-        m_swapchain.init();
-
-        log->debug("Vulkan initialized.");
     }
 
     void context::main_loop()
@@ -86,33 +82,14 @@ namespace ppr
 
         const std::vector<vk::ExtensionProperties> extension_properties = vk::enumerateInstanceExtensionProperties();
 
+        m_window.check_extension_compatibility(extensions, extension_properties);
+
         log->trace("Available extensions:");
         for (const auto& i_property : extension_properties)
         {
             log->trace("\t {} ", i_property.extensionName);
         }
         log->trace("{} extensions found in total.", extension_properties.size());
-
-        log->trace("Checking for GLFW extension compatibility...");
-
-        // check whether extensions required by GLFW are in available extension list
-        for (size_t i = 0; i < extensions.size(); ++i)
-        {
-            bool was_found = false;
-            for (const auto& i_property : extension_properties)
-            {
-                if (std::strcmp(extensions[i], i_property.extensionName) == 0)
-                {
-                    was_found = true;
-                    break;
-                }
-            }
-
-            if (!was_found)
-                log->critical("Could not find required GLFW extension for Vulkan on this system.");
-
-            log->trace("        {} found.", extensions[i]);
-        }
 
         log->debug("Extension check successful.");
 

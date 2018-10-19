@@ -2,7 +2,6 @@
 #include "util.hpp"
 #include "logger.hpp"
 
-
 #include <fstream>
 #include <string>
 
@@ -33,8 +32,6 @@ namespace ppr
 
         const vk::ShaderModule vert_shader_module = create_shader_module(vert_shader_code);
         const vk::ShaderModule frag_shader_module = create_shader_module(frag_shader_code);
-
-		log->debug("Shaders loaded.");
 
 		log->trace("Initializing shader and pipeline info...");
 
@@ -110,7 +107,7 @@ namespace ppr
 		if (print(m_device.createGraphicsPipelines(vk::PipelineCache(), 1, &pipeline_info, nullptr, &m_pipeline)) != vk::Result::eSuccess)
 			log->critical("Failed to create Vulkan graphics pipeline.");
 
-		log->debug("graphics pipeline successfully created.");
+		log->trace("Successfully created pipeline.");
 
 		m_device.destroyShaderModule(vert_shader_module);
 		m_device.destroyShaderModule(frag_shader_module);

@@ -19,13 +19,10 @@ namespace ppr
 
 #if defined(PPR_VERBOSE)
     constexpr log_level DEFAULT_LOG_LVL = log_level::TRACE;
-    constexpr const char* DEFAULT_LOGGER_S = "pepper-verbose";
 #elif defined(PPR_DEBUG)
     constexpr log_level DEFAULT_LOG_LVL = log_level::DEBUG;
-    constexpr const char* DEFAULT_LOGGER_S = "pepper-debug";
 #else
     constexpr log_level DEFAULT_LOG_LVL = log_level::OFF;
-    constexpr const char* DEFAULT_LOGGER_S = "pepper-release";
 #endif
 
     class logger
@@ -34,8 +31,6 @@ namespace ppr
         using spd_logger = std::shared_ptr<spdlog::logger>;
 
     public:
-        ~logger();
-
         static const logger& get_instance();
         static const spd_logger& get();
 

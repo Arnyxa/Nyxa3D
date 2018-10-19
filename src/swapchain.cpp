@@ -134,7 +134,7 @@ namespace ppr
 			swapchain_createinfo.queueFamilyIndexCount = NULL; // optional
 			swapchain_createinfo.pQueueFamilyIndices = nullptr; // optional
 		}
-		log->debug("Using {} sharing mode.", sharing_mode);
+		log->trace("Using {} sharing mode.", sharing_mode);
 
 		swapchain_createinfo.preTransform = support_details.capabilities.currentTransform;
 		swapchain_createinfo.compositeAlpha = vk::CompositeAlphaFlagBitsKHR::eOpaque;
@@ -149,7 +149,7 @@ namespace ppr
 		m_image_format = surface_format.format;
 		m_extent2D = extent2D;
 
-		log->debug("Successfully created swapchain.");
+		log->trace("Successfully created swapchain.");
 	}
 
 	void swapchain::create_imageviews()
@@ -166,12 +166,11 @@ namespace ppr
 			m_image_views[i] = m_device.createImageView(createinfo);
 		}
 
-		log->debug("Image views created.");
 	}
 
 	void swapchain::create_window_surface()
 	{
-		log->debug("Creating Vulkan surface...");
+		log->trace("Creating Vulkan surface...");
 
 		m_surface = m_window.create_surface(m_instance);
 	}
@@ -328,7 +327,7 @@ namespace ppr
 			m_framebuffers[i] = m_device.createFramebuffer(framebuffer_info);
 		}
 
-		log->debug("Successfully created framebuffers.");
+		log->trace("Successfully created framebuffers.");
 	}
 
 	void swapchain::recreate()
