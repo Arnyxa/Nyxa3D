@@ -4,9 +4,9 @@ namespace ppr
 	void window_callbacks::add(void (T::*a_function)(), T* obj_ptr, call_type a_type)
 	{
         if (obj_ptr == nullptr)
-            throw Error("Object to call back on was null pointer.", ppr::Error::Code::NULL_PTR);
+            log->critical("{} - Object to call back on was null pointer.", __FUNCTION__);
         if (a_function == nullptr)
-            throw Error("Provided function was null pointer.", ppr::Error::Code::NULL_PTR);
+            log->critical("{} - Provided function pointer was null pointer", __FUNCTION__);
 
 		callbacks::ptr myCallback(new call<T>(a_function, obj_ptr));
 

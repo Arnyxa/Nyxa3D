@@ -1,12 +1,12 @@
 #include "window.hpp"
 #include "callbacks.hpp"
 #include "util.hpp"
-
+#include "logger.hpp"
 
 #include <vulkan/vulkan.hpp>
 #include <glfw/glfw3.h>
 
-#include <iostream>
+
 #include <string>
 
 namespace ppr
@@ -30,20 +30,19 @@ namespace ppr
 
 	void window::init()
 	{
-		printf("Initializing GLFW...\n");
-
-		glfwInit();
+		log->trace("Initializing GLFW...");
+        if (!glfwInit())
+            log->critical("GLFW failed to initialize.");
 
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+        log->trace("GLFW Initialized.");
 
-		printf("Creating window...\n");
-
-		m_window = glfwCreateWindow((int)m_default_width, (int)m_default_height, m_title.c_str(), nullptr, nullptr);
+        log->trace("Creating window...");
+		m_window = glfwCreateWindow(m_default_width, m_default_height, m_title.c_str(), nullptr, nullptr);
 
 		wndcall.init(m_window);
-
-		printf("GLFW Initialized.\n");
+        log->trace("Window successfully created.");
 	}
 
 	void window::destroy()
@@ -74,11 +73,11 @@ namespace ppr
 	{
 		VkSurfaceKHR temp_surface;
 
-		if (print(glfwCreateWindowSurface(an_instance, m_window, nullptr, &temp_surface)) != VK_SUCCESS)
-			throw std::runtime_error("Failed to create Vulkan surface for GLFW window.");
+        if (print(glfwCreateWindowSurface(an_instance, m_window, nullptr, &temp_surface)) != VK_SUCCESS)
+            log->critical("Failed to create Vulkan surface for GLFW window.");
 
+        log->trace("Window surface successfully created");
 		return static_cast<vk::SurfaceKHR>(temp_surface);
-
 	}
 
 	std::vector<const char*> window::required_extensions() const
@@ -102,6 +101,7 @@ namespace ppr
 	{
 		m_title = a_title;
 		glfwSetWindowTitle(m_window, m_title.c_str());
+        log->trace("New window title set: {}", m_title);
 	}
 
 	std::string window::get_title() const
@@ -112,11 +112,13 @@ namespace ppr
 	void window::set_size(size_t a_width, size_t a_height)
 	{
 		glfwSetWindowSize(m_window, (int)a_width, (int)a_height);
+        log->trace("Window resized to: {}x{}", a_width, a_height);
 	}
 
 	// Sets window size back to initially specified default size
 	void window::reset_size()
 	{
 		glfwSetWindowSize(m_window, (int)m_default_width, (int)m_default_height);
+        log->trace("Window size reset to: {}x{}", m_default_width, m_default_height);
 	}
 }

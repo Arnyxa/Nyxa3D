@@ -1,8 +1,8 @@
 #include "pipeline.hpp"
 #include "util.hpp"
+#include "logger.hpp"
 
 
-#include <iostream>
 #include <fstream>
 #include <string>
 
@@ -26,10 +26,7 @@ namespace ppr
 
 	void pipeline::create()
 	{
-		if (!m_initialized)
-			printf("Creating graphics pipeline...\n");
-		else
-			printf("Creating graphics pipeline...\n");
+		log->trace("Creating graphics pipeline...");
 
 		const auto vert_shader_code = read_shader("shaders/vert.spv");
         const auto frag_shader_code = read_shader("shaders/frag.spv");
@@ -37,9 +34,9 @@ namespace ppr
         const vk::ShaderModule vert_shader_module = create_shader_module(vert_shader_code);
         const vk::ShaderModule frag_shader_module = create_shader_module(frag_shader_code);
 
-		printf("Shaders loaded.\n");
+		log->debug("Shaders loaded.");
 
-		printf("Initializing shader and pipeline info...\n");
+		log->trace("Initializing shader and pipeline info...");
 
         const vk::PipelineShaderStageCreateInfo vert_shader_info({}, vk::ShaderStageFlagBits::eVertex, vert_shader_module, "main");
         const vk::PipelineShaderStageCreateInfo frag_shader_info({}, vk::ShaderStageFlagBits::eFragment, frag_shader_module, "main");
@@ -98,7 +95,7 @@ namespace ppr
 		color_blend_global.attachmentCount = 1;
 		color_blend_global.pAttachments = &color_blend_attachment;
 
-		printf("Creating pipeline layout...\n");
+		log->trace("Creating pipeline layout...");
 
         const vk::PipelineLayoutCreateInfo layout_info;
 
@@ -111,9 +108,9 @@ namespace ppr
                                                            0, vk::Pipeline(), -1);
 
 		if (print(m_device.createGraphicsPipelines(vk::PipelineCache(), 1, &pipeline_info, nullptr, &m_pipeline)) != vk::Result::eSuccess)
-			throw Error("Failed to create Vulkan graphics pipeline.", Error::Code::PIPELINE_CREATION_FAIL);
+			log->critical("Failed to create Vulkan graphics pipeline.");
 
-		printf("graphics pipeline successfully created.\n");
+		log->debug("graphics pipeline successfully created.");
 
 		m_device.destroyShaderModule(vert_shader_module);
 		m_device.destroyShaderModule(frag_shader_module);
@@ -124,7 +121,7 @@ namespace ppr
 
 	vk::ShaderModule pipeline::create_shader_module(const std::vector<char>& a_bytecode) const
 	{
-		printf("Creating shader module...\n");
+		log->trace("Creating shader module...");
 
         const vk::ShaderModuleCreateInfo createinfo({}, 
                                                     a_bytecode.size(), 
@@ -139,17 +136,12 @@ namespace ppr
                                        | std::ios::binary);
 
 		if (!shader.is_open())
-			throw Error("Failed to open shader \"" 
-                        + a_filename + "\"", 
-                        Error::Code::SHADER_NOT_FOUND);
+			log->critical("Failed to open shader \"{}\"",  a_filename);
 
 		// figure out file size based on buffer position
         const size_t file_size = (size_t)shader.tellg();
 
-		printf(std::string(std::string(a_filename) 
-                                     + " size: " 
-                                     + std::to_string(file_size) 
-                                     + "\n").c_str());
+        log->trace("{} size: {}", a_filename, std::to_string(file_size));
 
 		std::vector<char> buffer(file_size);
 

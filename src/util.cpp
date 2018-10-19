@@ -1,8 +1,7 @@
 #include "util.hpp"
+#include "logger.hpp"
 
 #include <vulkan\vulkan.hpp>
-
-#include <iostream>
 
 namespace ppr
 {
@@ -15,7 +14,7 @@ namespace ppr
     { return mError; }
 
     void Error::print() const 
-    { std::cout << mError << "\n"; }
+    { /*std::cout << mError << "";*/ }
 
     int Error::GetCode() const 
     { return mCode; }
@@ -25,7 +24,7 @@ namespace ppr
 {
 	void print(const std::string& aText)
 	{
-		std::cout << aText << "\n";
+        log->debug("VkResult: {}", aText);
 	}
 
 	vk::Result print(vk::Result aResult)
@@ -44,7 +43,7 @@ namespace ppr
         return aResult;
     }
 
-    // work towards deleting
+    /// work towards deleting
 	//VkResult print_vkresult_depr(VkResult aResult)
 	//{
 	//	std::string myTextResult;
@@ -106,11 +105,11 @@ namespace ppr
 	//		myTextResult = "VK_ERROR_FORMAT_NOT_SUPPORTED -- A requested format is not supported on this device.";
 	//		break;
 	//	case VK_ERROR_FRAGMENTED_POOL:
-	//		myTextResult = "VK_ERROR_FRAGMENTED_POOL -- A pool allocation has failed due to fragmentation of the poolÅfs memory.\n This *must* only be returned if no attempt to allocate host or device memory was made to accomodate the new allocation.";
+	//		myTextResult = "VK_ERROR_FRAGMENTED_POOL -- A pool allocation has failed due to fragmentation of the poolÅfs memory. This *must* only be returned if no attempt to allocate host or device memory was made to accomodate the new allocation.";
 	//		break;
 	//	}
 
-	//	std::cout << myTextResult << "\n\n";
+	//	std::cout << myTextResult << "";
 
 	//	return aResult;
 	//}

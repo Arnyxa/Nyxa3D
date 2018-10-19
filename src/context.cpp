@@ -1,6 +1,7 @@
 #include "context.hpp"
 #include "callbacks.hpp"
 #include "util.hpp"
+#include "logger.hpp"
 
 #include <glfw/glfw3.h>
 
@@ -18,14 +19,14 @@ namespace ppr
 
     context::~context()
     {
-        printf("Destroying context objects...\n");
+        log->trace("Destroying context objects...");
 
         m_swapchain.destroy();
         m_device.destroy();
         m_debugger.destroy();
         m_instance.destroy();
 
-        printf("context successfully destroyed.\n\n");
+        log->trace("Context successfully destroyed.");
     }
 
 	void context::run()
@@ -36,11 +37,9 @@ namespace ppr
 
     void context::init()
     {
-        printf("Initializing window...\n");
-
         m_window.init();
 
-        printf("window initialized.\n\nInitializing Vulkan...\n");
+        log->trace("Initializing Vulkan...");
 
         create_instance();
         m_debugger.init();
@@ -49,7 +48,7 @@ namespace ppr
         create_device();
         m_swapchain.init();
 
-        printf("Vulkan initialized.\n\n");
+        log->debug("Vulkan initialized.");
     }
 
     void context::main_loop()
@@ -66,9 +65,9 @@ namespace ppr
     void context::create_instance()
     {
         if (VALIDATION_LAYERS_ENABLED && !m_debugger.supports_validation_layers())
-            throw Error("Validation layers requested, but not available.", Error::Code::REQ_VAL_LAYER_UNAVAILABLE);
+            log->critical("Validation layers requested, but not available.");
 
-        const vk::ApplicationInfo app_info("Pepper", VK_MAKE_VERSION(1, 0, 0), "Pepper Engine", VK_MAKE_VERSION(1, 0, 0), VK_API_VERSION_1_1);
+        const vk::ApplicationInfo app_info(PROJECT_TITLE, VK_MAKE_VERSION(0, 0, 1), PROJECT_TITLE, VK_MAKE_VERSION(0, 0, 1), VK_API_VERSION_1_1);
 
         const auto extensions = required_extensions();
 
@@ -87,14 +86,14 @@ namespace ppr
 
         const std::vector<vk::ExtensionProperties> extension_properties = vk::enumerateInstanceExtensionProperties();
 
-        printf("Available extensions:\n");
+        log->trace("Available extensions:");
         for (const auto& i_property : extension_properties)
         {
-            printf(std::string(std::string("\t") + i_property.extensionName + "\n").c_str());
+            log->trace("\t {} ", i_property.extensionName);
         }
-        printf(extension_properties.size() + " extensions found in total.\n\n");
+        log->trace("{} extensions found in total.", extension_properties.size());
 
-        printf("Checking for GLFW extension compatibility...\n");
+        log->trace("Checking for GLFW extension compatibility...");
 
         // check whether extensions required by GLFW are in available extension list
         for (size_t i = 0; i < extensions.size(); ++i)
@@ -110,21 +109,21 @@ namespace ppr
             }
 
             if (!was_found)
-                throw Error("Could not find required GLFW extension for Vulkan on this system.", Error::Code::REQ_EXT_UNAVAILABLE);
+                log->critical("Could not find required GLFW extension for Vulkan on this system.");
 
-            printf(std::string(std::string("        ") + extensions[i] + " found.\n").c_str());
+            log->trace("        {} found.", extensions[i]);
         }
 
-        printf("Extension check successful.\n\n");
+        log->debug("Extension check successful.");
 
         m_instance = vk::createInstance(createinfo);
 
-        printf("Created Vulkan instance.\n\n");
+        log->debug("Created Vulkan instance.");
     }
 
     void context::create_device()
     {
-        printf("Creating logical Vulkan Device...\n");
+        log->trace("Creating logical Vulkan Device...");
 
         const queue_families family_indices = m_swapchain.find_queue_families(m_physical_device);
 
@@ -162,17 +161,17 @@ namespace ppr
         m_swapchain.graphics_queue() = m_device.getQueue(family_indices.graphics, 0);
         m_swapchain.present_queue() = m_device.getQueue(family_indices.present, 0);
 
-        printf("Successfully created logical Vulkan Device.\n\n");
+        log->debug("Successfully created logical Vulkan Device.");
     }
 
 	void context::select_physical_device()
 	{
-		printf("Searching for viable physical device...\n");
+		log->trace("Searching for viable physical device...");
 
         const std::vector<vk::PhysicalDevice> devices = m_instance.enumeratePhysicalDevices();
 
 		if (devices.empty())
-			throw Error("Failed to find any GPU with Vulkan support.", Error::Code::NO_GPU_SUPPORT);
+			log->critical("Failed to find any GPU with Vulkan support.");
 
 		for (const auto& i_device : devices)
 		{
@@ -184,14 +183,14 @@ namespace ppr
 		}
 
 		if (m_physical_device == vk::PhysicalDevice())
-			throw Error("Available GPU(s) have insufficient compatibility with Pepper Engine features.", Error::Code::NO_PEPPER_SUPPORT);
+			log->critical("Available GPU(s) have insufficient compatibility with {} features.", PROJECT_TITLE);
 
-		printf("Matching Vulkan-compatible GPU(s) successfully found.\n\n");
+		log->debug("Matching Vulkan-compatible GPU(s) successfully found.");
 	}
 
 	bool context::device_is_suitable(const vk::PhysicalDevice& a_device) const
 	{
-		printf("Evaluating device suitability...\n");
+		log->trace("Evaluating device suitability...");
 
         const queue_families family_indices = m_swapchain.find_queue_families(a_device);
 
@@ -204,12 +203,12 @@ namespace ppr
 			is_swapchain_adequate = !support_details.formats.empty() && !support_details.present_modes.empty();
 		}
 
-		return family_indices.IsComplete() && is_ext_supported && is_swapchain_adequate;
+		return family_indices.is_complete() && is_ext_supported && is_swapchain_adequate;
 	}
 
 	std::vector<const char*> context::required_extensions() const
 	{
-		printf("Fetching required extensions...\n");
+		log->trace("Fetching required extensions...");
 
 		std::vector<const char*> extensions = m_window.required_extensions();
 
@@ -221,7 +220,7 @@ namespace ppr
 
 	bool context::check_ext_support(const vk::PhysicalDevice& a_device) const
 	{
-		printf("Checking device extension support...\n");
+		log->trace("Checking device extension support...");
 
         const std::vector<vk::ExtensionProperties> available_extensions = a_device.enumerateDeviceExtensionProperties();
 
