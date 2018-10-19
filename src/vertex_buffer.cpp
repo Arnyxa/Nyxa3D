@@ -1,5 +1,6 @@
 #include "vertex_buffer.hpp"
 #include "util.hpp"
+#include "logger.hpp"
 
 namespace ppr
 {
@@ -38,8 +39,8 @@ namespace ppr
     }
 
     const uint32_t vertex_buffer::find_memory_type(uint32_t a_typefilter, 
-                                             vk::MemoryPropertyFlags a_properties,
-                                       const vk::PhysicalDevice& a_physical_device) const
+                                               vk::MemoryPropertyFlags a_properties,
+                                         const vk::PhysicalDevice& a_physical_device) const
     {
         const auto memory_properties = a_physical_device.getMemoryProperties();
 
@@ -53,7 +54,7 @@ namespace ppr
                 return i;
         }
 
-        throw Error("Failed to find suitable memory type.", Error::Code::BUFFER_MEMORY_TYPE_UNSUITABLE);
+        log->critical("Failed to find suitable memory type.");
     }
 
     vk::Buffer& vertex_buffer::get()

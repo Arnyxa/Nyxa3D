@@ -1,6 +1,7 @@
 #include "globals.hpp"
 #include "util.hpp"
 #include "debugger.hpp"
+#include "logger.hpp"
 
 // leave this largely in C mode Vulkan-hpp does not work very well when it comes to the debugging features
 
@@ -20,7 +21,7 @@ namespace ppr
 		if (!VALIDATION_LAYERS_ENABLED)
 			return;
 
-		printf("Initializing debugger callback...\n");
+		log->debug("Initializing debugger callback...");
 
 		VkDebugUtilsMessengerCreateInfoEXT createinfo;
 		createinfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -33,8 +34,8 @@ namespace ppr
                                | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 		createinfo.pfnUserCallback = callback;
 
-		if (print(CreateDebugUtilsMessenger(&createinfo, nullptr, &m_messenger)) != VK_SUCCESS)
-			throw Error("Failed to setup debugger Utilities Messenger.", Error::Code::DEBUG_MSGR_SETUP_FAIL);
+        if (print(CreateDebugUtilsMessenger(&createinfo, nullptr, &m_messenger)) != VK_SUCCESS)
+            log->critical("Failed to setup: DEBUG UTILITIES MESSENGER");
 	}
 
 	void debugger::destroy()
@@ -48,7 +49,7 @@ namespace ppr
 		const VkDebugUtilsMessengerCallbackDataEXT* a_callback_data,
 		void* a_user_data)
 	{
-		std::cerr << "Validation layer: " << a_callback_data->pMessage << std::endl;
+        log->info("Validation layer: {}", a_callback_data->pMessage);
 
 		return VK_FALSE;
 	}
@@ -82,7 +83,7 @@ namespace ppr
 
 	bool debugger::supports_validation_layers() const
 	{
-		printf("Checking for validation layer compatibility...\n");
+		log->trace("Checking for validation layer compatibility...");
 
         const std::vector<vk::LayerProperties> available_layers = vk::enumerateInstanceLayerProperties();
 
@@ -101,14 +102,14 @@ namespace ppr
 
 			if (!was_found)
 			{
-				printf(std::string(std::string(i_layer) + " is not supported.\n").c_str());
+				log->debug("{} is not supported", i_layer);
 				return false;
 			}
 
-			printf(std::string(std::string(i_layer) + " is supported.\n").c_str());
+			log->debug("{} is supported", i_layer);
 		}
 
-		printf("All validation layers are supported.\n\n");
+		log->debug("All validation layers are supported.");
 
 		return true;
 	}

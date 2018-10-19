@@ -1,6 +1,4 @@
-/// Replace all those printf calls with proper error logging
-/// Make a better error handling system (logging instead of exceptions ty)
-/// Organize program files into folders (at least into src/header)
+/// Make sure GLFW code in extension check is in the Window class
 /// Make VertexBuffers more efficient (no memcpy pls)
 /// add functionality for texture loading and rendering
 /// add depth buffering

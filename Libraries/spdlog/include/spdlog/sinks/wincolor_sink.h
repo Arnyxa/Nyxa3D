@@ -29,6 +29,7 @@ public:
     const WORD BOLD = FOREGROUND_INTENSITY;
     const WORD RED = FOREGROUND_RED;
     const WORD GREEN = FOREGROUND_GREEN;
+    const WORD BLUE = FOREGROUND_BLUE;
     const WORD CYAN = FOREGROUND_GREEN | FOREGROUND_BLUE;
     const WORD WHITE = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
     const WORD YELLOW = FOREGROUND_RED | FOREGROUND_GREEN;
@@ -37,8 +38,8 @@ public:
         : out_handle_(OutHandle::handle())
         , mutex_(ConsoleMutex::mutex())
     {
-        colors_[level::trace] = WHITE;
-        colors_[level::debug] = CYAN;
+        colors_[level::trace] = CYAN;
+        colors_[level::debug] = BLUE;
         colors_[level::info] = GREEN;
         colors_[level::warn] = YELLOW | BOLD;
         colors_[level::err] = RED | BOLD;                         // red bold

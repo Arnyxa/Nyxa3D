@@ -12,14 +12,14 @@
 #include <vector>
 #include <sstream>
 #include <string>
-#include <iostream>
+
 
 namespace ppr
 {
 	class context
 	{
 	public:
-		context(const std::string& a_title = DEFAULT_NAME);
+		context(const std::string& a_title = PROJECT_TITLE);
 		~context();
 
 		void run();

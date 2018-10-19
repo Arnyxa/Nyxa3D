@@ -2,6 +2,7 @@
 
 #include "callback.hpp"
 #include "util.hpp"
+#include "logger.hpp"
 
 #include <vector>
 

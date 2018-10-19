@@ -1,9 +1,9 @@
 #include "swapchain.hpp"
 #include "context.hpp"
 #include "callbacks.hpp"
+#include "logger.hpp"
 
 
-#include <iostream>
 
 namespace ppr
 {
@@ -61,7 +61,7 @@ namespace ppr
 			return;
 		}
 		else if (result_pair.result != vk::Result::eSuccess && result_pair.result != vk::Result::eSuboptimalKHR)
-			throw Error("Failed to acquire swapchain image.", Error::Code::SWAPCHAIN_IMAGE_NOT_ACQUIRED);
+			log->critical("Failed to acquire swapchain image.");
 
 		const vk::Semaphore sema_wait[] = { m_sema_image_available };
 		const vk::Semaphore sema_signal[] = { m_sema_render_finished };
@@ -86,17 +86,14 @@ namespace ppr
 			return;
 		}
 		else if (result != vk::Result::eSuccess)
-			throw Error("Failed to present swapchain image.", Error::Code::SWAPCHAIN_IMAGE_PRESENT_ERROR);
+			log->critical("Failed to present swapchain image.");
 
 		m_queue_present.waitIdle();
 	}
 
 	void swapchain::create()
 	{
-		if (!m_initialized)
-			printf("Creating swapchain...\n");
-		else
-			printf("Creating swapchain...\n");
+		log->trace("Creating swapchain...");
 
 		const swapchain_support support_details = query_support(m_physical_device);
 
@@ -119,23 +116,25 @@ namespace ppr
                                                         extent2D, 1, 
                                                         vk::ImageUsageFlagBits::eColorAttachment);
 
-		printf("Evaluating image sharing mode...\n");
-		printf("Using ");
+		log->trace("Evaluating image sharing mode...");
+        std::string sharing_mode;
 		if (family_indices.graphics != family_indices.present)
 		{
-			printf("Concurrent ");
+			sharing_mode = "Concurrent";
+
 			swapchain_createinfo.imageSharingMode = vk::SharingMode::eConcurrent;
 			swapchain_createinfo.queueFamilyIndexCount = 2;
 			swapchain_createinfo.pQueueFamilyIndices = queue_families;
 		}
 		else
 		{
-			printf("Exclusive ");
+            sharing_mode = "Exclusive";
+
 			swapchain_createinfo.imageSharingMode = vk::SharingMode::eExclusive;
 			swapchain_createinfo.queueFamilyIndexCount = NULL; // optional
 			swapchain_createinfo.pQueueFamilyIndices = nullptr; // optional
 		}
-		printf("sharing mode.\n");
+		log->debug("Using {} sharing mode.", sharing_mode);
 
 		swapchain_createinfo.preTransform = support_details.capabilities.currentTransform;
 		swapchain_createinfo.compositeAlpha = vk::CompositeAlphaFlagBitsKHR::eOpaque;
@@ -150,7 +149,7 @@ namespace ppr
 		m_image_format = surface_format.format;
 		m_extent2D = extent2D;
 
-		printf("Successfully created swapchain.\n");
+		log->debug("Successfully created swapchain.");
 	}
 
 	void swapchain::create_imageviews()
@@ -159,7 +158,7 @@ namespace ppr
 
 		for (size_t i = 0; i < m_images.size(); ++i)
 		{
-			printf("Creating swapchain image view...\n");
+			log->trace("Creating swapchain image view...");
 
             const vk::ImageSubresourceRange subresource_range(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
             const vk::ImageViewCreateInfo createinfo({}, m_images[i], vk::ImageViewType::e2D, m_image_format, vk::ComponentMapping(), subresource_range);
@@ -167,19 +166,19 @@ namespace ppr
 			m_image_views[i] = m_device.createImageView(createinfo);
 		}
 
-		printf("Image views created.\n\n");
+		log->debug("Image views created.");
 	}
 
 	void swapchain::create_window_surface()
 	{
-		printf("Creating Vulkan surface...\n");
+		log->debug("Creating Vulkan surface...");
 
 		m_surface = m_window.create_surface(m_instance);
 	}
 
 	queue_families swapchain::find_queue_families(const vk::PhysicalDevice& a_device) const
 	{
-		printf("Searching for available queue families...\n");
+		log->trace("Searching for available queue families...");
 
         const std::vector<vk::QueueFamilyProperties> queue_fam_properties = a_device.getQueueFamilyProperties();
 
@@ -197,7 +196,7 @@ namespace ppr
              && present_support)
 				family_indices.present = i;
 
-			if (family_indices.IsComplete())
+			if (family_indices.is_complete())
 				break;
 		}
 		return family_indices;
@@ -210,7 +209,7 @@ namespace ppr
 
 	vk::SurfaceFormatKHR swapchain::choose_surface_format(const std::vector<vk::SurfaceFormatKHR>& an_available_formats) const
 	{
-		printf("Checking available swapchain Surface Format...\n");
+		log->trace("Checking available swapchain Surface Format...");
 		if (an_available_formats.size() == 1 && an_available_formats[0].format == vk::Format::eUndefined)
 			return { vk::Format::eB8G8R8A8Unorm, vk::ColorSpaceKHR::eSrgbNonlinear };
 
@@ -226,7 +225,7 @@ namespace ppr
 
 	vk::PresentModeKHR swapchain::choose_present_mode(const std::vector<vk::PresentModeKHR>& an_available_modes) const
 	{
-		printf("Determining optimal swapchain present mode...\n");
+		log->trace("Determining optimal swapchain present mode...");
 		vk::PresentModeKHR best_mode = vk::PresentModeKHR::eFifo;
 
 		for (const auto& i_present_mode : an_available_modes)
@@ -242,7 +241,7 @@ namespace ppr
 
 	vk::Extent2D swapchain::choose_extent(const vk::SurfaceCapabilitiesKHR& a_capabilities) const
 	{
-		printf("Choosing swapchain Extent...\n");
+		log->trace("Choosing swapchain Extent...");
 
 		if (a_capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max())
 			return a_capabilities.currentExtent;
@@ -262,7 +261,7 @@ namespace ppr
 
 	swapchain_support swapchain::query_support(const vk::PhysicalDevice& a_device) const
 	{
-		printf("Querying swapchain support...\n");
+		log->trace("Querying swapchain support...");
 
 		swapchain_support support_details;
 		support_details.capabilities  = a_device.getSurfaceCapabilitiesKHR(m_surface);
@@ -313,7 +312,7 @@ namespace ppr
 
 	void swapchain::create_framebuffers()
 	{
-		printf("Creating framebuffers...\n");
+		log->trace("Creating framebuffers...");
 
 		m_framebuffers.resize(m_image_views.size());
 
@@ -329,7 +328,7 @@ namespace ppr
 			m_framebuffers[i] = m_device.createFramebuffer(framebuffer_info);
 		}
 
-		printf("Finished creating framebuffers.\n");
+		log->debug("Successfully created framebuffers.");
 	}
 
 	void swapchain::recreate()
@@ -366,7 +365,7 @@ namespace ppr
 
 	void swapchain::create_commandbuffers()
 	{
-		printf("Creating Command Buffers...\n");
+		log->trace("Creating Command Buffers...");
 
 		m_commandbuffers.resize(m_framebuffers.size());
 
@@ -405,7 +404,7 @@ namespace ppr
 
 	void swapchain::create_commandpool()
 	{
-		printf("Creating Command Pool...\n");
+		log->trace("Creating Command Pool...");
 
         const queue_families family_indices = find_queue_families(m_physical_device);
 

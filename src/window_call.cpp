@@ -2,8 +2,6 @@
 
 #include <glfw/glfw3.h>
 
-#include <iostream>
-
 namespace ppr
 {
 	window_callbacks& window_callbacks::get()
@@ -20,9 +18,9 @@ namespace ppr
 		if (!initialized)
 		{
             if (a_window == nullptr)
-                throw Error("Provided window was null pointer.", Error::Code::NULL_PTR);
+                log->critical("{} - Provided GLFW window was nullptr", __FUNCTION__);
 
-			printf("Initializing window callbacks...\n");
+			log->trace("Initializing window callbacks...");
 
 			glfwSetWindowSizeCallback(a_window, on_resize);
 			glfwSetWindowCloseCallback(a_window, on_close);
@@ -33,7 +31,7 @@ namespace ppr
 
 			initialized = true;
 
-			printf("window callbacks initialized.\n\n");
+			log->debug("Window callbacks initialized.");
 		}
 	}
 
@@ -50,13 +48,9 @@ namespace ppr
 	void window_callbacks::on_focus(GLFWwindow* a_window, cbool was_focused)
 	{
 		if (was_focused != GLFW_TRUE && was_focused != GLFW_FALSE)
-			printf(std::string(std::string("\nWarning: 'was_focused' in 'window_callbacks::on_focus(GLFWwindow* a_window, cbool was_focused)'") 
-								+ "\nValue evaluated to: " + std::to_string(was_focused) + " (non-bool).\n\n").c_str());
+			log->warn("{} - 'was_focused' is not a standard bool. Value evaluates to: {} ", __FUNCTION__, std::to_string(was_focused));
 
-		if (was_focused)
-			get().execute(call_type::FOCUS);
-		else
-			get().execute(call_type::UNFOCUS);
+		get().execute((was_focused ? call_type::FOCUS : call_type::UNFOCUS));
 	}
 
 	void window_callbacks::on_reposition(GLFWwindow* a_window, int x, int y)
