@@ -34,14 +34,14 @@ namespace ppr
                                | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 		createinfo.pfnUserCallback = callback;
 
-        if (print(CreateDebugUtilsMessenger(&createinfo, nullptr, &m_messenger)) != VK_SUCCESS)
+        if (print(create_debug_utils_msgr(&createinfo, nullptr, &m_messenger)) != VK_SUCCESS)
             log->critical("Failed to setup: DEBUG UTILITIES MESSENGER");
 	}
 
 	void debugger::destroy()
 	{
 		if (m_messenger != VK_NULL_HANDLE)
-			DestroyDebugUtilsMessenger(m_messenger);
+			destroy_debug_utils_msgr(m_messenger);
 	}
 
 	VKAPI_ATTR VkBool32 VKAPI_CALL debugger::callback(VkDebugUtilsMessageSeverityFlagBitsEXT a_severity,
@@ -54,7 +54,7 @@ namespace ppr
 		return VK_FALSE;
 	}
 
-	VkResult debugger::CreateDebugUtilsMessenger(const VkDebugUtilsMessengerCreateInfoEXT* a_createinfo, const VkAllocationCallbacks* an_allocator, VkDebugUtilsMessengerEXT* a_messenger) const
+	VkResult debugger::create_debug_utils_msgr(const VkDebugUtilsMessengerCreateInfoEXT* a_createinfo, const VkAllocationCallbacks* an_allocator, VkDebugUtilsMessengerEXT* a_messenger) const
 	{
 		const auto function = (PFN_vkCreateDebugUtilsMessengerEXT)m_instance.getProcAddr(CREATE_DBG_MSGR_EXT);
 
@@ -64,7 +64,7 @@ namespace ppr
 			return VK_ERROR_EXTENSION_NOT_PRESENT;
 	}
 
-	void debugger::DestroyDebugUtilsMessenger(VkDebugUtilsMessengerEXT a_messenger, const VkAllocationCallbacks* an_allocator) const
+	void debugger::destroy_debug_utils_msgr(VkDebugUtilsMessengerEXT a_messenger, const VkAllocationCallbacks* an_allocator) const
 	{
         const auto function = (PFN_vkDestroyDebugUtilsMessengerEXT)m_instance.getProcAddr(DESTROY_DBG_MSGR_EXT);
 		if (function != nullptr)

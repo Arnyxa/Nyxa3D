@@ -18,17 +18,18 @@ namespace ppr
 		bool supports_validation_layers() const;
 		uint32_t enabled_layer_count() const;
 		const char* const* enabled_layer_names() const;
-
 	private:
 		static VKAPI_ATTR VkBool32 VKAPI_CALL callback(VkDebugUtilsMessageSeverityFlagBitsEXT a_severity,
-														VkDebugUtilsMessageTypeFlagsEXT a_type,
-														const VkDebugUtilsMessengerCallbackDataEXT* a_callback_data,
-														void* a_user_data);
+                                                       VkDebugUtilsMessageTypeFlagsEXT a_type,
+                                                 const VkDebugUtilsMessengerCallbackDataEXT* a_callback_data,
+                                                       void* a_user_data);
 
-		VkResult CreateDebugUtilsMessenger(const VkDebugUtilsMessengerCreateInfoEXT* a_createinfo,
-											const VkAllocationCallbacks* an_allocator, VkDebugUtilsMessengerEXT* a_callback) const;
+		VkResult create_debug_utils_msgr(const VkDebugUtilsMessengerCreateInfoEXT* a_createinfo,
+										 const VkAllocationCallbacks* an_allocator, 
+                                               VkDebugUtilsMessengerEXT* a_callback) const;
 
-		void DestroyDebugUtilsMessenger(VkDebugUtilsMessengerEXT a_callback, const VkAllocationCallbacks* an_allocator = nullptr) const;
+		void destroy_debug_utils_msgr(VkDebugUtilsMessengerEXT a_callback, 
+                                  const VkAllocationCallbacks* an_allocator = nullptr) const;
 
 	private:
 		VkDebugUtilsMessengerEXT m_messenger;
