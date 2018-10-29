@@ -54,7 +54,9 @@ namespace ppr
 		return VK_FALSE;
 	}
 
-	VkResult debugger::create_debug_utils_msgr(const VkDebugUtilsMessengerCreateInfoEXT* a_createinfo, const VkAllocationCallbacks* an_allocator, VkDebugUtilsMessengerEXT* a_messenger) const
+	VkResult debugger::create_debug_utils_msgr(const VkDebugUtilsMessengerCreateInfoEXT* a_createinfo, 
+                                               const VkAllocationCallbacks* an_allocator, 
+                                                     VkDebugUtilsMessengerEXT* a_messenger) const
 	{
 		const auto function = (PFN_vkCreateDebugUtilsMessengerEXT)m_instance.getProcAddr(CREATE_DBG_MSGR_EXT);
 
@@ -64,9 +66,11 @@ namespace ppr
 			return VK_ERROR_EXTENSION_NOT_PRESENT;
 	}
 
-	void debugger::destroy_debug_utils_msgr(VkDebugUtilsMessengerEXT a_messenger, const VkAllocationCallbacks* an_allocator) const
+	void debugger::destroy_debug_utils_msgr(VkDebugUtilsMessengerEXT a_messenger, 
+                                      const VkAllocationCallbacks* an_allocator) const
 	{
         const auto function = (PFN_vkDestroyDebugUtilsMessengerEXT)m_instance.getProcAddr(DESTROY_DBG_MSGR_EXT);
+
 		if (function != nullptr)
 			function(m_instance, a_messenger, an_allocator);
 	}

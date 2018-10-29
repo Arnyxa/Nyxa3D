@@ -63,7 +63,12 @@ namespace ppr
         if (VALIDATION_LAYERS_ENABLED && !m_debugger.supports_validation_layers())
             log->critical("Validation layers requested, but not available.");
 
-        const vk::ApplicationInfo app_info(PROJECT_TITLE, VK_MAKE_VERSION(0, 0, 1), PROJECT_TITLE, VK_MAKE_VERSION(0, 0, 1), VK_API_VERSION_1_1);
+        const vk::ApplicationInfo app_info = vk::ApplicationInfo()
+                                            .setPApplicationName(PROJECT_TITLE)
+                                            .setApplicationVersion(VK_MAKE_VERSION(0,1,0))
+                                            .setPEngineName(PROJECT_TITLE)
+                                            .setEngineVersion(VK_MAKE_VERSION(0,1,0))
+                                            .setApiVersion(VK_API_VERSION_1_1);
 
         const auto extensions = required_extensions();
 

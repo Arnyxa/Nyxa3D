@@ -1,5 +1,6 @@
 #include "logger.hpp"
 #include "globals.hpp"
+#include "util.hpp"
 
 #include <iostream>
 
@@ -23,7 +24,7 @@ namespace ppr
     }
 
     ppr::logger::logger(log_level a_level)
-        : m_logger(spdlog::stderr_color_st(PROJECT_TITLE))
+        : m_logger(spdlog::stderr_color_st(to_lower_copy(PROJECT_TITLE)))
     {
         m_logger->set_level(spdlog::level::trace);
 

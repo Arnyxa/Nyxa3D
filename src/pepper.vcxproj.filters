@@ -78,6 +78,9 @@
     <ClInclude Include="debugger.hpp">
       <Filter>src\debug</Filter>
     </ClInclude>
+    <ClInclude Include="buffer.h">
+      <Filter>src\render\vertex</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="window_call.inl">
@@ -120,6 +123,9 @@
     </ClCompile>
     <ClCompile Include="debugger.cpp">
       <Filter>src\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="buffer.cpp">
+      <Filter>src\render\vertex</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

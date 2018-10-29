@@ -3,6 +3,8 @@
 
 #include <vulkan\vulkan.hpp>
 
+#include <algorithm>
+
 namespace ppr
 {
     Error::Error(const std::string& aMessage, Error::Code anErrorCode)
@@ -22,6 +24,19 @@ namespace ppr
 
 namespace ppr
 {
+    std::string to_lower_copy(std::string a_string)
+    {
+        std::transform(a_string.begin(), a_string.end(), a_string.begin(), 
+            static_cast<int(*)(int)>(std::tolower));
+        return a_string;
+    }
+
+    void to_lower(std::string& a_string)
+    {
+        std::transform(a_string.begin(), a_string.end(), a_string.begin(),
+            static_cast<int(*)(int)>(std::tolower));
+    }
+
 	void print(const std::string& aText)
 	{
         log->debug("VkResult: {}", aText);
@@ -105,7 +120,7 @@ namespace ppr
 	//		myTextResult = "VK_ERROR_FORMAT_NOT_SUPPORTED -- A requested format is not supported on this device.";
 	//		break;
 	//	case VK_ERROR_FRAGMENTED_POOL:
-	//		myTextResult = "VK_ERROR_FRAGMENTED_POOL -- A pool allocation has failed due to fragmentation of the poolÅfs memory. This *must* only be returned if no attempt to allocate host or device memory was made to accomodate the new allocation.";
+	//		myTextResult = "VK_ERROR_FRAGMENTED_POOL -- A pool allocation has failed due to fragmentation of the poolÔøΩfs memory. This *must* only be returned if no attempt to allocate host or device memory was made to accomodate the new allocation.";
 	//		break;
 	//	}
 

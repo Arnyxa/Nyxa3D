@@ -14,6 +14,9 @@ namespace ppr
     void       print(const std::string& aText);
 	VkResult   print(VkResult aResult);
 	vk::Result print(vk::Result aResult);
+
+    std::string to_lower_copy(std::string a_string);
+    void to_lower(std::string& a_string);
 }
 
 namespace ppr

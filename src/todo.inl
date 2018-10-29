@@ -1,6 +1,4 @@
-/// add boost::tolower to libraries
-/// change project name color in logger
-/// Make sure GLFW code in extension check is in the Window class
-/// Make VertexBuffers more efficient (no memcpy pls)
+/// abstract vertex buffers into being generic buffers that may also buffer vertices
 /// add functionality for texture loading and rendering
 /// add depth buffering
+/// update pepper to make use of Vulkan 1.1 functionality

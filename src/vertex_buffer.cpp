@@ -55,6 +55,7 @@ namespace ppr
         }
 
         log->critical("Failed to find suitable memory type.");
+        return 0;
     }
 
     vk::Buffer& vertex_buffer::get()
