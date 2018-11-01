@@ -26,6 +26,7 @@ namespace ppr
     ppr::logger::logger(log_level a_level)
         : m_logger(spdlog::stderr_color_st(to_lower_copy(PROJECT_TITLE)))
     {
+#ifdef PPR_TRACE
         m_logger->set_level(spdlog::level::trace);
 
         m_logger->trace("Testing trace");
@@ -34,6 +35,7 @@ namespace ppr
         m_logger->warn("Testing warn");
         m_logger->error("Testing error");
         m_logger->critical("Testing crit\n");
+#endif
 
         m_logger->set_level(convert_lvl(a_level));
     }

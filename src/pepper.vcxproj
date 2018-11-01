@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="buffer.h" />
+    <ClInclude Include="buffer.hpp" />
     <ClInclude Include="callback.hpp" />
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="context.hpp" />

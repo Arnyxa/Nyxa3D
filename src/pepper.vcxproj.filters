@@ -78,7 +78,7 @@
     <ClInclude Include="debugger.hpp">
       <Filter>src\debug</Filter>
     </ClInclude>
-    <ClInclude Include="buffer.h">
+    <ClInclude Include="buffer.hpp">
       <Filter>src\render\vertex</Filter>
     </ClInclude>
   </ItemGroup>

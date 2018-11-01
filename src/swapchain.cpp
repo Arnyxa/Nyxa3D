@@ -34,7 +34,9 @@ namespace ppr
 		m_pipeline.create();
 		create_framebuffers();
 		create_commandpool();
-		m_vertex_buffer.create(m_physical_device);
+		m_vertex_buffer.create(m_physical_device, 
+                               m_commandpool, 
+                               m_queue_graphics);
 		create_commandbuffers();
 		create_semaphores();
 
@@ -346,7 +348,9 @@ namespace ppr
 		create_renderpass();
 		m_pipeline.create();
 		create_framebuffers();
-		m_vertex_buffer.create(m_physical_device);
+		m_vertex_buffer.create(m_physical_device, 
+                               m_commandpool, 
+                               m_queue_graphics);
 		create_commandbuffers();
 
 		m_destroyed = false;

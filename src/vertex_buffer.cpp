@@ -4,63 +4,63 @@
 
 namespace ppr
 {
-	vertex_buffer::vertex_buffer(const vk::Device& a_device) : m_device(a_device)
+	vertex_buffer::vertex_buffer(const vk::Device& a_device) 
+        : m_device(a_device)
+        , m_buffer(a_device)
 	{
 		m_vertices.emplace_back(vertex({ { 0.0f, -0.5f }, { 0.4f, 0.7f, 0.3f } }));
 		m_vertices.emplace_back(vertex({ { 0.5f,  0.5f }, { 0.4f, 0.3f, 0.1f } }));
 		m_vertices.emplace_back(vertex({ {-0.5f,  0.5f }, { 0.1f, 0.2f, 0.8f } }));
 	}
 
-    void vertex_buffer::create(const vk::PhysicalDevice& a_physical_device)
+    void vertex_buffer::create(const vk::PhysicalDevice& a_physical_device,
+                               const vk::CommandPool& a_command_pool,
+                               const vk::Queue& a_graphics_queue)
     {
-        const vk::BufferCreateInfo buffer_info({}, 
-                                               sizeof(m_vertices[0]) * m_vertices.size(), 
-                                               vk::BufferUsageFlagBits::eVertexBuffer, 
-                                               vk::SharingMode::eExclusive);
-        m_buffer = m_device.createBuffer(buffer_info);
+        const vk::DeviceSize buffer_size = sizeof(m_vertices[0]) * m_vertices.size();
 
-        const auto memory_reqs = m_device.getBufferMemoryRequirements(m_buffer);
-        const vk::MemoryAllocateInfo memory_alloc_info(memory_reqs.size, find_memory_type(memory_reqs.memoryTypeBits, 
-                                                                                          vk::MemoryPropertyFlagBits::eHostVisible
-                                                                                        | vk::MemoryPropertyFlagBits::eHostCoherent, 
-                                                                                          a_physical_device));
-        m_buffer_memory = m_device.allocateMemory(memory_alloc_info, nullptr);
-        m_device.bindBufferMemory(m_buffer, m_buffer_memory, 0);
+        buffer staging_buffer(m_device);
+        auto staging_buffer_info = buffer::create_info(a_physical_device, 
+                                                       vk::MemoryPropertyFlagBits::eHostVisible
+                                                       | vk::MemoryPropertyFlagBits::eHostCoherent,
+                                                       vk::BufferUsageFlagBits::eTransferSrc,
+                                                       buffer_size);
+        staging_buffer.create(staging_buffer_info);
 
-        void* memory_map = m_device.mapMemory(m_buffer_memory, 0, buffer_info.size);
-        memcpy(memory_map, m_vertices.data(), (size_t)buffer_info.size);
-        m_device.unmapMemory(m_buffer_memory);
+        auto memory_map = m_device.mapMemory(staging_buffer.memory(), 0, staging_buffer_info.data.size);
+            memcpy(memory_map, m_vertices.data(), staging_buffer_info.data.size);
+        m_device.unmapMemory(staging_buffer.memory());
+
+        auto vertex_buffer_info = buffer::create_info(a_physical_device, 
+                                                      vk::MemoryPropertyFlagBits::eDeviceLocal,
+                                                      vk::BufferUsageFlagBits::eTransferDst
+                                                      | vk::BufferUsageFlagBits::eVertexBuffer,
+                                                      buffer_size);
+        m_buffer.create(vertex_buffer_info);
+
+        auto buffer_copy_data = buffer::copy_data(m_buffer, 
+                                                  nullptr, 
+                                                  buffer_size, 
+                                                  a_command_pool, 
+                                                  a_graphics_queue);
+        staging_buffer.copy(buffer_copy_data);
+
+        staging_buffer.destroy();
     }
 
     void vertex_buffer::destroy() const
     {
-        m_device.destroyBuffer(m_buffer);
-        m_device.freeMemory(m_buffer_memory);
+        m_buffer.destroy();
     }
 
-    const uint32_t vertex_buffer::find_memory_type(uint32_t a_typefilter, 
-                                               vk::MemoryPropertyFlags a_properties,
-                                         const vk::PhysicalDevice& a_physical_device) const
+    const vk::Buffer& vertex_buffer::get() const
     {
-        const auto memory_properties = a_physical_device.getMemoryProperties();
-
-        for (uint32_t i = 0; i < memory_properties.memoryTypeCount; ++i)
-        {
-            // find index of suitable memory type by checking if the corresponding bit is set to 1
-            // also need to check if memory is suitable for writing to through property flags
-            if ((a_typefilter & (1 << i) 
-             && (memory_properties.memoryTypes[i].propertyFlags & a_properties) 
-             == a_properties))
-                return i;
-        }
-
-        log->critical("Failed to find suitable memory type.");
-        return 0;
+        return m_buffer.get();
     }
 
-    vk::Buffer& vertex_buffer::get()
+    vk::Buffer& vertex_buffer::get_mut()
     {
-        return m_buffer;
+        return m_buffer.get_mut();
     }
 
     std::vector<vertex>& vertex_buffer::get_vertex_array()
