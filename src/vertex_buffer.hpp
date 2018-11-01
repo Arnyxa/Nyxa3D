@@ -21,7 +21,7 @@ namespace ppr
 
         vk::Buffer& get_mut();
         const vk::Buffer& get() const;
-        std::vector<vertex>& get_vertex_array();
+        const std::vector<vertex>& vertices() const;
 
 	private:
 		const vk::Device& m_device;

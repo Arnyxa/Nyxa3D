@@ -33,6 +33,7 @@
     <ClInclude Include="context.hpp" />
     <ClInclude Include="debugger.hpp" />
     <ClInclude Include="globals.hpp" />
+    <ClInclude Include="index_buffer.hpp" />
     <ClInclude Include="logger.hpp" />
     <ClInclude Include="pipeline.hpp" />
     <ClInclude Include="structs.hpp" />
@@ -52,6 +53,7 @@
     <ClCompile Include="buffer.cpp" />
     <ClCompile Include="context.cpp" />
     <ClCompile Include="debugger.cpp" />
+    <ClCompile Include="index_buffer.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pipeline.cpp" />

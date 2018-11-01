@@ -8,9 +8,10 @@ namespace ppr
         : m_device(a_device)
         , m_buffer(a_device)
 	{
-		m_vertices.emplace_back(vertex({ { 0.0f, -0.5f }, { 0.4f, 0.7f, 0.3f } }));
-		m_vertices.emplace_back(vertex({ { 0.5f,  0.5f }, { 0.4f, 0.3f, 0.1f } }));
-		m_vertices.emplace_back(vertex({ {-0.5f,  0.5f }, { 0.1f, 0.2f, 0.8f } }));
+		m_vertices.emplace_back(vertex({{ -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }}));
+		m_vertices.emplace_back(vertex({{ 0.5f, -0.5f }, { 0.0f, 1.0f, 0.0f }}));
+		m_vertices.emplace_back(vertex({{ 0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f }}));
+        m_vertices.emplace_back(vertex({{ -0.5f, 0.5f }, { 1.0f, 1.0f, 1.0f }}));        
 	}
 
     void vertex_buffer::create(const vk::PhysicalDevice& a_physical_device,
@@ -63,7 +64,7 @@ namespace ppr
         return m_buffer.get_mut();
     }
 
-    std::vector<vertex>& vertex_buffer::get_vertex_array()
+    const std::vector<vertex>& vertex_buffer::vertices() const
     {
         return m_vertices;
     }

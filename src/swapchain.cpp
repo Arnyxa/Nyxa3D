@@ -3,8 +3,6 @@
 #include "callbacks.hpp"
 #include "logger.hpp"
 
-
-
 namespace ppr
 {
 	swapchain::swapchain(const vk::Device& a_device, 
@@ -14,6 +12,7 @@ namespace ppr
 		: m_device(a_device)
 		, m_pipeline(a_device, m_extent2D)
 		, m_vertex_buffer(a_device)
+        , m_index_buffer(a_device)
 		, m_window(a_window)
 		, m_instance(an_instance)
 		, m_physical_device(a_physical_device)
@@ -35,6 +34,9 @@ namespace ppr
 		create_framebuffers();
 		create_commandpool();
 		m_vertex_buffer.create(m_physical_device, 
+                               m_commandpool, 
+                               m_queue_graphics);
+        m_index_buffer.create(m_physical_device, 
                                m_commandpool, 
                                m_queue_graphics);
 		create_commandbuffers();
@@ -62,15 +64,15 @@ namespace ppr
 			this->recreate();
 			return;
 		}
-		else if (result_pair.result != vk::Result::eSuccess && result_pair.result != vk::Result::eSuboptimalKHR)
+		else if (result_pair.result != vk::Result::eSuccess 
+                                    && result_pair.result != vk::Result::eSuboptimalKHR)
 			log->critical("Failed to acquire swapchain image.");
 
 		const vk::Semaphore sema_wait[] = { m_sema_image_available };
 		const vk::Semaphore sema_signal[] = { m_sema_render_finished };
         const vk::PipelineStageFlags wait_stages[] = { vk::PipelineStageFlagBits::eColorAttachmentOutput };
 
-        const vk::SubmitInfo submit_info(1, 
-                                         sema_wait, 
+        const vk::SubmitInfo submit_info(1, sema_wait, 
                                          wait_stages, 1, 
                                         &m_commandbuffers[image_index], 1, 
                                          sema_signal);
@@ -78,11 +80,14 @@ namespace ppr
 		m_queue_graphics.submit(submit_info, nullptr);
 
         const vk::SwapchainKHR swapchains[] = { m_swapchain };
-        const vk::PresentInfoKHR present_info(1, sema_signal, 1, swapchains, &image_index);
+        const vk::PresentInfoKHR present_info(1, sema_signal, 
+                                              1, swapchains, 
+                                             &image_index);
 
 		const auto result = m_queue_present.presentKHR(present_info);
 
-		if (print(result) == vk::Result::eErrorOutOfDateKHR || result == vk::Result::eSuboptimalKHR)
+		if (print(result) == vk::Result::eErrorOutOfDateKHR 
+                          || result == vk::Result::eSuboptimalKHR)
 		{
 			this->recreate();
 			return;
@@ -163,7 +168,11 @@ namespace ppr
 			log->trace("Creating swapchain image view...");
 
             const vk::ImageSubresourceRange subresource_range(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
-            const vk::ImageViewCreateInfo createinfo({}, m_images[i], vk::ImageViewType::e2D, m_image_format, vk::ComponentMapping(), subresource_range);
+            const vk::ImageViewCreateInfo createinfo({}, m_images[i], 
+                                                 vk::ImageViewType::e2D, 
+                                                     m_image_format, 
+                                                 vk::ComponentMapping(), 
+                                                     subresource_range);
 
 			m_image_views[i] = m_device.createImageView(createinfo);
 		}
@@ -252,9 +261,9 @@ namespace ppr
             vk::Extent2D actual_extent = { window_size.width, window_size.height };
 
 			actual_extent.width = std::max(a_capabilities.minImageExtent.width, 
-                                      std::min(a_capabilities.maxImageExtent.width, actual_extent.width));
+                                  std::min(a_capabilities.maxImageExtent.width, actual_extent.width));
 			actual_extent.height = std::max(a_capabilities.minImageExtent.height, 
-                                       std::min(a_capabilities.maxImageExtent.height, actual_extent.height));
+                                   std::min(a_capabilities.maxImageExtent.height, actual_extent.height));
 
 			return actual_extent;
 		}
@@ -292,6 +301,7 @@ namespace ppr
 		m_pipeline.destroy();
 
 		m_vertex_buffer.destroy();
+        m_index_buffer.destroy();
 
 		for (auto i_view : m_image_views)
 			m_device.destroyImageView(i_view);
@@ -351,6 +361,9 @@ namespace ppr
 		m_vertex_buffer.create(m_physical_device, 
                                m_commandpool, 
                                m_queue_graphics);
+        m_index_buffer.create(m_physical_device, 
+                               m_commandpool, 
+                               m_queue_graphics);
 		create_commandbuffers();
 
 		m_destroyed = false;
@@ -374,7 +387,7 @@ namespace ppr
 
         const vk::CommandBufferAllocateInfo cmdbuffer_alloc_info(m_commandpool, 
                                                              vk::CommandBufferLevel::ePrimary, 
-                                                       (uint32_t)m_commandbuffers.size());
+                                                                 m_commandbuffers.size());
 
 		m_commandbuffers = m_device.allocateCommandBuffers(cmdbuffer_alloc_info);
 
@@ -397,9 +410,10 @@ namespace ppr
             const vk::Buffer     vertex_buffers[] = { m_vertex_buffer.get() };
             const vk::DeviceSize buffer_offsets[] = { 0 };
 			m_commandbuffers[i].bindVertexBuffers(0, 1, vertex_buffers, buffer_offsets);
+            m_commandbuffers[i].bindIndexBuffer(m_index_buffer.get(), 0, vk::IndexType::eUint16);
 
-            const uint32_t vertex_array_size = m_vertex_buffer.get_vertex_array().size();
-			m_commandbuffers[i].draw(vertex_array_size, 1, 0, 0);
+            const uint32_t vertex_array_size = m_vertex_buffer.vertices().size();
+			m_commandbuffers[i].drawIndexed(m_index_buffer.indices().size(), 1, 0, 0, 0);
 			m_commandbuffers[i].endRenderPass();
 			m_commandbuffers[i].end();
 		}

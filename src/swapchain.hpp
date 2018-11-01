@@ -6,6 +6,7 @@
 #include "window.hpp"
 #include "pipeline.hpp"
 #include "vertex_buffer.hpp"
+#include "index_buffer.hpp"
 
 #include <vulkan/vulkan.hpp>
 
@@ -62,6 +63,7 @@ namespace ppr
 
 		pipeline m_pipeline;
 		vertex_buffer m_vertex_buffer;
+        index_buffer m_index_buffer;
 
 		vk::SurfaceKHR m_surface;
 		vk::SwapchainKHR m_swapchain;
