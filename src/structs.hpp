@@ -2,7 +2,7 @@
 
 #pragma once
 
-typedef unsigned int uint32_t;
+using uint32_t = unsigned int;
 
 namespace ppr
 {
@@ -15,10 +15,10 @@ namespace ppr
 	public:
 		// Custom C-style conversions
 		operator size<uint32_t>() const
-		{ return size<uint32_t> {(uint32_t)width, (uint32_t)height}; }
+		{ return size<uint32_t> {static_cast<uint32_t>(width), static_cast<uint32_t>(height)}; }
 
 		operator size<int>() const
-		{ return size<int> {(int)width, (int)height}; }
+		{ return size<int> {static_cast<int>(width), static_cast<int>(height)}; }
 	};
 }
 

@@ -92,7 +92,7 @@ namespace ppr
         log->trace("Available extensions:");
         for (const auto& i_property : extension_properties)
         {
-            log->trace("\t {} ", i_property.extensionName);
+            log->trace("        {} ", i_property.extensionName);
         }
         log->trace("{} extensions found in total.", extension_properties.size());
 
@@ -100,7 +100,7 @@ namespace ppr
 
         m_instance = vk::createInstance(createinfo);
 
-        log->debug("Created Vulkan instance.");
+        log->debug("Created Vulkan instance.\n");
     }
 
     void context::create_device()

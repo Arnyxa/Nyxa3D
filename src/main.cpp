@@ -1,5 +1,4 @@
 #include "context.hpp"
-#include "globals.hpp"
 
 int main()
 {

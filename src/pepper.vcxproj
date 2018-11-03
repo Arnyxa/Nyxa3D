@@ -180,8 +180,11 @@
       <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk32\ $(OutDir)\"</Command>
+      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\common\ $(OutDir)\"</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk32\ $(OutDir)\"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='trace|Win32'">
     <ClCompile>
@@ -199,8 +202,11 @@
       <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk32\ $(OutDir)\"</Command>
+      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\common\ $(OutDir)\"</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk32\ $(OutDir)\"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
     <ClCompile>
@@ -222,8 +228,11 @@
       </Command>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk64\ $(OutDir)\"</Command>
+      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\common\ $(OutDir)\"</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk64\ $(OutDir)\"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='trace|x64'">
     <ClCompile>
@@ -245,8 +254,11 @@
       </Command>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk64\ $(OutDir)\"</Command>
+      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\common\ $(OutDir)\"</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk64\ $(OutDir)\"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
     <ClCompile>
@@ -269,8 +281,11 @@
       <AdditionalOptions>/ENTRY:"mainCRTStartup" %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk32\ $(OutDir)\"</Command>
+      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\common\ $(OutDir)\"</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk32\ $(OutDir)\"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
     <ClCompile>
@@ -297,8 +312,11 @@
       </Command>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk64\ $(OutDir)\"</Command>
+      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\common\ $(OutDir)\"</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk64\ $(OutDir)\"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
