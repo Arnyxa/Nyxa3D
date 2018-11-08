@@ -91,7 +91,7 @@ namespace ppr
 
         const std::vector<vk::LayerProperties> available_layers = vk::enumerateInstanceLayerProperties();
 
-		for (const char* i_layer : m_validation_layers)
+		for (const auto& i_layer : m_validation_layers)
 		{
 			bool was_found = false;
 
