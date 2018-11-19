@@ -30,8 +30,8 @@ namespace ppr
 
         m_logger->set_pattern("%^[%L]%$ %v");
         m_logger->trace("TRACE");
-        m_logger->info("INFO");
         m_logger->debug("DEBUG");
+        m_logger->info("INFO");
         m_logger->warn("WARN");
         m_logger->error("ERROR");
         m_logger->critical("CRITICAL\n"); 
