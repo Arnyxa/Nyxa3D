@@ -1,21 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="debug|Win32">
-      <Configuration>debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="trace|Win32">
-      <Configuration>trace</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="trace|x64">
       <Configuration>trace</Configuration>
       <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="release|Win32">
-      <Configuration>release</Configuration>
-      <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="debug|x64">
       <Configuration>debug</Configuration>
@@ -72,25 +60,6 @@
     <ProjectName>pepper</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='trace|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -115,15 +84,6 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='trace|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -134,93 +94,34 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
-    <OutDir>$(SolutionDir)build\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)build\intrmdt\$(Configuration)\$(Platform)\</IntDir>
-    <TargetName>Pepper-$(Configuration)</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='trace|Win32'">
-    <OutDir>$(SolutionDir)build\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)build\intrmdt\$(Configuration)\$(Platform)\</IntDir>
-    <TargetName>Pepper-$(Configuration)</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
-    <OutDir>$(SolutionDir)build\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)build\intrmdt\$(Configuration)\$(Platform)\</IntDir>
-    <TargetName>Pepper-$(Configuration)</TargetName>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
     <OutDir>$(SolutionDir)build\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)build\intrmdt\$(Configuration)\$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)build\_temp\$(Configuration)\$(Platform)\</IntDir>
     <TargetName>Pepper-$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
     <OutDir>$(SolutionDir)build\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)build\intrmdt\$(Configuration)\$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)build\_temp\$(Configuration)\$(Platform)\</IntDir>
     <TargetName>Pepper-$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='trace|x64'">
     <OutDir>$(SolutionDir)build\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)build\intrmdt\$(Configuration)\$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)build\_temp\$(Configuration)\$(Platform)\</IntDir>
     <TargetName>Pepper-$(Configuration)</TargetName>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)/libraries/spdlog/include;$(SolutionDir)/libraries/VulkanSDK/Include;$(SolutionDir)/libraries/GLM;$(SolutionDir)/libraries/GLFW/32bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VULKAN_HPP_TYPESAFE_CONVERSION;PPR_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DisableSpecificWarnings>4267</DisableSpecificWarnings>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)/Libraries/VulkanSDK/Lib32;$(SolutionDir)/Libraries/GLFW/32bit/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <SubSystem>Console</SubSystem>
-    </Link>
-    <PostBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\common\ $(OutDir)\"</Command>
-    </PostBuildEvent>
-    <PreBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk32\ $(OutDir)\"</Command>
-    </PreBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='trace|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)/libraries/spdlog/include;$(SolutionDir)/libraries/VulkanSDK/Include;$(SolutionDir)/libraries/GLM;$(SolutionDir)/libraries/GLFW/32bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VULKAN_HPP_TYPESAFE_CONVERSION;PPR_TRACE;PPR_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DisableSpecificWarnings>4267</DisableSpecificWarnings>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)/Libraries/VulkanSDK/Lib32;$(SolutionDir)/Libraries/GLFW/32bit/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <SubSystem>Console</SubSystem>
-    </Link>
-    <PostBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\common\ $(OutDir)\"</Command>
-    </PostBuildEvent>
-    <PreBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk32\ $(OutDir)\"</Command>
-    </PreBuildEvent>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)/libraries/spdlog/include;$(SolutionDir)/libraries/VulkanSDK/Include;$(SolutionDir)/libraries/GLM;$(SolutionDir)/libraries/GLFW/64bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/libraries/spdlog/include;$(SolutionDir)/libraries/vulkan_sdk/include;$(SolutionDir)/libraries/glm;$(SolutionDir)/libraries/glfw/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>VULKAN_HPP_TYPESAFE_CONVERSION;PPR_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4267</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)/Libraries/VulkanSDK/Lib;$(SolutionDir)/Libraries/GLFW/64bit/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)/libraries/vulkan_sdk/lib;$(SolutionDir)/libraries/glfw/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Console</SubSystem>
     </Link>
     <PreLinkEvent>
@@ -228,10 +129,11 @@
       </Command>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\common\ $(OutDir)\"</Command>
+      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\ $(OutDir)\"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk64\ $(OutDir)\"</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='trace|x64'">
@@ -240,13 +142,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)/libraries/spdlog/include;$(SolutionDir)/libraries/VulkanSDK/Include;$(SolutionDir)/libraries/GLM;$(SolutionDir)/libraries/GLFW/64bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/libraries/spdlog/include;$(SolutionDir)/libraries/vulkan_sdk/include;$(SolutionDir)/libraries/glm;$(SolutionDir)/libraries/glfw/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>VULKAN_HPP_TYPESAFE_CONVERSION;PPR_TRACE;PPR_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4267</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)/Libraries/VulkanSDK/Lib;$(SolutionDir)/Libraries/GLFW/64bit/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)/libraries/vulkan_sdk/lib;$(SolutionDir)/libraries/glfw/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Console</SubSystem>
     </Link>
     <PreLinkEvent>
@@ -254,37 +156,11 @@
       </Command>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\common\ $(OutDir)\"</Command>
+      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\ $(OutDir)\"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk64\ $(OutDir)\"</Command>
-    </PreBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)/libraries/spdlog/include;$(SolutionDir)/libraries/VulkanSDK/Include;$(SolutionDir)/libraries/GLM;$(SolutionDir)/libraries/GLFW/32bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VULKAN_HPP_TYPESAFE_CONVERSION;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DisableSpecificWarnings>4267</DisableSpecificWarnings>
-    </ClCompile>
-    <Link>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)/Libraries/VulkanSDK/Lib32;$(SolutionDir)/Libraries/GLFW/32bit/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <SubSystem>Windows</SubSystem>
-      <AdditionalOptions>/ENTRY:"mainCRTStartup" %(AdditionalOptions)</AdditionalOptions>
-    </Link>
-    <PostBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\common\ $(OutDir)\"</Command>
-    </PostBuildEvent>
-    <PreBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk32\ $(OutDir)\"</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
@@ -295,7 +171,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)/libraries/spdlog/include;$(SolutionDir)/libraries/VulkanSDK/Include;$(SolutionDir)/libraries/GLM;$(SolutionDir)/libraries/GLFW/64bit/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/libraries/spdlog/include;$(SolutionDir)/libraries/vulkan_sdk/include;$(SolutionDir)/libraries/glm;$(SolutionDir)/libraries/glfw/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>VULKAN_HPP_TYPESAFE_CONVERSION;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4267</DisableSpecificWarnings>
     </ClCompile>
@@ -303,7 +179,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)/Libraries/VulkanSDK/Lib;$(SolutionDir)/Libraries/GLFW/64bit/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)/libraries/vulkan_sdk/lib;$(SolutionDir)/libraries/glfw/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
       <AdditionalOptions>/ENTRY:"mainCRTStartup" %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -312,10 +188,11 @@
       </Command>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\common\ $(OutDir)\"</Command>
+      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\ $(OutDir)\"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>$(SolutionDir)scripts\copy_resources.bat "$(SolutionDir)resources\vk64\ $(OutDir)\"</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
